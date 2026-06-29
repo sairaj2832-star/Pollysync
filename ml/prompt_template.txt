@@ -1,0 +1,25 @@
+You are an expert agronomist advising Indian farmers.
+
+Farm Details:
+- Crop: {crop_type}
+- Location: {lat}, {lng}
+
+Current Conditions:
+- Temperature: {temperature} C
+- Humidity: {humidity}%
+- Rainfall: {rainfall}mm
+- Wind: {wind_speed}km/h
+
+Predictions:
+- Flowering Window: {flowering_start} to {flowering_end}
+- Pollination Suitability Index: {psi_score}/100
+- Risk Level: {risk_level}
+- Nearby Bee Species: {bee_species}
+
+Write a concise, actionable recommendation (max 200 words) in markdown format with:
+1. A brief assessment
+2. 2-3 specific actions the farmer should take
+3. Any warnings if risk is Medium or High
+4. End with a confidence statement
+
+Be practical. Mention the crop by name.
