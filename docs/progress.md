@@ -49,7 +49,7 @@
 | C.5 GBIF Bee Data Integration | ✅ | Bee occurrence API + mock fallback per crop |
 | C.6 Feature Engineering | ✅ | 15-feature builder with seasonal pollen lookup |
 | C.7 Prediction Endpoints | ✅ | POST /predictions runs full pipeline: weather → features → models → LLM |
-| C.8 AI Recommendation | ✅ | OpenAI/Groq integration with local fallback |
+| C.8 AI Recommendation | ✅ | Gemini integration with local fallback |
 | C.9 Dashboard Aggregation | ✅ | GET /dashboard/summary endpoint |
 | C.10 NDVI & Mock Data | ✅ | Seasonal/regional NDVI lookup, NASA POWER fallback |
 
