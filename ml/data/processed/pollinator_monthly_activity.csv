@@ -1,0 +1,821 @@
+species,stateProvince,month,record_count,activity_score,data_sufficient,total_records
+Apis andreniformis,Arunachal Pradesh,11,1,1.0,False,1
+Apis andreniformis,Odisha,4,1,1.0,False,1
+Apis cerana,Andaman and Nicobar,5,1,1.0,False,1
+Apis cerana,Andaman and Nicobar Islands,8,2,1.0,False,2
+Apis cerana,Andhra Pradesh,1,1,0.024390243902439025,True,41
+Apis cerana,Andhra Pradesh,2,4,0.0975609756097561,True,41
+Apis cerana,Andhra Pradesh,3,1,0.024390243902439025,True,41
+Apis cerana,Andhra Pradesh,4,6,0.14634146341463414,True,41
+Apis cerana,Andhra Pradesh,5,3,0.07317073170731707,True,41
+Apis cerana,Andhra Pradesh,6,1,0.024390243902439025,True,41
+Apis cerana,Andhra Pradesh,7,8,0.1951219512195122,True,41
+Apis cerana,Andhra Pradesh,8,8,0.1951219512195122,True,41
+Apis cerana,Andhra Pradesh,9,2,0.04878048780487805,True,41
+Apis cerana,Andhra Pradesh,10,4,0.0975609756097561,True,41
+Apis cerana,Andhra Pradesh,11,3,0.07317073170731707,True,41
+Apis cerana,Arunachal Pradesh,3,2,0.09523809523809523,True,21
+Apis cerana,Arunachal Pradesh,4,2,0.09523809523809523,True,21
+Apis cerana,Arunachal Pradesh,5,5,0.23809523809523808,True,21
+Apis cerana,Arunachal Pradesh,6,2,0.09523809523809523,True,21
+Apis cerana,Arunachal Pradesh,9,6,0.2857142857142857,True,21
+Apis cerana,Arunachal Pradesh,11,2,0.09523809523809523,True,21
+Apis cerana,Arunachal Pradesh,12,2,0.09523809523809523,True,21
+Apis cerana,Assam,1,4,0.1,True,40
+Apis cerana,Assam,2,10,0.25,True,40
+Apis cerana,Assam,3,3,0.075,True,40
+Apis cerana,Assam,4,8,0.2,True,40
+Apis cerana,Assam,5,3,0.075,True,40
+Apis cerana,Assam,6,2,0.05,True,40
+Apis cerana,Assam,7,2,0.05,True,40
+Apis cerana,Assam,8,1,0.025,True,40
+Apis cerana,Assam,9,1,0.025,True,40
+Apis cerana,Assam,10,1,0.025,True,40
+Apis cerana,Assam,11,1,0.025,True,40
+Apis cerana,Assam,12,4,0.1,True,40
+Apis cerana,Bihar,1,1,0.0625,True,16
+Apis cerana,Bihar,2,3,0.1875,True,16
+Apis cerana,Bihar,4,2,0.125,True,16
+Apis cerana,Bihar,7,3,0.1875,True,16
+Apis cerana,Bihar,12,7,0.4375,True,16
+Apis cerana,Chandigarh,3,1,0.5,False,2
+Apis cerana,Chandigarh,10,1,0.5,False,2
+Apis cerana,Chhattisgarh,2,1,0.1,True,10
+Apis cerana,Chhattisgarh,3,1,0.1,True,10
+Apis cerana,Chhattisgarh,6,3,0.3,True,10
+Apis cerana,Chhattisgarh,7,3,0.3,True,10
+Apis cerana,Chhattisgarh,9,1,0.1,True,10
+Apis cerana,Chhattisgarh,10,1,0.1,True,10
+Apis cerana,Goa,1,3,0.15,True,20
+Apis cerana,Goa,3,1,0.05,True,20
+Apis cerana,Goa,4,6,0.3,True,20
+Apis cerana,Goa,5,1,0.05,True,20
+Apis cerana,Goa,6,1,0.05,True,20
+Apis cerana,Goa,8,1,0.05,True,20
+Apis cerana,Goa,9,2,0.1,True,20
+Apis cerana,Goa,10,1,0.05,True,20
+Apis cerana,Goa,11,1,0.05,True,20
+Apis cerana,Goa,12,3,0.15,True,20
+Apis cerana,Gujarat,4,2,0.3333333333333333,False,6
+Apis cerana,Gujarat,7,3,0.5,False,6
+Apis cerana,Gujarat,8,1,0.16666666666666666,False,6
+Apis cerana,Haryana,1,1,0.07142857142857142,True,14
+Apis cerana,Haryana,2,1,0.07142857142857142,True,14
+Apis cerana,Haryana,3,3,0.21428571428571427,True,14
+Apis cerana,Haryana,4,3,0.21428571428571427,True,14
+Apis cerana,Haryana,6,1,0.07142857142857142,True,14
+Apis cerana,Haryana,9,1,0.07142857142857142,True,14
+Apis cerana,Haryana,10,1,0.07142857142857142,True,14
+Apis cerana,Haryana,12,3,0.21428571428571427,True,14
+Apis cerana,Himachal Pradesh,1,4,0.05714285714285714,True,70
+Apis cerana,Himachal Pradesh,2,2,0.02857142857142857,True,70
+Apis cerana,Himachal Pradesh,3,6,0.08571428571428572,True,70
+Apis cerana,Himachal Pradesh,4,24,0.34285714285714286,True,70
+Apis cerana,Himachal Pradesh,5,10,0.14285714285714285,True,70
+Apis cerana,Himachal Pradesh,6,6,0.08571428571428572,True,70
+Apis cerana,Himachal Pradesh,7,7,0.1,True,70
+Apis cerana,Himachal Pradesh,8,3,0.04285714285714286,True,70
+Apis cerana,Himachal Pradesh,9,5,0.07142857142857142,True,70
+Apis cerana,Himachal Pradesh,10,2,0.02857142857142857,True,70
+Apis cerana,Himachal Pradesh,11,1,0.014285714285714285,True,70
+Apis cerana,Jammu and Kashmir,4,2,0.10526315789473684,True,19
+Apis cerana,Jammu and Kashmir,5,3,0.15789473684210525,True,19
+Apis cerana,Jammu and Kashmir,7,1,0.05263157894736842,True,19
+Apis cerana,Jammu and Kashmir,8,6,0.3157894736842105,True,19
+Apis cerana,Jammu and Kashmir,10,2,0.10526315789473684,True,19
+Apis cerana,Jammu and Kashmir,11,1,0.05263157894736842,True,19
+Apis cerana,Jammu and Kashmir,12,4,0.21052631578947367,True,19
+Apis cerana,Jharkhand,6,1,0.25,False,4
+Apis cerana,Jharkhand,10,1,0.25,False,4
+Apis cerana,Jharkhand,11,2,0.5,False,4
+Apis cerana,Karnataka,1,21,0.0525,True,400
+Apis cerana,Karnataka,2,26,0.065,True,400
+Apis cerana,Karnataka,3,25,0.0625,True,400
+Apis cerana,Karnataka,4,45,0.1125,True,400
+Apis cerana,Karnataka,5,49,0.1225,True,400
+Apis cerana,Karnataka,6,38,0.095,True,400
+Apis cerana,Karnataka,7,33,0.0825,True,400
+Apis cerana,Karnataka,8,47,0.1175,True,400
+Apis cerana,Karnataka,9,30,0.075,True,400
+Apis cerana,Karnataka,10,16,0.04,True,400
+Apis cerana,Karnataka,11,29,0.0725,True,400
+Apis cerana,Karnataka,12,41,0.1025,True,400
+Apis cerana,Kerala,1,12,0.03669724770642202,True,327
+Apis cerana,Kerala,2,16,0.04892966360856269,True,327
+Apis cerana,Kerala,3,15,0.045871559633027525,True,327
+Apis cerana,Kerala,4,45,0.13761467889908258,True,327
+Apis cerana,Kerala,5,63,0.1926605504587156,True,327
+Apis cerana,Kerala,6,29,0.08868501529051988,True,327
+Apis cerana,Kerala,7,33,0.10091743119266056,True,327
+Apis cerana,Kerala,8,36,0.11009174311926606,True,327
+Apis cerana,Kerala,9,17,0.05198776758409786,True,327
+Apis cerana,Kerala,10,23,0.07033639143730887,True,327
+Apis cerana,Kerala,11,23,0.07033639143730887,True,327
+Apis cerana,Kerala,12,15,0.045871559633027525,True,327
+Apis cerana,Madhya Pradesh,1,3,0.25,True,12
+Apis cerana,Madhya Pradesh,3,2,0.16666666666666666,True,12
+Apis cerana,Madhya Pradesh,4,2,0.16666666666666666,True,12
+Apis cerana,Madhya Pradesh,6,1,0.08333333333333333,True,12
+Apis cerana,Madhya Pradesh,7,1,0.08333333333333333,True,12
+Apis cerana,Madhya Pradesh,8,1,0.08333333333333333,True,12
+Apis cerana,Madhya Pradesh,9,1,0.08333333333333333,True,12
+Apis cerana,Madhya Pradesh,10,1,0.08333333333333333,True,12
+Apis cerana,Maharashtra,1,35,0.08373205741626795,True,418
+Apis cerana,Maharashtra,2,29,0.06937799043062201,True,418
+Apis cerana,Maharashtra,3,26,0.06220095693779904,True,418
+Apis cerana,Maharashtra,4,31,0.07416267942583732,True,418
+Apis cerana,Maharashtra,5,26,0.06220095693779904,True,418
+Apis cerana,Maharashtra,6,42,0.10047846889952153,True,418
+Apis cerana,Maharashtra,7,48,0.11483253588516747,True,418
+Apis cerana,Maharashtra,8,38,0.09090909090909091,True,418
+Apis cerana,Maharashtra,9,33,0.07894736842105263,True,418
+Apis cerana,Maharashtra,10,39,0.09330143540669857,True,418
+Apis cerana,Maharashtra,11,21,0.050239234449760764,True,418
+Apis cerana,Maharashtra,12,50,0.11961722488038277,True,418
+Apis cerana,Manipur,1,1,1.0,False,1
+Apis cerana,Meghalaya,2,1,0.058823529411764705,True,17
+Apis cerana,Meghalaya,3,3,0.17647058823529413,True,17
+Apis cerana,Meghalaya,4,2,0.11764705882352941,True,17
+Apis cerana,Meghalaya,5,2,0.11764705882352941,True,17
+Apis cerana,Meghalaya,8,4,0.23529411764705882,True,17
+Apis cerana,Meghalaya,9,2,0.11764705882352941,True,17
+Apis cerana,Meghalaya,10,1,0.058823529411764705,True,17
+Apis cerana,Meghalaya,11,2,0.11764705882352941,True,17
+Apis cerana,Mizoram,2,1,0.16666666666666666,False,6
+Apis cerana,Mizoram,4,1,0.16666666666666666,False,6
+Apis cerana,Mizoram,10,2,0.3333333333333333,False,6
+Apis cerana,Mizoram,11,2,0.3333333333333333,False,6
+Apis cerana,NCT of Delhi,1,8,0.08,True,100
+Apis cerana,NCT of Delhi,2,15,0.15,True,100
+Apis cerana,NCT of Delhi,3,4,0.04,True,100
+Apis cerana,NCT of Delhi,4,15,0.15,True,100
+Apis cerana,NCT of Delhi,5,3,0.03,True,100
+Apis cerana,NCT of Delhi,6,4,0.04,True,100
+Apis cerana,NCT of Delhi,7,6,0.06,True,100
+Apis cerana,NCT of Delhi,8,4,0.04,True,100
+Apis cerana,NCT of Delhi,9,25,0.25,True,100
+Apis cerana,NCT of Delhi,10,10,0.1,True,100
+Apis cerana,NCT of Delhi,11,5,0.05,True,100
+Apis cerana,NCT of Delhi,12,1,0.01,True,100
+Apis cerana,Nagaland,1,2,0.3333333333333333,False,6
+Apis cerana,Nagaland,4,2,0.3333333333333333,False,6
+Apis cerana,Nagaland,10,1,0.16666666666666666,False,6
+Apis cerana,Nagaland,12,1,0.16666666666666666,False,6
+Apis cerana,Odisha,2,3,0.21428571428571427,True,14
+Apis cerana,Odisha,4,1,0.07142857142857142,True,14
+Apis cerana,Odisha,5,5,0.35714285714285715,True,14
+Apis cerana,Odisha,7,1,0.07142857142857142,True,14
+Apis cerana,Odisha,10,2,0.14285714285714285,True,14
+Apis cerana,Odisha,12,2,0.14285714285714285,True,14
+Apis cerana,Puducherry,8,1,0.125,False,8
+Apis cerana,Puducherry,9,4,0.5,False,8
+Apis cerana,Puducherry,10,2,0.25,False,8
+Apis cerana,Puducherry,11,1,0.125,False,8
+Apis cerana,Punjab,1,2,0.3333333333333333,False,6
+Apis cerana,Punjab,2,1,0.16666666666666666,False,6
+Apis cerana,Punjab,9,2,0.3333333333333333,False,6
+Apis cerana,Punjab,10,1,0.16666666666666666,False,6
+Apis cerana,Rajasthan,2,1,0.25,False,4
+Apis cerana,Rajasthan,5,2,0.5,False,4
+Apis cerana,Rajasthan,9,1,0.25,False,4
+Apis cerana,Sikkim,1,1,0.04,True,25
+Apis cerana,Sikkim,2,2,0.08,True,25
+Apis cerana,Sikkim,4,13,0.52,True,25
+Apis cerana,Sikkim,5,4,0.16,True,25
+Apis cerana,Sikkim,8,2,0.08,True,25
+Apis cerana,Sikkim,9,2,0.08,True,25
+Apis cerana,Sikkim,12,1,0.04,True,25
+Apis cerana,Tamil Nadu,1,17,0.06296296296296296,True,270
+Apis cerana,Tamil Nadu,2,13,0.04814814814814815,True,270
+Apis cerana,Tamil Nadu,3,10,0.037037037037037035,True,270
+Apis cerana,Tamil Nadu,4,25,0.09259259259259259,True,270
+Apis cerana,Tamil Nadu,5,18,0.06666666666666667,True,270
+Apis cerana,Tamil Nadu,6,25,0.09259259259259259,True,270
+Apis cerana,Tamil Nadu,7,42,0.15555555555555556,True,270
+Apis cerana,Tamil Nadu,8,48,0.17777777777777778,True,270
+Apis cerana,Tamil Nadu,9,18,0.06666666666666667,True,270
+Apis cerana,Tamil Nadu,10,22,0.08148148148148149,True,270
+Apis cerana,Tamil Nadu,11,13,0.04814814814814815,True,270
+Apis cerana,Tamil Nadu,12,19,0.07037037037037037,True,270
+Apis cerana,Telangana,1,1,0.02127659574468085,True,47
+Apis cerana,Telangana,4,11,0.23404255319148937,True,47
+Apis cerana,Telangana,5,1,0.02127659574468085,True,47
+Apis cerana,Telangana,6,2,0.0425531914893617,True,47
+Apis cerana,Telangana,7,3,0.06382978723404255,True,47
+Apis cerana,Telangana,8,2,0.0425531914893617,True,47
+Apis cerana,Telangana,9,6,0.1276595744680851,True,47
+Apis cerana,Telangana,10,13,0.2765957446808511,True,47
+Apis cerana,Telangana,11,7,0.14893617021276595,True,47
+Apis cerana,Telangana,12,1,0.02127659574468085,True,47
+Apis cerana,Tripura,2,1,0.5,False,2
+Apis cerana,Tripura,7,1,0.5,False,2
+Apis cerana,Unknown,1,12,0.06557377049180328,True,183
+Apis cerana,Unknown,2,16,0.08743169398907104,True,183
+Apis cerana,Unknown,3,61,0.3333333333333333,True,183
+Apis cerana,Unknown,4,11,0.060109289617486336,True,183
+Apis cerana,Unknown,5,9,0.04918032786885246,True,183
+Apis cerana,Unknown,6,2,0.01092896174863388,True,183
+Apis cerana,Unknown,7,3,0.01639344262295082,True,183
+Apis cerana,Unknown,8,20,0.1092896174863388,True,183
+Apis cerana,Unknown,9,35,0.1912568306010929,True,183
+Apis cerana,Unknown,10,7,0.03825136612021858,True,183
+Apis cerana,Unknown,11,3,0.01639344262295082,True,183
+Apis cerana,Unknown,12,4,0.02185792349726776,True,183
+Apis cerana,Uttar Pradesh,1,4,0.08888888888888889,True,45
+Apis cerana,Uttar Pradesh,2,9,0.2,True,45
+Apis cerana,Uttar Pradesh,3,3,0.06666666666666667,True,45
+Apis cerana,Uttar Pradesh,4,5,0.1111111111111111,True,45
+Apis cerana,Uttar Pradesh,5,6,0.13333333333333333,True,45
+Apis cerana,Uttar Pradesh,6,1,0.022222222222222223,True,45
+Apis cerana,Uttar Pradesh,7,2,0.044444444444444446,True,45
+Apis cerana,Uttar Pradesh,8,2,0.044444444444444446,True,45
+Apis cerana,Uttar Pradesh,9,1,0.022222222222222223,True,45
+Apis cerana,Uttar Pradesh,10,2,0.044444444444444446,True,45
+Apis cerana,Uttar Pradesh,11,2,0.044444444444444446,True,45
+Apis cerana,Uttar Pradesh,12,8,0.17777777777777778,True,45
+Apis cerana,Uttarakhand,1,6,0.04316546762589928,True,139
+Apis cerana,Uttarakhand,2,5,0.03597122302158273,True,139
+Apis cerana,Uttarakhand,3,5,0.03597122302158273,True,139
+Apis cerana,Uttarakhand,4,22,0.15827338129496402,True,139
+Apis cerana,Uttarakhand,5,8,0.05755395683453238,True,139
+Apis cerana,Uttarakhand,6,11,0.07913669064748201,True,139
+Apis cerana,Uttarakhand,7,12,0.08633093525179857,True,139
+Apis cerana,Uttarakhand,8,22,0.15827338129496402,True,139
+Apis cerana,Uttarakhand,9,19,0.1366906474820144,True,139
+Apis cerana,Uttarakhand,10,11,0.07913669064748201,True,139
+Apis cerana,Uttarakhand,11,10,0.07194244604316546,True,139
+Apis cerana,Uttarakhand,12,8,0.05755395683453238,True,139
+Apis cerana,West Bengal,1,4,0.039603960396039604,True,101
+Apis cerana,West Bengal,2,10,0.09900990099009901,True,101
+Apis cerana,West Bengal,3,22,0.21782178217821782,True,101
+Apis cerana,West Bengal,4,25,0.24752475247524752,True,101
+Apis cerana,West Bengal,5,11,0.10891089108910891,True,101
+Apis cerana,West Bengal,6,5,0.04950495049504951,True,101
+Apis cerana,West Bengal,7,1,0.009900990099009901,True,101
+Apis cerana,West Bengal,8,1,0.009900990099009901,True,101
+Apis cerana,West Bengal,9,5,0.04950495049504951,True,101
+Apis cerana,West Bengal,10,2,0.019801980198019802,True,101
+Apis cerana,West Bengal,11,2,0.019801980198019802,True,101
+Apis cerana,West Bengal,12,13,0.12871287128712872,True,101
+Apis dorsata,Andaman and Nicobar,1,4,0.2857142857142857,True,14
+Apis dorsata,Andaman and Nicobar,3,2,0.14285714285714285,True,14
+Apis dorsata,Andaman and Nicobar,4,1,0.07142857142857142,True,14
+Apis dorsata,Andaman and Nicobar,5,1,0.07142857142857142,True,14
+Apis dorsata,Andaman and Nicobar,8,1,0.07142857142857142,True,14
+Apis dorsata,Andaman and Nicobar,10,1,0.07142857142857142,True,14
+Apis dorsata,Andaman and Nicobar,11,2,0.14285714285714285,True,14
+Apis dorsata,Andaman and Nicobar,12,2,0.14285714285714285,True,14
+Apis dorsata,Andaman and Nicobar Islands,8,1,1.0,False,1
+Apis dorsata,Andhra Pradesh,1,5,0.029069767441860465,True,172
+Apis dorsata,Andhra Pradesh,2,8,0.046511627906976744,True,172
+Apis dorsata,Andhra Pradesh,3,11,0.06395348837209303,True,172
+Apis dorsata,Andhra Pradesh,4,37,0.21511627906976744,True,172
+Apis dorsata,Andhra Pradesh,5,8,0.046511627906976744,True,172
+Apis dorsata,Andhra Pradesh,6,3,0.01744186046511628,True,172
+Apis dorsata,Andhra Pradesh,7,25,0.14534883720930233,True,172
+Apis dorsata,Andhra Pradesh,8,23,0.13372093023255813,True,172
+Apis dorsata,Andhra Pradesh,9,24,0.13953488372093023,True,172
+Apis dorsata,Andhra Pradesh,10,15,0.0872093023255814,True,172
+Apis dorsata,Andhra Pradesh,11,8,0.046511627906976744,True,172
+Apis dorsata,Andhra Pradesh,12,5,0.029069767441860465,True,172
+Apis dorsata,Arunachal Pradesh,2,1,0.058823529411764705,True,17
+Apis dorsata,Arunachal Pradesh,3,1,0.058823529411764705,True,17
+Apis dorsata,Arunachal Pradesh,4,2,0.11764705882352941,True,17
+Apis dorsata,Arunachal Pradesh,5,6,0.35294117647058826,True,17
+Apis dorsata,Arunachal Pradesh,7,1,0.058823529411764705,True,17
+Apis dorsata,Arunachal Pradesh,9,3,0.17647058823529413,True,17
+Apis dorsata,Arunachal Pradesh,11,1,0.058823529411764705,True,17
+Apis dorsata,Arunachal Pradesh,12,2,0.11764705882352941,True,17
+Apis dorsata,Assam,1,5,0.06944444444444445,True,72
+Apis dorsata,Assam,2,5,0.06944444444444445,True,72
+Apis dorsata,Assam,3,7,0.09722222222222222,True,72
+Apis dorsata,Assam,4,26,0.3611111111111111,True,72
+Apis dorsata,Assam,5,7,0.09722222222222222,True,72
+Apis dorsata,Assam,6,4,0.05555555555555555,True,72
+Apis dorsata,Assam,7,3,0.041666666666666664,True,72
+Apis dorsata,Assam,8,1,0.013888888888888888,True,72
+Apis dorsata,Assam,9,3,0.041666666666666664,True,72
+Apis dorsata,Assam,10,2,0.027777777777777776,True,72
+Apis dorsata,Assam,11,6,0.08333333333333333,True,72
+Apis dorsata,Assam,12,3,0.041666666666666664,True,72
+Apis dorsata,Bihar,1,4,0.12121212121212122,True,33
+Apis dorsata,Bihar,4,5,0.15151515151515152,True,33
+Apis dorsata,Bihar,5,1,0.030303030303030304,True,33
+Apis dorsata,Bihar,7,1,0.030303030303030304,True,33
+Apis dorsata,Bihar,8,1,0.030303030303030304,True,33
+Apis dorsata,Bihar,9,1,0.030303030303030304,True,33
+Apis dorsata,Bihar,10,7,0.21212121212121213,True,33
+Apis dorsata,Bihar,11,6,0.18181818181818182,True,33
+Apis dorsata,Bihar,12,7,0.21212121212121213,True,33
+Apis dorsata,Chandigarh,3,1,0.25,False,4
+Apis dorsata,Chandigarh,4,1,0.25,False,4
+Apis dorsata,Chandigarh,5,1,0.25,False,4
+Apis dorsata,Chandigarh,6,1,0.25,False,4
+Apis dorsata,Chhattisgarh,1,2,0.03389830508474576,True,59
+Apis dorsata,Chhattisgarh,2,6,0.1016949152542373,True,59
+Apis dorsata,Chhattisgarh,3,7,0.11864406779661017,True,59
+Apis dorsata,Chhattisgarh,4,1,0.01694915254237288,True,59
+Apis dorsata,Chhattisgarh,5,3,0.05084745762711865,True,59
+Apis dorsata,Chhattisgarh,6,3,0.05084745762711865,True,59
+Apis dorsata,Chhattisgarh,7,5,0.0847457627118644,True,59
+Apis dorsata,Chhattisgarh,8,10,0.1694915254237288,True,59
+Apis dorsata,Chhattisgarh,9,7,0.11864406779661017,True,59
+Apis dorsata,Chhattisgarh,10,6,0.1016949152542373,True,59
+Apis dorsata,Chhattisgarh,11,8,0.13559322033898305,True,59
+Apis dorsata,Chhattisgarh,12,1,0.01694915254237288,True,59
+Apis dorsata,Goa,1,2,0.04081632653061224,True,49
+Apis dorsata,Goa,2,2,0.04081632653061224,True,49
+Apis dorsata,Goa,3,1,0.02040816326530612,True,49
+Apis dorsata,Goa,4,2,0.04081632653061224,True,49
+Apis dorsata,Goa,7,2,0.04081632653061224,True,49
+Apis dorsata,Goa,8,8,0.16326530612244897,True,49
+Apis dorsata,Goa,9,4,0.08163265306122448,True,49
+Apis dorsata,Goa,10,1,0.02040816326530612,True,49
+Apis dorsata,Goa,11,12,0.24489795918367346,True,49
+Apis dorsata,Goa,12,15,0.30612244897959184,True,49
+Apis dorsata,Gujarat,1,3,0.022388059701492536,True,134
+Apis dorsata,Gujarat,2,6,0.04477611940298507,True,134
+Apis dorsata,Gujarat,3,9,0.06716417910447761,True,134
+Apis dorsata,Gujarat,4,18,0.13432835820895522,True,134
+Apis dorsata,Gujarat,5,13,0.09701492537313433,True,134
+Apis dorsata,Gujarat,6,18,0.13432835820895522,True,134
+Apis dorsata,Gujarat,7,20,0.14925373134328357,True,134
+Apis dorsata,Gujarat,8,11,0.08208955223880597,True,134
+Apis dorsata,Gujarat,9,5,0.03731343283582089,True,134
+Apis dorsata,Gujarat,10,14,0.1044776119402985,True,134
+Apis dorsata,Gujarat,11,6,0.04477611940298507,True,134
+Apis dorsata,Gujarat,12,11,0.08208955223880597,True,134
+Apis dorsata,Haryana,1,2,0.08333333333333333,True,24
+Apis dorsata,Haryana,2,1,0.041666666666666664,True,24
+Apis dorsata,Haryana,3,1,0.041666666666666664,True,24
+Apis dorsata,Haryana,4,4,0.16666666666666666,True,24
+Apis dorsata,Haryana,5,2,0.08333333333333333,True,24
+Apis dorsata,Haryana,7,3,0.125,True,24
+Apis dorsata,Haryana,8,4,0.16666666666666666,True,24
+Apis dorsata,Haryana,9,2,0.08333333333333333,True,24
+Apis dorsata,Haryana,10,2,0.08333333333333333,True,24
+Apis dorsata,Haryana,11,1,0.041666666666666664,True,24
+Apis dorsata,Haryana,12,2,0.08333333333333333,True,24
+Apis dorsata,Himachal Pradesh,1,1,0.14285714285714285,False,7
+Apis dorsata,Himachal Pradesh,4,4,0.5714285714285714,False,7
+Apis dorsata,Himachal Pradesh,5,1,0.14285714285714285,False,7
+Apis dorsata,Himachal Pradesh,7,1,0.14285714285714285,False,7
+Apis dorsata,Jammu and Kashmir,8,1,0.25,False,4
+Apis dorsata,Jammu and Kashmir,10,2,0.5,False,4
+Apis dorsata,Jammu and Kashmir,11,1,0.25,False,4
+Apis dorsata,Jharkhand,1,2,0.2,True,10
+Apis dorsata,Jharkhand,2,1,0.1,True,10
+Apis dorsata,Jharkhand,6,2,0.2,True,10
+Apis dorsata,Jharkhand,7,1,0.1,True,10
+Apis dorsata,Jharkhand,9,1,0.1,True,10
+Apis dorsata,Jharkhand,11,3,0.3,True,10
+Apis dorsata,Karnataka,1,32,0.0570409982174688,True,561
+Apis dorsata,Karnataka,2,43,0.0766488413547237,True,561
+Apis dorsata,Karnataka,3,68,0.12121212121212122,True,561
+Apis dorsata,Karnataka,4,62,0.11051693404634581,True,561
+Apis dorsata,Karnataka,5,57,0.10160427807486631,True,561
+Apis dorsata,Karnataka,6,65,0.11586452762923351,True,561
+Apis dorsata,Karnataka,7,50,0.08912655971479501,True,561
+Apis dorsata,Karnataka,8,43,0.0766488413547237,True,561
+Apis dorsata,Karnataka,9,36,0.06417112299465241,True,561
+Apis dorsata,Karnataka,10,33,0.058823529411764705,True,561
+Apis dorsata,Karnataka,11,36,0.06417112299465241,True,561
+Apis dorsata,Karnataka,12,36,0.06417112299465241,True,561
+Apis dorsata,Kerala,1,11,0.03793103448275862,True,290
+Apis dorsata,Kerala,2,14,0.04827586206896552,True,290
+Apis dorsata,Kerala,3,17,0.05862068965517241,True,290
+Apis dorsata,Kerala,4,38,0.1310344827586207,True,290
+Apis dorsata,Kerala,5,29,0.1,True,290
+Apis dorsata,Kerala,6,29,0.1,True,290
+Apis dorsata,Kerala,7,15,0.05172413793103448,True,290
+Apis dorsata,Kerala,8,34,0.11724137931034483,True,290
+Apis dorsata,Kerala,9,34,0.11724137931034483,True,290
+Apis dorsata,Kerala,10,26,0.0896551724137931,True,290
+Apis dorsata,Kerala,11,19,0.06551724137931035,True,290
+Apis dorsata,Kerala,12,24,0.08275862068965517,True,290
+Apis dorsata,Madhya Pradesh,1,2,0.020202020202020204,True,99
+Apis dorsata,Madhya Pradesh,2,14,0.1414141414141414,True,99
+Apis dorsata,Madhya Pradesh,3,12,0.12121212121212122,True,99
+Apis dorsata,Madhya Pradesh,4,26,0.26262626262626265,True,99
+Apis dorsata,Madhya Pradesh,5,5,0.050505050505050504,True,99
+Apis dorsata,Madhya Pradesh,6,5,0.050505050505050504,True,99
+Apis dorsata,Madhya Pradesh,7,1,0.010101010101010102,True,99
+Apis dorsata,Madhya Pradesh,8,7,0.0707070707070707,True,99
+Apis dorsata,Madhya Pradesh,9,10,0.10101010101010101,True,99
+Apis dorsata,Madhya Pradesh,10,5,0.050505050505050504,True,99
+Apis dorsata,Madhya Pradesh,11,3,0.030303030303030304,True,99
+Apis dorsata,Madhya Pradesh,12,9,0.09090909090909091,True,99
+Apis dorsata,Maharashtra,1,16,0.03305785123966942,True,484
+Apis dorsata,Maharashtra,2,29,0.05991735537190083,True,484
+Apis dorsata,Maharashtra,3,30,0.06198347107438017,True,484
+Apis dorsata,Maharashtra,4,53,0.10950413223140495,True,484
+Apis dorsata,Maharashtra,5,40,0.08264462809917356,True,484
+Apis dorsata,Maharashtra,6,54,0.1115702479338843,True,484
+Apis dorsata,Maharashtra,7,49,0.1012396694214876,True,484
+Apis dorsata,Maharashtra,8,40,0.08264462809917356,True,484
+Apis dorsata,Maharashtra,9,63,0.13016528925619836,True,484
+Apis dorsata,Maharashtra,10,50,0.10330578512396695,True,484
+Apis dorsata,Maharashtra,11,31,0.0640495867768595,True,484
+Apis dorsata,Maharashtra,12,29,0.05991735537190083,True,484
+Apis dorsata,Manipur,1,1,0.5,False,2
+Apis dorsata,Manipur,4,1,0.5,False,2
+Apis dorsata,Meghalaya,3,2,1.0,False,2
+Apis dorsata,Mizoram,4,4,0.8,False,5
+Apis dorsata,Mizoram,5,1,0.2,False,5
+Apis dorsata,NCT of Delhi,1,1,0.007575757575757576,True,132
+Apis dorsata,NCT of Delhi,2,10,0.07575757575757576,True,132
+Apis dorsata,NCT of Delhi,3,12,0.09090909090909091,True,132
+Apis dorsata,NCT of Delhi,4,54,0.4090909090909091,True,132
+Apis dorsata,NCT of Delhi,5,9,0.06818181818181818,True,132
+Apis dorsata,NCT of Delhi,6,2,0.015151515151515152,True,132
+Apis dorsata,NCT of Delhi,7,9,0.06818181818181818,True,132
+Apis dorsata,NCT of Delhi,8,2,0.015151515151515152,True,132
+Apis dorsata,NCT of Delhi,9,24,0.18181818181818182,True,132
+Apis dorsata,NCT of Delhi,10,4,0.030303030303030304,True,132
+Apis dorsata,NCT of Delhi,11,3,0.022727272727272728,True,132
+Apis dorsata,NCT of Delhi,12,2,0.015151515151515152,True,132
+Apis dorsata,Nagaland,3,1,1.0,False,1
+Apis dorsata,Odisha,1,1,0.025,True,40
+Apis dorsata,Odisha,2,1,0.025,True,40
+Apis dorsata,Odisha,4,8,0.2,True,40
+Apis dorsata,Odisha,5,3,0.075,True,40
+Apis dorsata,Odisha,6,3,0.075,True,40
+Apis dorsata,Odisha,7,4,0.1,True,40
+Apis dorsata,Odisha,8,4,0.1,True,40
+Apis dorsata,Odisha,9,3,0.075,True,40
+Apis dorsata,Odisha,10,8,0.2,True,40
+Apis dorsata,Odisha,11,3,0.075,True,40
+Apis dorsata,Odisha,12,2,0.05,True,40
+Apis dorsata,Puducherry,1,3,0.13636363636363635,True,22
+Apis dorsata,Puducherry,3,1,0.045454545454545456,True,22
+Apis dorsata,Puducherry,5,1,0.045454545454545456,True,22
+Apis dorsata,Puducherry,6,2,0.09090909090909091,True,22
+Apis dorsata,Puducherry,7,2,0.09090909090909091,True,22
+Apis dorsata,Puducherry,8,6,0.2727272727272727,True,22
+Apis dorsata,Puducherry,9,2,0.09090909090909091,True,22
+Apis dorsata,Puducherry,10,5,0.22727272727272727,True,22
+Apis dorsata,Punjab,2,1,0.09090909090909091,True,11
+Apis dorsata,Punjab,3,1,0.09090909090909091,True,11
+Apis dorsata,Punjab,4,1,0.09090909090909091,True,11
+Apis dorsata,Punjab,6,1,0.09090909090909091,True,11
+Apis dorsata,Punjab,8,3,0.2727272727272727,True,11
+Apis dorsata,Punjab,10,3,0.2727272727272727,True,11
+Apis dorsata,Punjab,11,1,0.09090909090909091,True,11
+Apis dorsata,Rajasthan,1,12,0.06217616580310881,True,193
+Apis dorsata,Rajasthan,2,27,0.13989637305699482,True,193
+Apis dorsata,Rajasthan,3,36,0.18652849740932642,True,193
+Apis dorsata,Rajasthan,4,23,0.11917098445595854,True,193
+Apis dorsata,Rajasthan,5,22,0.11398963730569948,True,193
+Apis dorsata,Rajasthan,6,9,0.046632124352331605,True,193
+Apis dorsata,Rajasthan,7,9,0.046632124352331605,True,193
+Apis dorsata,Rajasthan,8,9,0.046632124352331605,True,193
+Apis dorsata,Rajasthan,9,3,0.015544041450777202,True,193
+Apis dorsata,Rajasthan,10,8,0.04145077720207254,True,193
+Apis dorsata,Rajasthan,11,22,0.11398963730569948,True,193
+Apis dorsata,Rajasthan,12,13,0.06735751295336788,True,193
+Apis dorsata,Tamil Nadu,1,17,0.04218362282878412,True,403
+Apis dorsata,Tamil Nadu,2,8,0.019851116625310174,True,403
+Apis dorsata,Tamil Nadu,3,24,0.05955334987593052,True,403
+Apis dorsata,Tamil Nadu,4,32,0.0794044665012407,True,403
+Apis dorsata,Tamil Nadu,5,30,0.07444168734491315,True,403
+Apis dorsata,Tamil Nadu,6,48,0.11910669975186104,True,403
+Apis dorsata,Tamil Nadu,7,65,0.16129032258064516,True,403
+Apis dorsata,Tamil Nadu,8,55,0.13647642679900746,True,403
+Apis dorsata,Tamil Nadu,9,50,0.12406947890818859,True,403
+Apis dorsata,Tamil Nadu,10,31,0.07692307692307693,True,403
+Apis dorsata,Tamil Nadu,11,24,0.05955334987593052,True,403
+Apis dorsata,Tamil Nadu,12,19,0.04714640198511166,True,403
+Apis dorsata,Telangana,1,8,0.058394160583941604,True,137
+Apis dorsata,Telangana,2,3,0.021897810218978103,True,137
+Apis dorsata,Telangana,3,3,0.021897810218978103,True,137
+Apis dorsata,Telangana,4,28,0.20437956204379562,True,137
+Apis dorsata,Telangana,5,4,0.029197080291970802,True,137
+Apis dorsata,Telangana,6,14,0.10218978102189781,True,137
+Apis dorsata,Telangana,7,17,0.12408759124087591,True,137
+Apis dorsata,Telangana,8,15,0.10948905109489052,True,137
+Apis dorsata,Telangana,9,26,0.1897810218978102,True,137
+Apis dorsata,Telangana,10,6,0.043795620437956206,True,137
+Apis dorsata,Telangana,11,3,0.021897810218978103,True,137
+Apis dorsata,Telangana,12,10,0.072992700729927,True,137
+Apis dorsata,Tripura,7,1,1.0,False,1
+Apis dorsata,Unknown,1,13,0.16049382716049382,True,81
+Apis dorsata,Unknown,2,10,0.12345679012345678,True,81
+Apis dorsata,Unknown,3,6,0.07407407407407407,True,81
+Apis dorsata,Unknown,4,8,0.09876543209876543,True,81
+Apis dorsata,Unknown,5,7,0.08641975308641975,True,81
+Apis dorsata,Unknown,6,3,0.037037037037037035,True,81
+Apis dorsata,Unknown,7,2,0.024691358024691357,True,81
+Apis dorsata,Unknown,8,6,0.07407407407407407,True,81
+Apis dorsata,Unknown,9,9,0.1111111111111111,True,81
+Apis dorsata,Unknown,10,3,0.037037037037037035,True,81
+Apis dorsata,Unknown,11,6,0.07407407407407407,True,81
+Apis dorsata,Unknown,12,8,0.09876543209876543,True,81
+Apis dorsata,Uttar Pradesh,1,4,0.036036036036036036,True,111
+Apis dorsata,Uttar Pradesh,2,26,0.23423423423423423,True,111
+Apis dorsata,Uttar Pradesh,3,13,0.11711711711711711,True,111
+Apis dorsata,Uttar Pradesh,4,7,0.06306306306306306,True,111
+Apis dorsata,Uttar Pradesh,5,9,0.08108108108108109,True,111
+Apis dorsata,Uttar Pradesh,6,5,0.04504504504504504,True,111
+Apis dorsata,Uttar Pradesh,7,3,0.02702702702702703,True,111
+Apis dorsata,Uttar Pradesh,8,4,0.036036036036036036,True,111
+Apis dorsata,Uttar Pradesh,9,3,0.02702702702702703,True,111
+Apis dorsata,Uttar Pradesh,10,7,0.06306306306306306,True,111
+Apis dorsata,Uttar Pradesh,11,8,0.07207207207207207,True,111
+Apis dorsata,Uttar Pradesh,12,22,0.1981981981981982,True,111
+Apis dorsata,Uttarakhand,2,6,0.08955223880597014,True,67
+Apis dorsata,Uttarakhand,3,3,0.04477611940298507,True,67
+Apis dorsata,Uttarakhand,4,10,0.14925373134328357,True,67
+Apis dorsata,Uttarakhand,5,24,0.3582089552238806,True,67
+Apis dorsata,Uttarakhand,6,1,0.014925373134328358,True,67
+Apis dorsata,Uttarakhand,7,4,0.05970149253731343,True,67
+Apis dorsata,Uttarakhand,8,4,0.05970149253731343,True,67
+Apis dorsata,Uttarakhand,9,3,0.04477611940298507,True,67
+Apis dorsata,Uttarakhand,10,4,0.05970149253731343,True,67
+Apis dorsata,Uttarakhand,11,6,0.08955223880597014,True,67
+Apis dorsata,Uttarakhand,12,2,0.029850746268656716,True,67
+Apis dorsata,West Bengal,1,12,0.11009174311926606,True,109
+Apis dorsata,West Bengal,2,13,0.11926605504587157,True,109
+Apis dorsata,West Bengal,3,7,0.06422018348623854,True,109
+Apis dorsata,West Bengal,4,20,0.1834862385321101,True,109
+Apis dorsata,West Bengal,5,7,0.06422018348623854,True,109
+Apis dorsata,West Bengal,6,10,0.09174311926605505,True,109
+Apis dorsata,West Bengal,7,7,0.06422018348623854,True,109
+Apis dorsata,West Bengal,8,7,0.06422018348623854,True,109
+Apis dorsata,West Bengal,9,6,0.05504587155963303,True,109
+Apis dorsata,West Bengal,10,3,0.027522935779816515,True,109
+Apis dorsata,West Bengal,11,8,0.07339449541284404,True,109
+Apis dorsata,West Bengal,12,9,0.08256880733944955,True,109
+Apis florea,Andaman and Nicobar Islands,8,20,1.0,True,20
+Apis florea,Andhra Pradesh,3,1,0.02564102564102564,True,39
+Apis florea,Andhra Pradesh,4,3,0.07692307692307693,True,39
+Apis florea,Andhra Pradesh,5,1,0.02564102564102564,True,39
+Apis florea,Andhra Pradesh,6,5,0.1282051282051282,True,39
+Apis florea,Andhra Pradesh,7,8,0.20512820512820512,True,39
+Apis florea,Andhra Pradesh,8,10,0.2564102564102564,True,39
+Apis florea,Andhra Pradesh,9,6,0.15384615384615385,True,39
+Apis florea,Andhra Pradesh,10,1,0.02564102564102564,True,39
+Apis florea,Andhra Pradesh,12,4,0.10256410256410256,True,39
+Apis florea,Assam,1,2,0.2857142857142857,False,7
+Apis florea,Assam,3,1,0.14285714285714285,False,7
+Apis florea,Assam,4,3,0.42857142857142855,False,7
+Apis florea,Assam,12,1,0.14285714285714285,False,7
+Apis florea,Bihar,1,1,0.16666666666666666,False,6
+Apis florea,Bihar,10,1,0.16666666666666666,False,6
+Apis florea,Bihar,11,1,0.16666666666666666,False,6
+Apis florea,Bihar,12,3,0.5,False,6
+Apis florea,Chhattisgarh,6,1,0.2,False,5
+Apis florea,Chhattisgarh,8,1,0.2,False,5
+Apis florea,Chhattisgarh,9,1,0.2,False,5
+Apis florea,Chhattisgarh,11,1,0.2,False,5
+Apis florea,Chhattisgarh,12,1,0.2,False,5
+Apis florea,Daman and Diu,7,1,1.0,False,1
+Apis florea,Goa,1,2,0.125,True,16
+Apis florea,Goa,3,3,0.1875,True,16
+Apis florea,Goa,4,3,0.1875,True,16
+Apis florea,Goa,5,1,0.0625,True,16
+Apis florea,Goa,7,2,0.125,True,16
+Apis florea,Goa,9,1,0.0625,True,16
+Apis florea,Goa,10,1,0.0625,True,16
+Apis florea,Goa,12,3,0.1875,True,16
+Apis florea,Gujarat,1,7,0.07954545454545454,True,88
+Apis florea,Gujarat,2,9,0.10227272727272728,True,88
+Apis florea,Gujarat,3,8,0.09090909090909091,True,88
+Apis florea,Gujarat,4,10,0.11363636363636363,True,88
+Apis florea,Gujarat,5,17,0.19318181818181818,True,88
+Apis florea,Gujarat,6,7,0.07954545454545454,True,88
+Apis florea,Gujarat,7,8,0.09090909090909091,True,88
+Apis florea,Gujarat,8,4,0.045454545454545456,True,88
+Apis florea,Gujarat,9,6,0.06818181818181818,True,88
+Apis florea,Gujarat,10,2,0.022727272727272728,True,88
+Apis florea,Gujarat,11,3,0.03409090909090909,True,88
+Apis florea,Gujarat,12,7,0.07954545454545454,True,88
+Apis florea,Haryana,3,1,0.07692307692307693,True,13
+Apis florea,Haryana,4,5,0.38461538461538464,True,13
+Apis florea,Haryana,5,1,0.07692307692307693,True,13
+Apis florea,Haryana,9,3,0.23076923076923078,True,13
+Apis florea,Haryana,10,1,0.07692307692307693,True,13
+Apis florea,Haryana,11,2,0.15384615384615385,True,13
+Apis florea,Jharkhand,6,2,0.6666666666666666,False,3
+Apis florea,Jharkhand,11,1,0.3333333333333333,False,3
+Apis florea,Karnataka,1,30,0.09771986970684039,True,307
+Apis florea,Karnataka,2,22,0.07166123778501629,True,307
+Apis florea,Karnataka,3,24,0.0781758957654723,True,307
+Apis florea,Karnataka,4,28,0.09120521172638436,True,307
+Apis florea,Karnataka,5,26,0.08469055374592833,True,307
+Apis florea,Karnataka,6,39,0.1270358306188925,True,307
+Apis florea,Karnataka,7,23,0.0749185667752443,True,307
+Apis florea,Karnataka,8,41,0.13355048859934854,True,307
+Apis florea,Karnataka,9,30,0.09771986970684039,True,307
+Apis florea,Karnataka,10,15,0.048859934853420196,True,307
+Apis florea,Karnataka,11,10,0.03257328990228013,True,307
+Apis florea,Karnataka,12,19,0.06188925081433225,True,307
+Apis florea,Kerala,1,2,0.015151515151515152,True,132
+Apis florea,Kerala,2,9,0.06818181818181818,True,132
+Apis florea,Kerala,3,7,0.05303030303030303,True,132
+Apis florea,Kerala,4,36,0.2727272727272727,True,132
+Apis florea,Kerala,5,34,0.25757575757575757,True,132
+Apis florea,Kerala,6,13,0.09848484848484848,True,132
+Apis florea,Kerala,7,6,0.045454545454545456,True,132
+Apis florea,Kerala,8,9,0.06818181818181818,True,132
+Apis florea,Kerala,9,7,0.05303030303030303,True,132
+Apis florea,Kerala,10,3,0.022727272727272728,True,132
+Apis florea,Kerala,11,2,0.015151515151515152,True,132
+Apis florea,Kerala,12,4,0.030303030303030304,True,132
+Apis florea,Madhya Pradesh,1,2,0.13333333333333333,True,15
+Apis florea,Madhya Pradesh,2,2,0.13333333333333333,True,15
+Apis florea,Madhya Pradesh,3,2,0.13333333333333333,True,15
+Apis florea,Madhya Pradesh,5,3,0.2,True,15
+Apis florea,Madhya Pradesh,6,2,0.13333333333333333,True,15
+Apis florea,Madhya Pradesh,8,1,0.06666666666666667,True,15
+Apis florea,Madhya Pradesh,11,2,0.13333333333333333,True,15
+Apis florea,Madhya Pradesh,12,1,0.06666666666666667,True,15
+Apis florea,Maharashtra,1,34,0.06924643584521385,True,491
+Apis florea,Maharashtra,2,30,0.06109979633401222,True,491
+Apis florea,Maharashtra,3,41,0.0835030549898167,True,491
+Apis florea,Maharashtra,4,48,0.09775967413441955,True,491
+Apis florea,Maharashtra,5,62,0.12627291242362526,True,491
+Apis florea,Maharashtra,6,43,0.08757637474541752,True,491
+Apis florea,Maharashtra,7,49,0.09979633401221996,True,491
+Apis florea,Maharashtra,8,40,0.0814663951120163,True,491
+Apis florea,Maharashtra,9,31,0.06313645621181263,True,491
+Apis florea,Maharashtra,10,37,0.07535641547861507,True,491
+Apis florea,Maharashtra,11,33,0.06720977596741344,True,491
+Apis florea,Maharashtra,12,43,0.08757637474541752,True,491
+Apis florea,Maharashtra,11,1,1.0,False,1
+Apis florea,Mizoram,11,1,1.0,False,1
+Apis florea,NCT of Delhi,1,3,0.04054054054054054,True,74
+Apis florea,NCT of Delhi,2,4,0.05405405405405406,True,74
+Apis florea,NCT of Delhi,3,7,0.0945945945945946,True,74
+Apis florea,NCT of Delhi,4,8,0.10810810810810811,True,74
+Apis florea,NCT of Delhi,5,8,0.10810810810810811,True,74
+Apis florea,NCT of Delhi,6,1,0.013513513513513514,True,74
+Apis florea,NCT of Delhi,7,12,0.16216216216216217,True,74
+Apis florea,NCT of Delhi,8,2,0.02702702702702703,True,74
+Apis florea,NCT of Delhi,9,14,0.1891891891891892,True,74
+Apis florea,NCT of Delhi,10,5,0.06756756756756757,True,74
+Apis florea,NCT of Delhi,11,5,0.06756756756756757,True,74
+Apis florea,NCT of Delhi,12,5,0.06756756756756757,True,74
+Apis florea,Puducherry,4,1,0.16666666666666666,False,6
+Apis florea,Puducherry,5,1,0.16666666666666666,False,6
+Apis florea,Puducherry,9,3,0.5,False,6
+Apis florea,Puducherry,11,1,0.16666666666666666,False,6
+Apis florea,Punjab,3,1,0.3333333333333333,False,3
+Apis florea,Punjab,7,1,0.3333333333333333,False,3
+Apis florea,Punjab,12,1,0.3333333333333333,False,3
+Apis florea,Rajasthan,1,15,0.23076923076923078,True,65
+Apis florea,Rajasthan,2,7,0.1076923076923077,True,65
+Apis florea,Rajasthan,3,10,0.15384615384615385,True,65
+Apis florea,Rajasthan,4,9,0.13846153846153847,True,65
+Apis florea,Rajasthan,5,6,0.09230769230769231,True,65
+Apis florea,Rajasthan,6,4,0.06153846153846154,True,65
+Apis florea,Rajasthan,7,2,0.03076923076923077,True,65
+Apis florea,Rajasthan,8,4,0.06153846153846154,True,65
+Apis florea,Rajasthan,10,1,0.015384615384615385,True,65
+Apis florea,Rajasthan,11,4,0.06153846153846154,True,65
+Apis florea,Rajasthan,12,3,0.046153846153846156,True,65
+Apis florea,Tamil Nadu,1,8,0.03305785123966942,True,242
+Apis florea,Tamil Nadu,2,10,0.04132231404958678,True,242
+Apis florea,Tamil Nadu,3,12,0.049586776859504134,True,242
+Apis florea,Tamil Nadu,4,27,0.1115702479338843,True,242
+Apis florea,Tamil Nadu,5,21,0.08677685950413223,True,242
+Apis florea,Tamil Nadu,6,22,0.09090909090909091,True,242
+Apis florea,Tamil Nadu,7,35,0.1446280991735537,True,242
+Apis florea,Tamil Nadu,8,62,0.256198347107438,True,242
+Apis florea,Tamil Nadu,9,14,0.05785123966942149,True,242
+Apis florea,Tamil Nadu,10,20,0.08264462809917356,True,242
+Apis florea,Tamil Nadu,11,7,0.028925619834710745,True,242
+Apis florea,Tamil Nadu,12,4,0.01652892561983471,True,242
+Apis florea,Telangana,1,6,0.06896551724137931,True,87
+Apis florea,Telangana,3,9,0.10344827586206896,True,87
+Apis florea,Telangana,4,12,0.13793103448275862,True,87
+Apis florea,Telangana,5,3,0.034482758620689655,True,87
+Apis florea,Telangana,6,14,0.16091954022988506,True,87
+Apis florea,Telangana,7,10,0.11494252873563218,True,87
+Apis florea,Telangana,8,12,0.13793103448275862,True,87
+Apis florea,Telangana,9,11,0.12643678160919541,True,87
+Apis florea,Telangana,10,9,0.10344827586206896,True,87
+Apis florea,Telangana,11,1,0.011494252873563218,True,87
+Apis florea,Unknown,1,1,0.02857142857142857,True,35
+Apis florea,Unknown,2,1,0.02857142857142857,True,35
+Apis florea,Unknown,3,2,0.05714285714285714,True,35
+Apis florea,Unknown,4,5,0.14285714285714285,True,35
+Apis florea,Unknown,5,6,0.17142857142857143,True,35
+Apis florea,Unknown,6,1,0.02857142857142857,True,35
+Apis florea,Unknown,7,6,0.17142857142857143,True,35
+Apis florea,Unknown,8,2,0.05714285714285714,True,35
+Apis florea,Unknown,9,2,0.05714285714285714,True,35
+Apis florea,Unknown,10,4,0.11428571428571428,True,35
+Apis florea,Unknown,11,5,0.14285714285714285,True,35
+Apis florea,Uttar Pradesh,1,2,0.125,True,16
+Apis florea,Uttar Pradesh,2,1,0.0625,True,16
+Apis florea,Uttar Pradesh,3,2,0.125,True,16
+Apis florea,Uttar Pradesh,4,1,0.0625,True,16
+Apis florea,Uttar Pradesh,8,2,0.125,True,16
+Apis florea,Uttar Pradesh,10,1,0.0625,True,16
+Apis florea,Uttar Pradesh,11,5,0.3125,True,16
+Apis florea,Uttar Pradesh,12,2,0.125,True,16
+Apis florea,Uttarakhand,3,1,0.2,False,5
+Apis florea,Uttarakhand,5,1,0.2,False,5
+Apis florea,Uttarakhand,6,1,0.2,False,5
+Apis florea,Uttarakhand,8,1,0.2,False,5
+Apis florea,Uttarakhand,12,1,0.2,False,5
+Apis florea,West Bengal,1,7,0.23333333333333334,True,30
+Apis florea,West Bengal,2,2,0.06666666666666667,True,30
+Apis florea,West Bengal,3,2,0.06666666666666667,True,30
+Apis florea,West Bengal,4,5,0.16666666666666666,True,30
+Apis florea,West Bengal,5,5,0.16666666666666666,True,30
+Apis florea,West Bengal,8,1,0.03333333333333333,True,30
+Apis florea,West Bengal,10,2,0.06666666666666667,True,30
+Apis florea,West Bengal,11,2,0.06666666666666667,True,30
+Apis florea,West Bengal,12,4,0.13333333333333333,True,30
+Apis karinjodian,Karnataka,6,2,1.0,False,2
+Apis laboriosa,Arunachal Pradesh,1,1,0.038461538461538464,True,26
+Apis laboriosa,Arunachal Pradesh,2,2,0.07692307692307693,True,26
+Apis laboriosa,Arunachal Pradesh,3,4,0.15384615384615385,True,26
+Apis laboriosa,Arunachal Pradesh,4,6,0.23076923076923078,True,26
+Apis laboriosa,Arunachal Pradesh,5,8,0.3076923076923077,True,26
+Apis laboriosa,Arunachal Pradesh,6,1,0.038461538461538464,True,26
+Apis laboriosa,Arunachal Pradesh,9,2,0.07692307692307693,True,26
+Apis laboriosa,Arunachal Pradesh,10,1,0.038461538461538464,True,26
+Apis laboriosa,Arunachal Pradesh,11,1,0.038461538461538464,True,26
+Apis laboriosa,Manipur,4,2,0.5,False,4
+Apis laboriosa,Manipur,8,2,0.5,False,4
+Apis laboriosa,Nagaland,10,3,0.5,False,6
+Apis laboriosa,Nagaland,11,2,0.3333333333333333,False,6
+Apis laboriosa,Nagaland,12,1,0.16666666666666666,False,6
+Apis laboriosa,Sikkim,3,2,0.6666666666666666,False,3
+Apis laboriosa,Sikkim,12,1,0.3333333333333333,False,3
+Apis laboriosa,Uttarakhand,2,1,0.02857142857142857,True,35
+Apis laboriosa,Uttarakhand,3,1,0.02857142857142857,True,35
+Apis laboriosa,Uttarakhand,4,2,0.05714285714285714,True,35
+Apis laboriosa,Uttarakhand,5,5,0.14285714285714285,True,35
+Apis laboriosa,Uttarakhand,6,3,0.08571428571428572,True,35
+Apis laboriosa,Uttarakhand,7,1,0.02857142857142857,True,35
+Apis laboriosa,Uttarakhand,8,14,0.4,True,35
+Apis laboriosa,Uttarakhand,9,3,0.08571428571428572,True,35
+Apis laboriosa,Uttarakhand,10,2,0.05714285714285714,True,35
+Apis laboriosa,Uttarakhand,11,2,0.05714285714285714,True,35
+Apis laboriosa,Uttarakhand,12,1,0.02857142857142857,True,35
+Apis laboriosa,West Bengal,4,1,0.25,False,4
+Apis laboriosa,West Bengal,5,1,0.25,False,4
+Apis laboriosa,West Bengal,6,1,0.25,False,4
+Apis laboriosa,West Bengal,10,1,0.25,False,4
+Apis mellifera,Andhra Pradesh,4,1,1.0,False,1
+Apis mellifera,Bihar,1,1,0.2,False,5
+Apis mellifera,Bihar,2,1,0.2,False,5
+Apis mellifera,Bihar,4,1,0.2,False,5
+Apis mellifera,Bihar,12,2,0.4,False,5
+Apis mellifera,Gujarat,4,1,1.0,False,1
+Apis mellifera,Haryana,1,1,1.0,False,1
+Apis mellifera,Himachal Pradesh,3,3,0.3,True,10
+Apis mellifera,Himachal Pradesh,4,2,0.2,True,10
+Apis mellifera,Himachal Pradesh,5,3,0.3,True,10
+Apis mellifera,Himachal Pradesh,6,1,0.1,True,10
+Apis mellifera,Himachal Pradesh,7,1,0.1,True,10
+Apis mellifera,Jammu and Kashmir,4,2,0.16666666666666666,True,12
+Apis mellifera,Jammu and Kashmir,5,4,0.3333333333333333,True,12
+Apis mellifera,Jammu and Kashmir,6,1,0.08333333333333333,True,12
+Apis mellifera,Jammu and Kashmir,7,3,0.25,True,12
+Apis mellifera,Jammu and Kashmir,8,1,0.08333333333333333,True,12
+Apis mellifera,Jammu and Kashmir,12,1,0.08333333333333333,True,12
+Apis mellifera,Karnataka,10,1,0.5,False,2
+Apis mellifera,Karnataka,11,1,0.5,False,2
+Apis mellifera,Maharashtra,12,1,1.0,False,1
+Apis mellifera,NCT of Delhi,3,1,0.1,True,10
+Apis mellifera,NCT of Delhi,4,3,0.3,True,10
+Apis mellifera,NCT of Delhi,6,1,0.1,True,10
+Apis mellifera,NCT of Delhi,7,2,0.2,True,10
+Apis mellifera,NCT of Delhi,9,2,0.2,True,10
+Apis mellifera,NCT of Delhi,12,1,0.1,True,10
+Apis mellifera,Nagaland,6,1,1.0,False,1
+Apis mellifera,Rajasthan,3,1,0.3333333333333333,False,3
+Apis mellifera,Rajasthan,4,1,0.3333333333333333,False,3
+Apis mellifera,Rajasthan,11,1,0.3333333333333333,False,3
+Apis mellifera,Tamil Nadu,6,1,0.5,False,2
+Apis mellifera,Tamil Nadu,9,1,0.5,False,2
+Apis mellifera,Unknown,2,2,0.09523809523809523,True,21
+Apis mellifera,Unknown,4,3,0.14285714285714285,True,21
+Apis mellifera,Unknown,5,2,0.09523809523809523,True,21
+Apis mellifera,Unknown,6,1,0.047619047619047616,True,21
+Apis mellifera,Unknown,11,1,0.047619047619047616,True,21
+Apis mellifera,Unknown,12,12,0.5714285714285714,True,21
+Apis mellifera,Uttar Pradesh,2,1,0.16666666666666666,False,6
+Apis mellifera,Uttar Pradesh,5,3,0.5,False,6
+Apis mellifera,Uttar Pradesh,9,1,0.16666666666666666,False,6
+Apis mellifera,Uttar Pradesh,11,1,0.16666666666666666,False,6
+Apis mellifera,Uttarakhand,2,1,0.06666666666666667,True,15
+Apis mellifera,Uttarakhand,4,2,0.13333333333333333,True,15
+Apis mellifera,Uttarakhand,5,4,0.26666666666666666,True,15
+Apis mellifera,Uttarakhand,8,1,0.06666666666666667,True,15
+Apis mellifera,Uttarakhand,11,4,0.26666666666666666,True,15
+Apis mellifera,Uttarakhand,12,3,0.2,True,15
+Apis mellifera,West Bengal,1,1,0.034482758620689655,True,29
+Apis mellifera,West Bengal,2,2,0.06896551724137931,True,29
+Apis mellifera,West Bengal,3,1,0.034482758620689655,True,29
+Apis mellifera,West Bengal,4,10,0.3448275862068966,True,29
+Apis mellifera,West Bengal,5,1,0.034482758620689655,True,29
+Apis mellifera,West Bengal,6,2,0.06896551724137931,True,29
+Apis mellifera,West Bengal,7,1,0.034482758620689655,True,29
+Apis mellifera,West Bengal,10,1,0.034482758620689655,True,29
+Apis mellifera,West Bengal,11,2,0.06896551724137931,True,29
+Apis mellifera,West Bengal,12,8,0.27586206896551724,True,29

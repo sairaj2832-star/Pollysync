@@ -19,7 +19,7 @@ venv/
 *.sqlite3
 ml/models/*.pkl
 ml/models/*.joblib
-ml/data/*.csv
+
 
 # Environment and secrets
 .env

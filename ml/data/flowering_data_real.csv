@@ -1,0 +1,7 @@
+crop,region,start_doy,end_doy,temp_7d_mean,humidity,rainfall_7d,wind_speed,ndvi,month,day_of_year,bee_richness
+sunflower,Karnataka,217,224,25.33,82.29,57.34,14.18,0.5,8,217,0
+sunflower,Maharashtra,224,231,24.63,88.65,50.26,8.46,0.5,8,224,0
+sunflower,Andhra Pradesh,209,216,28.74,74.39,22.55,17.35,0.5,7,209,0
+mustard,Rajasthan,330,337,18.86,57.48,0.0,5.5,0.5,11,330,0
+mustard,Madhya Pradesh,332,339,18.87,76.31,0.0,5.6,0.5,11,332,0
+mustard,Uttar Pradesh,328,335,18.54,73.82,0.0,4.95,0.5,11,328,4
