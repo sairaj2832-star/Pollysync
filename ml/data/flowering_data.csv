@@ -1,0 +1,401 @@
+crop,region,start_doy,end_doy,temp_7d_mean,humidity,rainfall_7d,ndvi,month,day_of_year
+sunflower,Andhra Pradesh,210,217,28.4,73.0,18.2,0.56,6,167
+sunflower,Karnataka,196,203,27.9,55.9,18.6,0.68,6,153
+sunflower,Karnataka,215,222,26.3,60.8,2.0,0.69,6,168
+sunflower,Maharashtra,188,195,25.7,52.3,1.6,0.53,5,139
+sunflower,Karnataka,208,215,25.4,65.4,4.0,0.66,6,158
+sunflower,Karnataka,203,210,26.9,57.8,2.7,0.67,6,157
+sunflower,Andhra Pradesh,201,208,29.8,48.4,4.0,0.68,6,161
+sunflower,Maharashtra,196,203,29.1,55.5,16.3,0.59,6,154
+sunflower,Maharashtra,193,200,24.6,53.3,9.3,0.75,5,142
+sunflower,Maharashtra,172,179,29.6,65.1,7.1,0.56,5,131
+sunflower,Karnataka,173,180,27.1,51.0,9.0,0.68,5,127
+sunflower,Karnataka,182,189,24.0,50.7,6.9,0.43,5,129
+sunflower,Maharashtra,193,200,25.9,43.5,8.3,0.77,5,144
+sunflower,Karnataka,181,188,28.3,43.1,11.5,0.58,5,138
+sunflower,Maharashtra,213,220,29.8,72.9,3.9,0.31,6,173
+sunflower,Karnataka,182,189,28.7,55.3,1.9,0.65,5,140
+sunflower,Maharashtra,171,178,26.5,49.1,1.9,0.57,5,124
+sunflower,Karnataka,206,213,28.3,55.1,14.1,0.62,6,164
+sunflower,Andhra Pradesh,209,216,28.8,80.8,11.1,0.61,6,166
+sunflower,Karnataka,172,179,25.8,74.9,48.3,0.63,5,124
+sunflower,Andhra Pradesh,200,207,26.6,57.7,20.6,0.66,6,153
+sunflower,Maharashtra,215,222,27.6,73.8,24.1,0.64,6,171
+sunflower,Andhra Pradesh,172,179,29.2,70.2,13.2,0.5,5,130
+sunflower,Maharashtra,215,222,29.5,53.8,13.7,0.71,6,174
+sunflower,Karnataka,219,226,24.8,44.6,15.1,0.68,6,169
+sunflower,Maharashtra,225,232,25.8,55.2,4.4,0.72,6,176
+sunflower,Karnataka,196,203,29.2,58.9,0.4,0.66,6,155
+sunflower,Karnataka,186,193,27.6,39.4,6.9,0.62,5,141
+sunflower,Andhra Pradesh,190,197,27.3,65.5,0.4,0.52,5,145
+sunflower,Maharashtra,195,202,24.9,66.0,8.9,0.61,5,145
+sunflower,Andhra Pradesh,175,182,28.2,56.3,0.7,0.72,5,132
+sunflower,Andhra Pradesh,183,190,29.8,67.9,1.9,0.75,5,142
+sunflower,Maharashtra,169,176,29.8,67.1,13.9,0.77,5,129
+sunflower,Karnataka,223,230,27.3,51.6,17.8,0.71,6,179
+sunflower,Karnataka,177,184,29.2,48.1,6.9,0.61,5,136
+sunflower,Maharashtra,182,189,24.5,60.8,21.3,0.75,5,130
+sunflower,Andhra Pradesh,189,196,26.8,53.7,14.3,0.46,5,143
+sunflower,Karnataka,212,219,25.9,69.8,54.5,0.68,6,163
+sunflower,Andhra Pradesh,191,198,25.4,53.8,7.2,0.55,5,141
+sunflower,Karnataka,199,206,24.4,59.6,4.4,0.46,5,148
+sunflower,Andhra Pradesh,180,187,24.8,58.8,6.4,0.49,5,129
+sunflower,Andhra Pradesh,219,226,26.6,53.5,44.4,0.57,6,172
+sunflower,Maharashtra,203,210,27.7,66.6,1.0,0.76,6,159
+sunflower,Andhra Pradesh,185,192,29.5,40.5,21.0,0.65,5,144
+sunflower,Maharashtra,229,236,25.3,86.7,20.2,0.66,6,178
+sunflower,Maharashtra,190,197,25.8,41.6,4.3,0.48,5,141
+sunflower,Maharashtra,190,197,26.4,76.9,3.7,0.62,5,143
+sunflower,Karnataka,210,217,26.0,69.8,0.5,0.86,6,163
+sunflower,Maharashtra,207,214,26.1,64.8,2.8,0.74,6,159
+sunflower,Maharashtra,181,188,25.2,45.9,8.1,0.52,5,131
+sunflower,Karnataka,193,200,25.2,56.6,0.1,0.65,5,143
+sunflower,Karnataka,182,189,29.8,71.9,9.1,0.65,5,142
+sunflower,Andhra Pradesh,205,212,29.9,61.9,24.0,0.76,6,165
+sunflower,Maharashtra,197,204,29.6,58.1,1.9,0.73,6,156
+sunflower,Maharashtra,188,195,24.1,67.2,23.5,0.4,5,135
+sunflower,Andhra Pradesh,195,202,24.5,48.8,7.2,0.66,5,144
+sunflower,Andhra Pradesh,172,179,29.7,67.1,2.1,0.65,5,132
+sunflower,Maharashtra,165,172,28.5,76.0,2.7,0.74,5,122
+sunflower,Maharashtra,219,226,28.9,55.7,0.7,0.48,6,177
+sunflower,Andhra Pradesh,196,203,29.4,72.0,7.1,0.74,6,155
+sunflower,Maharashtra,219,226,24.4,57.6,4.1,0.77,6,167
+sunflower,Maharashtra,187,194,26.8,67.9,2.1,0.86,5,141
+sunflower,Maharashtra,213,220,26.3,60.8,9.2,0.66,6,165
+sunflower,Maharashtra,212,219,29.6,66.9,2.0,0.7,6,171
+sunflower,Maharashtra,208,215,28.6,66.0,2.8,0.67,6,166
+sunflower,Karnataka,173,180,27.5,65.3,6.8,0.74,5,128
+sunflower,Andhra Pradesh,177,184,24.2,54.2,0.7,0.47,5,125
+sunflower,Karnataka,229,236,25.1,69.4,2.4,0.65,6,179
+sunflower,Andhra Pradesh,191,198,24.6,53.0,16.6,0.69,5,141
+sunflower,Andhra Pradesh,211,218,26.5,61.7,3.6,0.71,6,165
+sunflower,Maharashtra,215,222,24.5,55.1,1.9,0.62,6,163
+sunflower,Maharashtra,219,226,24.1,41.7,2.3,0.67,6,166
+sunflower,Karnataka,213,220,25.9,57.5,1.6,0.54,6,165
+sunflower,Andhra Pradesh,201,208,28.8,72.0,3.3,0.64,6,159
+sunflower,Andhra Pradesh,169,176,27.6,52.0,3.5,0.67,5,125
+sunflower,Maharashtra,169,176,29.1,60.7,5.7,0.73,5,129
+sunflower,Maharashtra,183,190,25.5,52.5,5.3,0.64,5,135
+sunflower,Karnataka,215,222,29.5,39.6,4.6,0.71,6,174
+sunflower,Karnataka,208,215,30.0,54.1,12.0,0.56,6,168
+sunflower,Maharashtra,182,189,24.2,59.3,22.3,0.72,5,130
+sunflower,Maharashtra,222,229,24.7,55.4,6.6,0.55,6,171
+sunflower,Karnataka,169,176,28.4,47.8,8.7,0.68,5,126
+sunflower,Karnataka,208,215,28.8,44.3,8.1,0.54,6,166
+sunflower,Andhra Pradesh,194,201,24.7,58.9,7.0,0.68,5,143
+sunflower,Karnataka,168,175,28.0,53.1,14.2,0.7,5,124
+sunflower,Andhra Pradesh,215,222,28.3,78.2,0.4,0.66,6,172
+sunflower,Maharashtra,172,179,28.0,61.6,0.6,0.68,5,128
+sunflower,Maharashtra,230,237,24.1,46.4,5.3,0.8,6,177
+sunflower,Andhra Pradesh,199,206,28.5,61.4,0.8,0.53,6,156
+sunflower,Andhra Pradesh,202,209,29.6,55.8,6.8,0.59,6,162
+sunflower,Maharashtra,198,205,29.5,45.1,0.4,0.61,6,158
+sunflower,Karnataka,185,192,25.2,65.9,3.6,0.59,5,136
+sunflower,Andhra Pradesh,199,206,29.1,68.4,3.6,0.48,6,157
+sunflower,Andhra Pradesh,184,191,29.6,59.3,14.8,0.56,5,143
+sunflower,Karnataka,209,216,25.1,55.4,3.6,0.69,6,159
+sunflower,Karnataka,196,203,25.8,63.3,17.7,0.74,5,148
+sunflower,Maharashtra,198,205,28.3,65.1,19.8,0.58,6,155
+sunflower,Karnataka,224,231,26.1,52.0,1.6,0.78,6,176
+sunflower,Karnataka,211,218,24.2,37.0,42.9,0.46,6,158
+sunflower,Maharashtra,186,193,24.8,54.3,4.9,0.6,5,136
+sunflower,Karnataka,216,223,28.9,85.3,2.3,0.61,6,174
+sunflower,Karnataka,214,221,24.1,73.1,5.3,0.53,6,161
+sunflower,Andhra Pradesh,182,189,27.8,60.9,7.4,0.75,5,138
+sunflower,Maharashtra,204,211,25.4,64.8,9.9,0.63,6,154
+sunflower,Karnataka,213,220,29.5,54.2,1.6,0.68,6,172
+sunflower,Andhra Pradesh,173,180,26.5,62.2,12.7,0.51,5,126
+sunflower,Maharashtra,174,181,28.7,48.0,14.0,0.82,5,132
+sunflower,Karnataka,215,222,26.9,45.2,2.3,0.87,6,169
+sunflower,Maharashtra,170,177,29.7,69.1,0.1,0.74,5,129
+sunflower,Maharashtra,182,189,24.8,37.3,6.1,0.78,5,130
+sunflower,Andhra Pradesh,206,213,28.4,51.2,7.2,0.67,6,163
+sunflower,Karnataka,179,186,25.9,58.7,4.5,0.65,5,131
+sunflower,Andhra Pradesh,186,193,27.4,54.8,4.0,0.67,5,142
+sunflower,Andhra Pradesh,189,196,26.9,62.9,1.9,0.61,5,143
+sunflower,Andhra Pradesh,201,208,26.5,61.8,5.4,0.65,6,155
+sunflower,Andhra Pradesh,179,186,28.5,67.6,2.2,0.69,5,136
+sunflower,Andhra Pradesh,201,208,26.7,58.0,8.9,0.67,6,155
+sunflower,Maharashtra,204,211,29.0,39.0,1.0,0.69,6,162
+sunflower,Andhra Pradesh,215,222,26.9,73.2,5.8,0.66,6,169
+sunflower,Andhra Pradesh,213,220,28.8,41.7,2.6,0.69,6,171
+sunflower,Maharashtra,223,230,27.0,75.9,1.7,0.58,6,177
+sunflower,Karnataka,200,207,28.6,63.2,8.5,0.6,6,157
+sunflower,Karnataka,210,217,27.4,64.2,16.3,0.75,6,165
+sunflower,Andhra Pradesh,219,226,24.6,58.9,6.1,0.76,6,168
+sunflower,Maharashtra,174,181,27.9,60.7,14.4,0.59,5,130
+sunflower,Andhra Pradesh,176,183,26.5,66.6,8.9,0.58,5,129
+sunflower,Andhra Pradesh,215,222,28.4,61.1,5.4,0.94,6,172
+sunflower,Maharashtra,181,188,28.0,71.0,12.8,0.6,5,138
+sunflower,Maharashtra,181,188,28.3,42.7,3.5,0.49,5,138
+sunflower,Andhra Pradesh,183,190,29.1,67.5,1.0,0.68,5,141
+sunflower,Andhra Pradesh,188,195,25.1,65.7,18.3,0.63,5,137
+sunflower,Maharashtra,204,211,26.0,54.2,2.8,0.73,6,157
+sunflower,Andhra Pradesh,165,172,28.1,58.8,19.8,0.58,5,122
+sunflower,Maharashtra,187,194,24.3,46.7,1.6,0.63,5,136
+sunflower,Karnataka,178,185,27.7,55.3,14.9,0.49,5,134
+sunflower,Andhra Pradesh,213,220,28.7,47.1,8.8,0.77,6,171
+sunflower,Andhra Pradesh,165,172,28.6,67.8,3.9,0.81,5,122
+sunflower,Maharashtra,217,224,27.9,59.6,0.7,0.66,6,173
+sunflower,Maharashtra,181,188,26.7,51.4,5.6,0.77,5,134
+sunflower,Karnataka,206,213,28.5,56.9,4.5,0.64,6,164
+sunflower,Karnataka,171,178,26.6,50.4,1.2,0.66,5,125
+sunflower,Andhra Pradesh,180,187,25.2,55.4,19.1,0.64,5,130
+sunflower,Maharashtra,217,224,27.4,56.3,3.6,0.67,6,173
+sunflower,Andhra Pradesh,185,192,26.1,55.5,9.0,0.81,5,137
+sunflower,Andhra Pradesh,176,183,28.4,49.3,4.1,0.59,5,133
+sunflower,Andhra Pradesh,213,220,29.2,61.1,1.6,0.57,6,171
+sunflower,Maharashtra,189,196,24.3,48.4,9.5,0.71,5,136
+sunflower,Maharashtra,205,212,26.4,58.8,21.5,0.72,6,159
+sunflower,Maharashtra,197,204,25.5,57.7,5.2,0.74,5,148
+sunflower,Andhra Pradesh,217,224,27.6,49.0,8.4,0.77,6,172
+sunflower,Andhra Pradesh,183,190,28.9,50.1,5.9,0.56,5,141
+sunflower,Andhra Pradesh,207,214,26.2,47.0,1.0,0.49,6,160
+sunflower,Andhra Pradesh,215,222,28.3,47.0,8.9,0.7,6,171
+sunflower,Maharashtra,187,194,26.0,58.8,16.2,0.69,5,139
+sunflower,Maharashtra,172,179,29.9,66.0,6.0,0.63,5,131
+sunflower,Andhra Pradesh,216,223,27.5,52.0,6.9,0.54,6,171
+sunflower,Andhra Pradesh,217,224,25.1,45.6,14.3,0.7,6,168
+sunflower,Andhra Pradesh,215,222,24.3,77.0,1.1,0.69,6,162
+sunflower,Karnataka,168,175,27.6,51.0,7.6,0.58,5,124
+sunflower,Karnataka,225,232,25.5,69.1,9.0,0.49,6,176
+sunflower,Maharashtra,202,209,28.2,61.5,3.8,0.45,6,159
+sunflower,Maharashtra,187,194,27.3,52.6,11.7,0.54,5,143
+sunflower,Maharashtra,204,211,28.6,67.6,4.3,0.71,6,161
+sunflower,Karnataka,186,193,29.5,57.4,41.0,0.83,5,145
+sunflower,Maharashtra,214,221,28.8,52.1,2.2,0.65,6,172
+sunflower,Karnataka,187,194,26.6,71.1,10.1,0.85,5,141
+sunflower,Andhra Pradesh,186,193,24.9,51.1,15.0,0.53,5,134
+sunflower,Andhra Pradesh,176,183,25.8,61.3,1.1,0.6,5,128
+sunflower,Karnataka,191,198,26.9,69.1,35.8,0.61,5,144
+sunflower,Maharashtra,170,177,27.9,64.4,17.0,0.5,5,127
+sunflower,Andhra Pradesh,226,233,25.0,77.4,9.4,0.59,6,176
+sunflower,Karnataka,198,205,28.0,57.0,9.7,0.63,6,154
+sunflower,Karnataka,170,177,28.0,59.5,27.7,0.78,5,127
+sunflower,Andhra Pradesh,221,228,26.7,54.4,15.8,0.72,6,175
+sunflower,Karnataka,210,217,26.5,49.6,8.0,0.62,6,163
+sunflower,Maharashtra,205,212,27.4,62.6,1.9,0.68,6,160
+sunflower,Maharashtra,200,207,24.2,77.1,1.2,0.45,5,147
+sunflower,Andhra Pradesh,187,194,29.8,49.9,11.4,0.7,5,146
+sunflower,Maharashtra,206,213,25.7,56.6,4.6,0.65,6,157
+sunflower,Andhra Pradesh,171,178,29.0,51.6,7.8,0.6,5,129
+sunflower,Karnataka,182,189,29.2,36.1,5.2,0.66,5,141
+sunflower,Maharashtra,178,185,26.8,41.5,0.7,0.75,5,131
+sunflower,Andhra Pradesh,201,208,24.2,58.7,9.9,0.54,5,147
+sunflower,Karnataka,224,231,27.1,57.1,27.5,0.66,6,179
+sunflower,Maharashtra,191,198,25.6,68.1,10.9,0.8,5,142
+sunflower,Andhra Pradesh,202,209,30.0,64.5,9.6,0.6,6,162
+sunflower,Karnataka,211,218,28.3,59.4,0.6,0.41,6,168
+sunflower,Maharashtra,198,205,29.8,52.8,7.4,0.78,6,157
+sunflower,Karnataka,205,212,28.8,58.4,14.5,0.44,6,163
+sunflower,Maharashtra,167,174,29.4,69.1,1.6,0.64,5,126
+sunflower,Maharashtra,203,210,26.5,51.4,1.3,0.59,6,156
+sunflower,Karnataka,216,223,27.5,55.4,5.3,0.58,6,171
+sunflower,Maharashtra,192,199,24.8,68.6,17.1,0.6,5,141
+sunflower,Andhra Pradesh,217,224,29.1,90.1,7.2,0.78,6,176
+sunflower,Karnataka,177,184,24.1,58.9,5.2,0.65,5,125
+sunflower,Maharashtra,202,209,27.7,67.6,11.0,0.54,6,158
+sunflower,Karnataka,180,187,27.2,49.0,5.3,0.56,5,135
+sunflower,Maharashtra,173,180,27.0,58.1,23.5,0.82,5,128
+sunflower,Karnataka,210,217,28.5,58.1,14.5,0.69,6,167
+sunflower,Karnataka,178,185,27.3,66.3,20.4,0.74,5,133
+mustard,Uttar Pradesh,313,320,18.7,59.5,23.1,0.45,9,266
+mustard,Uttar Pradesh,305,312,17.4,74.9,23.4,0.52,9,258
+mustard,Madhya Pradesh,329,336,19.2,38.0,1.9,0.72,10,282
+mustard,Rajasthan,328,335,16.8,57.3,2.9,0.75,10,281
+mustard,Madhya Pradesh,298,305,14.4,56.2,5.0,0.72,9,251
+mustard,Madhya Pradesh,348,355,12.1,56.0,22.7,0.71,10,301
+mustard,Madhya Pradesh,346,353,19.7,49.7,13.5,0.61,10,299
+mustard,Madhya Pradesh,314,321,14.3,64.9,24.2,0.55,9,267
+mustard,Rajasthan,334,341,15.8,49.3,18.8,0.64,10,287
+mustard,Rajasthan,322,329,14.3,41.5,2.6,0.54,10,275
+mustard,Rajasthan,328,335,12.4,62.9,2.4,0.71,10,281
+mustard,Madhya Pradesh,314,321,19.4,52.6,1.0,0.7,9,267
+mustard,Rajasthan,311,318,15.5,66.7,17.8,0.71,9,264
+mustard,Madhya Pradesh,315,322,16.8,62.3,3.2,0.72,9,268
+mustard,Rajasthan,292,299,15.3,44.3,5.7,0.67,9,245
+mustard,Rajasthan,328,335,16.6,59.8,4.4,0.68,10,281
+mustard,Rajasthan,306,313,17.7,46.2,1.6,0.73,9,259
+mustard,Madhya Pradesh,335,342,16.6,43.8,9.8,0.77,10,288
+mustard,Madhya Pradesh,326,333,16.7,78.3,15.2,0.71,10,279
+mustard,Uttar Pradesh,331,338,14.4,89.4,0.4,0.78,10,284
+mustard,Rajasthan,318,325,20.0,50.5,0.5,0.63,9,271
+mustard,Uttar Pradesh,344,351,17.2,68.2,22.1,0.57,10,297
+mustard,Madhya Pradesh,332,339,12.4,61.9,3.0,0.54,10,285
+mustard,Uttar Pradesh,302,309,19.4,50.6,0.5,0.64,9,255
+mustard,Rajasthan,323,330,18.9,73.1,22.5,0.61,10,276
+mustard,Rajasthan,317,324,12.8,56.6,1.2,0.71,9,270
+mustard,Uttar Pradesh,330,337,17.1,74.5,4.9,0.59,10,283
+mustard,Madhya Pradesh,332,339,14.5,73.8,5.3,0.65,10,285
+mustard,Uttar Pradesh,333,340,18.9,59.8,3.2,0.6,10,286
+mustard,Rajasthan,300,307,13.1,75.5,2.6,0.68,9,253
+mustard,Rajasthan,304,311,18.3,62.4,0.6,0.61,9,257
+mustard,Madhya Pradesh,304,311,17.5,57.4,8.1,0.7,9,257
+mustard,Madhya Pradesh,304,311,12.3,71.9,0.5,0.59,9,257
+mustard,Rajasthan,338,345,16.2,59.5,11.9,0.55,10,291
+mustard,Rajasthan,346,353,19.2,41.5,12.1,0.65,10,299
+mustard,Rajasthan,347,354,16.2,44.7,0.8,0.54,10,300
+mustard,Uttar Pradesh,311,318,16.6,39.5,7.8,0.53,9,264
+mustard,Madhya Pradesh,298,305,16.6,51.7,5.3,0.63,9,251
+mustard,Madhya Pradesh,295,302,18.3,62.2,1.6,0.57,9,248
+mustard,Uttar Pradesh,339,346,18.2,72.8,4.9,0.42,10,292
+mustard,Uttar Pradesh,337,344,12.2,53.5,17.4,0.81,10,290
+mustard,Madhya Pradesh,317,324,16.8,64.2,32.8,0.85,9,270
+mustard,Rajasthan,322,329,15.6,61.1,12.8,0.44,10,275
+mustard,Uttar Pradesh,300,307,12.9,64.8,25.1,0.55,9,253
+mustard,Rajasthan,348,355,19.5,68.8,5.4,0.6,10,301
+mustard,Rajasthan,348,355,13.0,52.6,14.8,0.7,10,301
+mustard,Uttar Pradesh,310,317,13.8,76.1,21.2,0.64,9,263
+mustard,Uttar Pradesh,337,344,19.9,57.5,42.0,0.58,10,290
+mustard,Rajasthan,329,336,17.4,58.3,4.9,0.78,10,282
+mustard,Madhya Pradesh,323,330,14.5,56.6,7.3,0.61,10,276
+mustard,Uttar Pradesh,345,352,16.2,55.4,7.2,0.56,10,298
+mustard,Rajasthan,328,335,19.6,47.4,5.3,0.5,10,281
+mustard,Uttar Pradesh,339,346,18.9,55.5,0.6,0.65,10,292
+mustard,Madhya Pradesh,324,331,18.9,53.7,8.4,0.56,10,277
+mustard,Rajasthan,335,342,20.0,62.1,4.5,0.65,10,288
+mustard,Rajasthan,326,333,13.8,59.4,17.6,0.57,10,279
+mustard,Rajasthan,322,329,13.2,79.8,15.6,0.54,10,275
+mustard,Uttar Pradesh,335,342,15.1,61.3,6.7,0.82,10,288
+mustard,Rajasthan,318,325,14.7,60.3,1.6,0.61,9,271
+mustard,Madhya Pradesh,333,340,19.9,56.8,2.0,0.6,10,286
+mustard,Uttar Pradesh,339,346,12.0,56.3,4.8,0.59,10,292
+mustard,Madhya Pradesh,299,306,18.1,60.4,8.4,0.76,9,252
+mustard,Rajasthan,314,321,12.7,57.2,4.7,0.57,9,267
+mustard,Rajasthan,296,303,12.7,69.3,0.3,0.63,9,249
+mustard,Rajasthan,341,348,17.5,60.4,5.9,0.53,10,294
+mustard,Uttar Pradesh,341,348,13.1,77.8,7.9,0.76,10,294
+mustard,Rajasthan,322,329,19.4,68.1,16.4,0.72,10,275
+mustard,Madhya Pradesh,305,312,16.8,59.1,9.0,0.78,9,258
+mustard,Madhya Pradesh,331,338,14.8,66.7,2.2,0.57,10,284
+mustard,Uttar Pradesh,295,302,19.2,60.1,0.4,0.44,9,248
+mustard,Madhya Pradesh,323,330,15.8,53.4,32.6,0.78,10,276
+mustard,Rajasthan,295,302,17.0,53.8,2.9,0.62,9,248
+mustard,Rajasthan,329,336,16.0,58.7,3.8,0.67,10,282
+mustard,Uttar Pradesh,335,342,15.5,72.7,10.0,0.88,10,288
+mustard,Uttar Pradesh,338,345,14.5,45.7,3.5,0.52,10,291
+mustard,Uttar Pradesh,340,347,19.9,72.9,9.5,0.72,10,293
+mustard,Rajasthan,336,343,13.3,70.1,7.1,0.7,10,289
+mustard,Madhya Pradesh,335,342,17.7,56.8,2.4,0.62,10,288
+mustard,Madhya Pradesh,326,333,12.9,71.0,0.2,0.74,10,279
+mustard,Uttar Pradesh,345,352,18.9,61.7,19.0,0.55,10,298
+mustard,Rajasthan,337,344,15.2,51.6,25.0,0.64,10,290
+mustard,Madhya Pradesh,298,305,14.1,47.6,15.8,0.75,9,251
+mustard,Rajasthan,348,355,16.8,36.2,7.8,0.58,10,301
+mustard,Uttar Pradesh,348,355,16.4,60.1,5.2,0.8,10,301
+mustard,Rajasthan,300,307,16.7,66.9,6.5,0.57,9,253
+mustard,Rajasthan,339,346,12.4,68.2,4.2,0.78,10,292
+mustard,Rajasthan,299,306,12.9,83.5,13.1,0.69,9,252
+mustard,Rajasthan,340,347,18.2,68.2,4.2,0.79,10,293
+mustard,Madhya Pradesh,331,338,13.8,71.5,2.3,0.63,10,284
+mustard,Madhya Pradesh,333,340,16.6,60.4,1.0,0.59,10,286
+mustard,Rajasthan,340,347,12.4,46.9,6.5,0.54,10,293
+mustard,Rajasthan,318,325,16.0,68.0,0.7,0.61,9,271
+mustard,Madhya Pradesh,322,329,16.0,61.6,0.9,0.65,10,275
+mustard,Uttar Pradesh,302,309,16.0,64.4,4.4,0.63,9,255
+mustard,Uttar Pradesh,345,352,19.5,75.0,8.5,0.64,10,298
+mustard,Rajasthan,314,321,18.6,51.9,1.1,0.74,9,267
+mustard,Rajasthan,332,339,13.1,51.8,3.9,0.66,10,285
+mustard,Rajasthan,292,299,17.3,56.9,5.6,0.65,9,245
+mustard,Rajasthan,334,341,19.7,53.1,4.3,0.52,10,287
+mustard,Madhya Pradesh,327,334,19.0,43.6,3.5,0.74,10,280
+mustard,Uttar Pradesh,300,307,17.9,54.0,1.0,0.56,9,253
+mustard,Madhya Pradesh,300,307,19.0,76.6,19.0,0.52,9,253
+mustard,Madhya Pradesh,302,309,14.3,52.3,5.3,0.61,9,255
+mustard,Madhya Pradesh,296,303,18.1,61.8,22.3,0.59,9,249
+mustard,Madhya Pradesh,324,331,19.0,68.8,2.3,0.61,10,277
+mustard,Madhya Pradesh,334,341,16.8,42.4,10.6,0.76,10,287
+mustard,Rajasthan,313,320,12.8,75.0,18.3,0.64,9,266
+mustard,Madhya Pradesh,334,341,16.8,52.3,5.9,0.61,10,287
+mustard,Uttar Pradesh,325,332,15.8,36.6,16.5,0.56,10,278
+mustard,Uttar Pradesh,345,352,15.3,71.0,3.2,0.64,10,298
+mustard,Madhya Pradesh,303,310,19.8,65.4,3.5,0.65,9,256
+mustard,Uttar Pradesh,338,345,18.6,54.3,8.4,0.71,10,291
+mustard,Madhya Pradesh,294,301,19.8,65.1,53.7,0.63,9,247
+mustard,Rajasthan,301,308,12.0,67.6,2.5,0.68,9,254
+mustard,Rajasthan,313,320,14.6,67.5,8.1,0.69,9,266
+mustard,Uttar Pradesh,311,318,12.8,59.9,9.1,0.59,9,264
+mustard,Rajasthan,299,306,14.0,45.9,3.1,0.6,9,252
+mustard,Madhya Pradesh,300,307,18.8,70.4,14.4,0.68,9,253
+mustard,Rajasthan,337,344,15.6,52.3,20.2,0.71,10,290
+mustard,Madhya Pradesh,338,345,19.8,62.7,1.0,0.76,10,291
+mustard,Rajasthan,340,347,18.5,62.4,1.3,0.65,10,293
+mustard,Uttar Pradesh,310,317,14.5,64.0,4.1,0.79,9,263
+mustard,Uttar Pradesh,347,354,14.6,44.5,9.5,0.55,10,300
+mustard,Rajasthan,302,309,13.8,56.1,8.8,0.49,9,255
+mustard,Uttar Pradesh,318,325,15.3,62.1,7.3,0.53,9,271
+mustard,Uttar Pradesh,325,332,19.8,61.1,15.5,0.57,10,278
+mustard,Uttar Pradesh,337,344,17.0,65.7,7.3,0.59,10,290
+mustard,Uttar Pradesh,324,331,12.3,69.4,7.2,0.61,10,277
+mustard,Rajasthan,306,313,12.9,58.5,30.9,0.53,9,259
+mustard,Madhya Pradesh,313,320,19.6,63.0,3.2,0.7,9,266
+mustard,Uttar Pradesh,344,351,17.8,55.9,3.7,0.6,10,297
+mustard,Rajasthan,335,342,19.2,67.9,6.3,0.81,10,288
+mustard,Madhya Pradesh,317,324,16.5,56.3,17.1,0.55,9,270
+mustard,Uttar Pradesh,311,318,14.0,59.3,1.3,0.61,9,264
+mustard,Madhya Pradesh,297,304,15.7,62.6,14.5,0.66,9,250
+mustard,Madhya Pradesh,298,305,12.7,59.6,13.2,0.65,9,251
+mustard,Madhya Pradesh,310,317,14.2,63.3,3.7,0.6,9,263
+mustard,Uttar Pradesh,307,314,16.2,50.6,4.2,0.7,9,260
+mustard,Madhya Pradesh,327,334,16.9,80.7,1.7,0.64,10,280
+mustard,Madhya Pradesh,341,348,19.2,62.8,4.5,0.31,10,294
+mustard,Madhya Pradesh,310,317,13.8,77.5,6.6,0.79,9,263
+mustard,Uttar Pradesh,318,325,12.2,75.4,0.4,0.64,9,271
+mustard,Uttar Pradesh,322,329,17.0,63.2,5.1,0.64,10,275
+mustard,Madhya Pradesh,311,318,14.7,49.5,8.3,0.54,9,264
+mustard,Madhya Pradesh,311,318,13.3,65.3,6.2,0.52,9,264
+mustard,Madhya Pradesh,308,315,19.2,72.6,1.2,0.64,9,261
+mustard,Uttar Pradesh,294,301,14.4,59.7,0.1,0.67,9,247
+mustard,Uttar Pradesh,307,314,17.3,54.3,37.7,0.67,9,260
+mustard,Rajasthan,329,336,13.3,82.3,2.7,0.6,10,282
+mustard,Madhya Pradesh,307,314,18.5,77.0,4.3,0.59,9,260
+mustard,Uttar Pradesh,298,305,12.4,64.5,13.6,0.67,9,251
+mustard,Madhya Pradesh,313,320,13.2,80.9,9.8,0.67,9,266
+mustard,Madhya Pradesh,305,312,15.8,71.8,19.6,0.69,9,258
+mustard,Rajasthan,302,309,17.8,51.5,4.8,0.55,9,255
+mustard,Rajasthan,299,306,14.8,62.2,1.3,0.9,9,252
+mustard,Madhya Pradesh,314,321,16.1,38.9,11.6,0.56,9,267
+mustard,Rajasthan,330,337,13.7,55.4,17.5,0.68,10,283
+mustard,Uttar Pradesh,344,351,12.8,45.8,4.0,0.63,10,297
+mustard,Madhya Pradesh,328,335,16.1,53.8,14.1,0.6,10,281
+mustard,Rajasthan,292,299,17.1,47.8,5.3,0.61,9,245
+mustard,Uttar Pradesh,343,350,15.1,55.2,7.4,0.7,10,296
+mustard,Madhya Pradesh,304,311,19.1,53.3,3.0,0.55,9,257
+mustard,Uttar Pradesh,310,317,17.0,69.0,2.5,0.62,9,263
+mustard,Madhya Pradesh,293,300,14.3,41.7,9.6,0.62,9,246
+mustard,Rajasthan,298,305,19.2,50.3,2.3,0.41,9,251
+mustard,Rajasthan,335,342,15.7,56.6,19.2,0.47,10,288
+mustard,Madhya Pradesh,333,340,13.9,60.1,5.3,0.56,10,286
+mustard,Madhya Pradesh,317,324,15.2,46.1,20.0,0.6,9,270
+mustard,Madhya Pradesh,333,340,14.5,48.1,19.2,0.58,10,286
+mustard,Madhya Pradesh,337,344,15.5,43.2,2.7,0.86,10,290
+mustard,Rajasthan,307,314,13.1,57.0,27.1,0.67,9,260
+mustard,Madhya Pradesh,330,337,15.3,69.6,7.4,0.67,10,283
+mustard,Madhya Pradesh,317,324,19.2,66.4,22.1,0.63,9,270
+mustard,Uttar Pradesh,322,329,13.7,70.7,2.8,0.74,10,275
+mustard,Uttar Pradesh,333,340,17.4,64.6,2.7,0.77,10,286
+mustard,Rajasthan,308,315,13.9,59.8,9.1,0.76,9,261
+mustard,Rajasthan,297,304,13.1,56.2,3.8,0.52,9,250
+mustard,Rajasthan,348,355,17.7,59.2,1.7,0.6,10,301
+mustard,Rajasthan,344,351,17.5,67.3,6.1,0.41,10,297
+mustard,Madhya Pradesh,345,352,16.7,53.0,8.0,0.63,10,298
+mustard,Uttar Pradesh,322,329,15.4,38.6,5.4,0.74,10,275
+mustard,Madhya Pradesh,344,351,12.7,65.1,3.5,0.62,10,297
+mustard,Madhya Pradesh,310,317,14.4,84.6,15.2,0.59,9,263
+mustard,Uttar Pradesh,303,310,15.4,58.1,16.7,0.6,9,256
+mustard,Uttar Pradesh,348,355,16.0,66.9,19.3,0.69,10,301
+mustard,Madhya Pradesh,328,335,12.7,77.1,3.7,0.69,10,281
+mustard,Rajasthan,348,355,15.5,49.2,10.1,0.73,10,301
+mustard,Uttar Pradesh,339,346,18.2,62.7,1.8,0.64,10,292
+mustard,Madhya Pradesh,334,341,12.9,62.4,6.4,0.78,10,287
+mustard,Rajasthan,318,325,16.1,71.2,15.2,0.51,9,271
+mustard,Madhya Pradesh,309,316,14.0,77.3,12.9,0.59,9,262
+mustard,Madhya Pradesh,318,325,14.0,54.2,14.5,0.63,9,271
+mustard,Rajasthan,299,306,17.1,39.3,4.8,0.44,9,252
+mustard,Uttar Pradesh,300,307,14.8,74.4,1.5,0.71,9,253
+mustard,Uttar Pradesh,294,301,13.3,60.8,2.2,0.75,9,247
+mustard,Madhya Pradesh,325,332,13.3,51.6,28.4,0.51,10,278
+mustard,Rajasthan,330,337,14.3,56.6,3.4,0.65,10,283
+mustard,Madhya Pradesh,329,336,12.6,58.5,8.4,0.58,10,282
+mustard,Rajasthan,311,318,15.0,57.6,0.3,0.66,9,264
+mustard,Uttar Pradesh,309,316,17.3,63.9,14.3,0.54,9,262
