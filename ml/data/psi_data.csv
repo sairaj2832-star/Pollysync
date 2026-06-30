@@ -1,0 +1,401 @@
+crop,region,temp_7d_mean,humidity,rainfall_7d,ndvi,bee_richness,pollen_level,psi_score,risk_level
+sunflower,Andhra Pradesh,35.4,52.6,10.9,0.54,4,4,60,Medium
+sunflower,Karnataka,29.7,53.1,8.9,0.54,4,3,86,Low
+sunflower,Maharashtra,25.8,64.5,0.8,0.58,3,5,87,Low
+sunflower,Andhra Pradesh,32.9,45.7,16.9,0.6,3,2,62,Medium
+sunflower,Karnataka,31.9,63.9,4.7,0.74,9,1,81,Low
+sunflower,Maharashtra,41.6,67.0,15.7,0.76,3,1,57,Medium
+sunflower,Karnataka,34.0,46.5,13.2,0.46,7,2,62,Medium
+sunflower,Maharashtra,32.1,59.3,9.9,0.77,4,5,86,Low
+sunflower,Andhra Pradesh,34.0,70.8,4.2,0.64,4,1,71,Low
+sunflower,Karnataka,26.8,55.3,20.4,0.47,1,3,81,Low
+sunflower,Karnataka,29.3,50.4,34.4,0.68,7,1,85,Low
+sunflower,Maharashtra,28.8,54.7,5.1,0.64,6,3,90,Low
+sunflower,Andhra Pradesh,34.9,59.7,6.1,0.71,5,2,75,Low
+sunflower,Andhra Pradesh,32.0,47.3,14.1,0.71,4,2,75,Low
+sunflower,Andhra Pradesh,33.6,75.7,9.1,0.61,10,4,85,Low
+sunflower,Karnataka,28.4,63.5,0.1,0.56,5,1,69,Medium
+sunflower,Andhra Pradesh,34.6,37.4,8.5,0.49,9,3,63,Medium
+sunflower,Andhra Pradesh,35.8,38.6,25.8,0.62,6,5,59,Medium
+sunflower,Andhra Pradesh,23.7,56.8,6.0,0.51,4,5,89,Low
+sunflower,Andhra Pradesh,35.7,67.9,1.0,0.48,0,4,43,Medium
+sunflower,Maharashtra,27.8,58.5,26.1,0.66,7,2,88,Low
+sunflower,Andhra Pradesh,29.9,60.8,17.6,0.52,3,4,82,Low
+sunflower,Andhra Pradesh,25.9,36.1,16.4,0.56,3,2,63,Medium
+sunflower,Andhra Pradesh,28.8,81.2,13.0,0.7,7,5,85,Low
+sunflower,Maharashtra,33.1,67.2,5.1,0.9,4,3,89,Low
+sunflower,Maharashtra,30.7,71.7,34.6,0.84,11,3,91,Low
+sunflower,Maharashtra,28.1,62.5,4.6,0.58,7,1,72,Low
+sunflower,Andhra Pradesh,37.5,38.5,18.0,0.5,7,4,53,Medium
+sunflower,Karnataka,32.0,58.5,13.6,0.49,2,4,83,Low
+sunflower,Maharashtra,23.4,67.5,1.1,0.73,4,3,100,Low
+sunflower,Karnataka,37.5,66.0,24.2,0.62,4,3,72,Low
+sunflower,Maharashtra,34.8,51.4,18.0,0.62,5,4,89,Low
+sunflower,Maharashtra,36.5,73.6,3.3,0.58,6,5,65,Medium
+sunflower,Maharashtra,23.1,54.3,2.2,0.68,8,4,97,Low
+sunflower,Maharashtra,30.2,43.7,5.2,0.56,11,1,56,Medium
+sunflower,Karnataka,35.0,59.1,20.0,0.62,8,1,69,Medium
+sunflower,Andhra Pradesh,34.2,60.6,17.6,0.61,6,2,82,Low
+sunflower,Karnataka,27.1,53.8,20.3,0.76,6,2,93,Low
+sunflower,Andhra Pradesh,35.0,60.6,11.2,0.75,5,2,75,Low
+sunflower,Maharashtra,40.9,39.6,7.4,0.64,5,1,46,Medium
+sunflower,Andhra Pradesh,37.3,50.2,2.4,0.56,7,5,60,Medium
+sunflower,Maharashtra,37.2,69.4,1.7,0.62,3,3,65,Medium
+sunflower,Karnataka,34.8,50.7,51.4,0.75,4,3,87,Low
+sunflower,Andhra Pradesh,33.5,60.3,9.1,0.77,3,1,71,Low
+sunflower,Maharashtra,33.7,62.7,1.1,0.46,7,1,57,Medium
+sunflower,Karnataka,31.3,76.7,10.1,0.49,4,4,90,Low
+sunflower,Karnataka,30.9,50.0,6.3,0.7,7,3,94,Low
+sunflower,Karnataka,34.6,49.1,16.0,0.73,6,3,70,Low
+sunflower,Karnataka,29.2,69.1,13.7,0.71,6,3,98,Low
+sunflower,Karnataka,34.4,61.0,10.3,0.63,4,5,84,Low
+sunflower,Maharashtra,32.6,62.9,4.6,0.86,8,2,77,Low
+sunflower,Andhra Pradesh,34.7,37.6,15.7,0.56,10,4,65,Medium
+sunflower,Karnataka,32.5,69.9,20.7,0.62,6,4,89,Low
+sunflower,Andhra Pradesh,29.7,45.9,6.6,0.57,4,1,62,Medium
+sunflower,Andhra Pradesh,39.9,67.1,30.7,0.56,7,5,64,Medium
+sunflower,Karnataka,31.5,54.3,4.5,0.76,5,2,91,Low
+sunflower,Andhra Pradesh,33.9,60.9,5.1,0.8,3,1,71,Low
+sunflower,Karnataka,26.7,72.5,3.9,0.57,5,4,87,Low
+sunflower,Maharashtra,28.2,40.7,6.7,0.58,7,4,70,Low
+sunflower,Karnataka,35.4,55.7,4.9,0.68,5,4,66,Medium
+sunflower,Andhra Pradesh,35.1,46.5,0.2,0.66,3,3,58,Medium
+sunflower,Maharashtra,29.5,39.7,1.1,0.54,9,2,65,Medium
+sunflower,Andhra Pradesh,27.8,72.2,17.8,0.76,6,1,76,Low
+sunflower,Andhra Pradesh,31.0,70.4,6.2,0.78,5,5,100,Low
+sunflower,Karnataka,35.1,48.3,3.8,0.89,2,5,58,Medium
+sunflower,Maharashtra,32.8,49.1,12.0,0.75,8,5,73,Low
+sunflower,Andhra Pradesh,25.9,50.4,5.3,0.53,6,4,82,Low
+sunflower,Andhra Pradesh,37.2,64.5,7.7,0.52,6,2,52,Medium
+sunflower,Andhra Pradesh,25.3,73.7,1.2,0.64,8,1,85,Low
+sunflower,Karnataka,31.2,56.3,10.6,0.66,6,2,93,Low
+sunflower,Andhra Pradesh,37.8,27.5,12.4,0.5,8,1,21,High
+sunflower,Maharashtra,38.6,43.8,0.3,0.72,5,4,55,Medium
+sunflower,Maharashtra,37.0,52.2,3.8,0.55,3,5,62,Medium
+sunflower,Karnataka,33.5,68.0,3.9,0.84,2,1,65,Medium
+sunflower,Andhra Pradesh,37.7,57.4,34.7,0.93,7,2,66,Medium
+sunflower,Karnataka,27.2,66.2,2.9,0.79,8,5,97,Low
+sunflower,Maharashtra,36.9,81.6,1.2,0.61,7,4,60,Medium
+sunflower,Andhra Pradesh,35.1,49.9,3.0,0.65,5,2,50,Medium
+sunflower,Karnataka,33.5,67.7,8.8,0.6,3,5,79,Low
+sunflower,Andhra Pradesh,34.8,62.3,39.0,0.63,2,3,77,Low
+sunflower,Karnataka,32.0,70.3,2.6,0.62,3,5,92,Low
+sunflower,Karnataka,28.9,59.4,22.0,0.61,5,4,100,Low
+sunflower,Maharashtra,32.9,82.2,0.7,0.89,4,3,80,Low
+sunflower,Karnataka,26.8,58.6,34.7,0.5,7,3,90,Low
+sunflower,Andhra Pradesh,34.0,46.2,34.5,0.87,6,1,63,Medium
+sunflower,Karnataka,31.0,66.1,2.5,0.65,7,4,99,Low
+sunflower,Andhra Pradesh,35.0,78.0,3.4,0.47,6,5,71,Low
+sunflower,Karnataka,32.3,89.7,4.1,0.59,5,1,53,Medium
+sunflower,Karnataka,37.1,59.7,14.5,0.62,3,1,53,Medium
+sunflower,Karnataka,31.5,62.3,14.0,0.52,3,3,82,Low
+sunflower,Andhra Pradesh,34.6,64.3,24.6,0.76,6,3,88,Low
+sunflower,Karnataka,33.5,67.8,12.6,0.84,7,4,81,Low
+sunflower,Karnataka,33.4,61.4,2.7,0.59,2,5,72,Low
+sunflower,Maharashtra,34.7,76.6,17.5,0.74,4,2,76,Low
+sunflower,Karnataka,34.4,73.6,58.1,0.54,6,2,64,Medium
+sunflower,Andhra Pradesh,27.4,58.7,1.2,0.56,5,1,73,Low
+sunflower,Karnataka,34.2,58.9,11.0,0.48,6,5,73,Low
+sunflower,Andhra Pradesh,33.0,51.1,5.7,0.49,9,2,71,Low
+sunflower,Andhra Pradesh,30.8,54.3,3.1,0.67,4,1,76,Low
+sunflower,Maharashtra,31.5,72.0,8.1,0.3,2,5,66,Medium
+sunflower,Karnataka,31.0,52.2,7.0,0.63,8,1,78,Low
+sunflower,Maharashtra,33.3,70.1,5.1,0.87,6,1,75,Low
+sunflower,Karnataka,35.0,45.3,19.8,0.74,4,1,64,Medium
+sunflower,Andhra Pradesh,34.3,70.5,10.9,0.39,2,3,55,Medium
+sunflower,Karnataka,32.9,79.4,9.4,0.45,9,1,58,Medium
+sunflower,Andhra Pradesh,31.8,58.8,2.6,0.48,7,2,74,Low
+sunflower,Maharashtra,35.1,75.8,1.6,0.69,5,1,57,Medium
+sunflower,Maharashtra,34.0,61.5,20.5,0.72,7,2,83,Low
+sunflower,Maharashtra,32.9,65.5,13.4,0.72,3,4,81,Low
+sunflower,Maharashtra,32.3,74.7,9.5,0.84,5,5,81,Low
+sunflower,Andhra Pradesh,36.8,55.0,0.2,0.78,7,1,60,Medium
+sunflower,Karnataka,29.6,60.4,0.8,0.56,7,2,79,Low
+sunflower,Karnataka,31.1,61.4,4.9,0.55,7,4,87,Low
+sunflower,Andhra Pradesh,35.0,53.6,2.0,0.48,8,4,75,Low
+sunflower,Karnataka,28.5,55.1,5.0,0.47,6,3,85,Low
+sunflower,Maharashtra,27.8,29.8,9.3,0.65,5,1,59,Medium
+sunflower,Andhra Pradesh,26.9,75.8,44.6,0.78,6,3,92,Low
+sunflower,Maharashtra,35.4,50.4,7.8,0.69,4,4,68,Medium
+sunflower,Karnataka,30.8,57.2,5.4,0.79,5,3,98,Low
+sunflower,Andhra Pradesh,23.4,51.5,2.3,0.75,5,5,93,Low
+sunflower,Karnataka,27.5,57.3,5.5,0.79,2,2,86,Low
+sunflower,Maharashtra,28.2,70.4,1.8,0.55,2,2,70,Low
+sunflower,Maharashtra,33.8,67.0,1.4,0.41,3,4,71,Low
+sunflower,Andhra Pradesh,37.4,49.5,18.4,0.38,8,4,42,Medium
+sunflower,Maharashtra,26.7,58.8,7.2,0.69,5,1,81,Low
+sunflower,Andhra Pradesh,32.2,58.5,0.4,0.66,9,2,78,Low
+sunflower,Andhra Pradesh,31.3,75.7,5.8,0.61,5,5,93,Low
+sunflower,Andhra Pradesh,34.1,77.5,16.5,0.87,5,1,72,Low
+sunflower,Andhra Pradesh,29.0,55.6,3.8,0.68,1,5,85,Low
+sunflower,Karnataka,35.4,58.0,16.9,0.68,9,2,59,Medium
+sunflower,Maharashtra,29.5,59.5,5.0,0.83,4,4,98,Low
+sunflower,Maharashtra,28.5,57.0,3.4,0.65,5,2,87,Low
+sunflower,Karnataka,31.2,46.7,18.4,0.63,3,2,77,Low
+sunflower,Maharashtra,33.1,67.6,7.6,0.71,5,2,77,Low
+sunflower,Karnataka,26.9,75.2,19.0,0.67,4,4,97,Low
+sunflower,Karnataka,29.4,79.3,0.3,0.84,6,4,92,Low
+sunflower,Maharashtra,27.7,37.6,1.1,0.71,8,4,90,Low
+sunflower,Andhra Pradesh,28.3,45.0,5.4,0.69,2,5,78,Low
+sunflower,Maharashtra,33.3,66.3,5.7,0.48,7,4,75,Low
+sunflower,Maharashtra,21.5,48.0,16.7,0.69,3,4,86,Low
+sunflower,Andhra Pradesh,27.4,36.8,22.4,0.56,4,2,63,Medium
+sunflower,Andhra Pradesh,29.6,63.0,9.9,0.66,3,1,79,Low
+sunflower,Karnataka,36.2,51.6,2.5,0.5,3,5,58,Medium
+sunflower,Andhra Pradesh,27.3,62.4,8.9,0.79,3,1,75,Low
+sunflower,Karnataka,26.3,24.9,2.2,0.6,4,4,70,Low
+sunflower,Karnataka,40.9,59.8,5.0,0.82,4,5,70,Low
+sunflower,Karnataka,31.4,59.6,17.7,0.76,5,3,94,Low
+sunflower,Andhra Pradesh,29.9,75.2,3.9,0.57,6,2,79,Low
+sunflower,Andhra Pradesh,38.8,62.2,0.4,0.81,7,1,56,Medium
+sunflower,Maharashtra,30.6,47.3,25.6,0.7,2,1,60,Medium
+sunflower,Maharashtra,27.7,66.7,5.7,0.71,6,3,99,Low
+sunflower,Maharashtra,29.0,62.9,6.5,0.59,9,1,68,Medium
+sunflower,Maharashtra,36.6,46.5,0.9,0.68,6,5,57,Medium
+sunflower,Maharashtra,30.0,66.2,24.6,0.67,7,4,94,Low
+sunflower,Karnataka,29.7,58.9,16.2,0.62,5,1,85,Low
+sunflower,Andhra Pradesh,33.5,50.7,3.0,0.9,2,1,58,Medium
+sunflower,Maharashtra,35.9,78.3,0.8,0.51,8,5,59,Medium
+sunflower,Maharashtra,28.8,63.2,21.2,0.73,8,5,95,Low
+sunflower,Maharashtra,37.7,68.9,3.3,0.53,8,1,41,Medium
+sunflower,Maharashtra,29.3,69.7,3.3,0.67,6,1,80,Low
+sunflower,Maharashtra,28.1,51.0,19.5,0.71,4,5,92,Low
+sunflower,Andhra Pradesh,40.2,59.8,14.5,0.78,4,4,72,Low
+sunflower,Maharashtra,28.5,70.7,20.8,0.67,4,3,97,Low
+sunflower,Maharashtra,27.6,57.3,34.1,0.57,4,2,75,Low
+sunflower,Karnataka,28.8,56.2,12.2,0.68,7,5,94,Low
+sunflower,Karnataka,37.4,75.2,12.7,0.55,7,2,50,Medium
+sunflower,Andhra Pradesh,33.7,69.7,4.6,0.43,6,1,55,Medium
+sunflower,Andhra Pradesh,33.4,60.6,12.2,0.63,3,5,87,Low
+sunflower,Karnataka,38.6,84.4,1.3,0.52,4,3,49,Medium
+sunflower,Karnataka,30.1,55.0,5.6,0.78,5,4,90,Low
+sunflower,Maharashtra,42.7,38.3,2.2,0.73,6,3,61,Medium
+sunflower,Andhra Pradesh,28.5,63.9,2.8,0.61,7,5,90,Low
+sunflower,Maharashtra,33.0,65.6,9.1,0.61,7,2,76,Low
+sunflower,Karnataka,33.0,38.2,11.2,0.88,9,1,62,Medium
+sunflower,Maharashtra,33.4,24.7,11.8,0.88,5,3,67,Medium
+sunflower,Karnataka,34.0,71.4,4.2,0.71,3,5,87,Low
+sunflower,Maharashtra,34.5,61.7,14.4,0.62,3,3,82,Low
+sunflower,Andhra Pradesh,30.2,80.7,0.1,0.73,4,4,85,Low
+sunflower,Karnataka,24.6,50.8,3.2,0.75,8,5,92,Low
+sunflower,Maharashtra,31.7,67.2,24.2,0.55,7,4,90,Low
+sunflower,Andhra Pradesh,30.0,56.1,25.6,0.72,3,5,99,Low
+sunflower,Karnataka,33.1,56.1,21.9,0.67,0,5,73,Low
+sunflower,Maharashtra,34.1,61.8,10.0,0.67,7,5,80,Low
+sunflower,Andhra Pradesh,37.2,49.9,3.5,0.7,3,4,63,Medium
+sunflower,Karnataka,37.3,55.1,90.4,0.65,6,1,51,Medium
+sunflower,Maharashtra,31.0,55.2,12.9,0.71,6,4,91,Low
+sunflower,Andhra Pradesh,27.3,79.7,15.0,0.67,2,2,80,Low
+sunflower,Andhra Pradesh,33.6,57.3,8.1,0.53,3,3,78,Low
+sunflower,Karnataka,28.6,73.4,17.8,0.66,2,3,91,Low
+sunflower,Karnataka,34.7,37.3,5.0,0.56,9,1,51,Medium
+sunflower,Maharashtra,29.3,55.2,27.6,0.69,4,1,81,Low
+sunflower,Maharashtra,32.6,75.5,9.9,0.81,7,5,84,Low
+sunflower,Andhra Pradesh,33.4,66.2,35.3,0.8,6,1,66,Medium
+sunflower,Karnataka,29.5,60.0,13.7,0.45,4,5,82,Low
+sunflower,Karnataka,37.0,59.5,13.5,0.36,6,4,55,Medium
+sunflower,Maharashtra,33.4,51.4,11.7,0.67,10,4,80,Low
+sunflower,Andhra Pradesh,33.7,45.6,17.7,0.61,1,4,72,Low
+sunflower,Andhra Pradesh,32.8,51.7,22.6,0.52,3,3,79,Low
+sunflower,Maharashtra,40.4,42.4,7.9,0.56,1,3,47,Medium
+sunflower,Karnataka,33.5,37.9,22.5,0.84,6,1,55,Medium
+mustard,Madhya Pradesh,19.3,83.8,10.4,0.84,8,4,77,Low
+mustard,Rajasthan,19.7,54.8,12.1,0.66,4,3,87,Low
+mustard,Uttar Pradesh,22.8,68.9,12.8,0.44,2,1,66,Medium
+mustard,Rajasthan,21.3,51.9,43.4,0.65,3,3,95,Low
+mustard,Uttar Pradesh,21.8,49.1,12.3,0.83,5,3,85,Low
+mustard,Uttar Pradesh,17.3,63.0,1.9,0.84,3,2,81,Low
+mustard,Rajasthan,19.9,69.5,15.0,0.6,12,3,78,Low
+mustard,Rajasthan,18.9,67.7,2.1,0.52,5,2,66,Medium
+mustard,Madhya Pradesh,15.9,63.6,19.2,0.78,5,5,80,Low
+mustard,Rajasthan,23.8,57.1,19.3,0.68,4,4,96,Low
+mustard,Madhya Pradesh,27.2,67.4,3.5,0.78,3,4,90,Low
+mustard,Rajasthan,23.0,45.3,6.4,0.6,6,1,57,Medium
+mustard,Madhya Pradesh,19.2,53.4,34.7,0.82,4,5,87,Low
+mustard,Madhya Pradesh,28.0,64.9,1.3,0.64,5,1,81,Low
+mustard,Uttar Pradesh,27.0,61.4,12.0,0.87,4,1,80,Low
+mustard,Uttar Pradesh,23.5,44.4,0.2,0.75,6,4,81,Low
+mustard,Rajasthan,18.0,47.9,11.4,0.48,4,3,60,Medium
+mustard,Madhya Pradesh,24.5,55.4,13.4,0.7,2,2,78,Low
+mustard,Uttar Pradesh,18.7,63.6,20.4,0.31,7,4,60,Medium
+mustard,Rajasthan,18.9,48.3,2.9,0.42,7,3,69,Medium
+mustard,Madhya Pradesh,23.4,80.5,0.9,0.73,7,5,89,Low
+mustard,Uttar Pradesh,21.5,60.0,9.2,0.8,6,5,100,Low
+mustard,Madhya Pradesh,15.2,49.2,15.0,0.65,9,1,58,Medium
+mustard,Uttar Pradesh,20.7,34.3,5.2,0.71,10,1,70,Low
+mustard,Uttar Pradesh,24.6,34.1,19.0,0.61,2,1,62,Medium
+mustard,Uttar Pradesh,20.8,47.6,1.5,0.74,1,2,70,Low
+mustard,Madhya Pradesh,24.4,37.9,5.1,0.84,4,2,83,Low
+mustard,Madhya Pradesh,16.6,50.2,4.9,0.54,9,2,65,Medium
+mustard,Rajasthan,25.6,86.6,1.5,0.54,4,1,57,Medium
+mustard,Uttar Pradesh,24.0,72.3,13.4,0.69,10,4,92,Low
+mustard,Madhya Pradesh,19.4,57.6,23.2,0.64,4,4,88,Low
+mustard,Uttar Pradesh,20.6,52.7,5.6,0.68,6,3,96,Low
+mustard,Madhya Pradesh,18.6,58.4,5.2,0.63,5,1,68,Medium
+mustard,Rajasthan,23.6,68.5,19.5,0.74,5,1,80,Low
+mustard,Rajasthan,20.2,42.4,6.8,0.71,7,5,90,Low
+mustard,Madhya Pradesh,21.6,60.2,2.5,0.76,6,1,77,Low
+mustard,Madhya Pradesh,23.5,41.6,21.0,0.44,8,4,70,Low
+mustard,Rajasthan,19.8,53.3,26.3,0.46,8,5,75,Low
+mustard,Madhya Pradesh,25.2,41.6,0.8,0.79,4,5,80,Low
+mustard,Uttar Pradesh,14.7,74.6,10.0,0.58,3,2,48,Medium
+mustard,Uttar Pradesh,26.9,84.2,11.8,0.68,8,2,79,Low
+mustard,Rajasthan,25.2,29.8,8.2,0.49,8,3,64,Medium
+mustard,Rajasthan,18.0,60.6,0.9,0.84,3,2,73,Low
+mustard,Rajasthan,25.7,62.0,0.3,0.6,9,2,76,Low
+mustard,Madhya Pradesh,16.4,73.4,0.6,0.64,5,5,90,Low
+mustard,Uttar Pradesh,21.1,74.6,25.9,0.59,2,1,64,Medium
+mustard,Rajasthan,19.2,57.6,44.4,0.69,3,4,89,Low
+mustard,Madhya Pradesh,21.7,58.7,9.1,0.56,3,3,87,Low
+mustard,Rajasthan,17.7,53.0,5.3,0.6,5,2,69,Medium
+mustard,Uttar Pradesh,22.1,55.7,10.4,0.69,4,1,75,Low
+mustard,Uttar Pradesh,29.5,51.0,4.0,0.51,5,5,80,Low
+mustard,Rajasthan,23.0,60.2,7.6,0.61,6,4,100,Low
+mustard,Rajasthan,21.2,76.1,16.0,0.78,7,3,92,Low
+mustard,Rajasthan,20.4,62.6,10.3,0.75,8,5,93,Low
+mustard,Rajasthan,17.6,40.0,8.9,0.83,4,4,70,Low
+mustard,Rajasthan,21.4,59.6,30.4,0.54,2,2,76,Low
+mustard,Rajasthan,25.5,57.5,2.0,0.32,6,5,76,Low
+mustard,Rajasthan,19.6,69.2,8.6,0.68,2,1,66,Medium
+mustard,Rajasthan,19.1,56.4,0.6,0.58,5,3,76,Low
+mustard,Uttar Pradesh,23.2,63.3,23.3,0.48,6,1,67,Medium
+mustard,Uttar Pradesh,21.3,62.4,3.7,0.84,8,1,83,Low
+mustard,Uttar Pradesh,23.4,52.0,1.8,0.76,7,4,100,Low
+mustard,Rajasthan,15.9,71.3,5.0,0.75,1,2,74,Low
+mustard,Madhya Pradesh,21.9,50.4,4.2,0.58,6,2,76,Low
+mustard,Uttar Pradesh,17.5,56.1,7.0,0.67,5,5,89,Low
+mustard,Madhya Pradesh,18.3,69.3,10.5,0.81,2,4,79,Low
+mustard,Uttar Pradesh,25.2,75.3,12.8,0.62,1,3,87,Low
+mustard,Madhya Pradesh,24.2,47.7,47.3,0.64,3,4,82,Low
+mustard,Madhya Pradesh,25.2,56.1,18.7,0.7,3,2,87,Low
+mustard,Uttar Pradesh,22.9,41.9,54.6,0.67,5,3,87,Low
+mustard,Madhya Pradesh,20.2,52.4,1.1,0.47,7,3,85,Low
+mustard,Rajasthan,16.0,64.0,0.4,0.88,7,4,86,Low
+mustard,Uttar Pradesh,22.4,65.8,1.0,0.74,6,4,95,Low
+mustard,Madhya Pradesh,15.2,49.2,4.1,0.57,3,2,54,Medium
+mustard,Uttar Pradesh,15.1,46.6,21.7,0.64,3,2,64,Medium
+mustard,Rajasthan,21.3,46.0,26.9,0.4,1,2,49,Medium
+mustard,Rajasthan,26.3,54.3,7.9,0.42,3,3,90,Low
+mustard,Rajasthan,23.0,46.6,2.8,0.56,6,2,65,Medium
+mustard,Rajasthan,25.7,73.1,1.5,0.49,4,1,74,Low
+mustard,Madhya Pradesh,24.5,47.1,19.6,0.8,2,2,68,Medium
+mustard,Uttar Pradesh,16.1,53.9,24.3,0.63,1,1,60,Medium
+mustard,Madhya Pradesh,26.1,51.7,3.4,0.78,3,2,93,Low
+mustard,Uttar Pradesh,24.1,56.8,5.6,0.57,7,4,85,Low
+mustard,Rajasthan,22.2,47.9,4.8,0.53,8,5,80,Low
+mustard,Uttar Pradesh,16.9,51.7,5.4,0.85,1,5,75,Low
+mustard,Uttar Pradesh,20.8,44.5,4.5,0.5,4,4,78,Low
+mustard,Madhya Pradesh,21.6,51.6,5.4,0.51,6,1,69,Medium
+mustard,Rajasthan,24.8,39.8,11.6,0.4,3,3,67,Medium
+mustard,Rajasthan,18.7,49.9,8.9,0.63,7,3,77,Low
+mustard,Madhya Pradesh,17.4,54.6,13.5,0.76,7,4,89,Low
+mustard,Rajasthan,19.6,68.5,0.7,0.68,4,2,80,Low
+mustard,Rajasthan,17.8,47.1,9.5,0.88,4,4,74,Low
+mustard,Rajasthan,19.3,34.7,22.0,0.68,10,3,76,Low
+mustard,Rajasthan,18.2,67.8,12.1,0.51,3,5,76,Low
+mustard,Madhya Pradesh,18.6,57.1,31.0,0.64,6,3,80,Low
+mustard,Uttar Pradesh,8.6,61.5,20.1,0.76,6,3,71,Low
+mustard,Uttar Pradesh,22.4,57.8,0.8,0.64,7,4,92,Low
+mustard,Rajasthan,24.6,73.2,16.8,0.78,5,4,93,Low
+mustard,Uttar Pradesh,20.9,65.0,1.6,0.96,2,3,89,Low
+mustard,Madhya Pradesh,15.5,64.6,8.9,0.63,4,3,87,Low
+mustard,Uttar Pradesh,21.1,69.0,4.9,0.66,11,5,96,Low
+mustard,Madhya Pradesh,23.8,58.9,0.8,0.69,6,5,97,Low
+mustard,Rajasthan,25.1,46.6,7.0,0.59,8,4,70,Low
+mustard,Rajasthan,18.8,57.6,11.6,0.66,2,2,74,Low
+mustard,Rajasthan,24.9,53.2,9.3,0.66,4,3,93,Low
+mustard,Rajasthan,15.3,74.4,1.0,0.69,6,2,82,Low
+mustard,Uttar Pradesh,24.2,41.0,19.4,0.35,3,4,65,Medium
+mustard,Madhya Pradesh,14.2,52.9,1.7,0.75,3,3,71,Low
+mustard,Uttar Pradesh,21.8,62.7,21.6,0.62,3,2,88,Low
+mustard,Madhya Pradesh,19.2,41.7,38.0,0.86,5,5,76,Low
+mustard,Rajasthan,18.5,61.6,13.2,0.64,2,3,78,Low
+mustard,Uttar Pradesh,21.4,50.1,7.7,0.58,1,5,75,Low
+mustard,Rajasthan,22.0,44.0,12.4,0.59,2,2,64,Medium
+mustard,Rajasthan,19.9,73.3,0.6,0.76,4,4,82,Low
+mustard,Uttar Pradesh,28.5,47.9,10.4,0.71,3,2,74,Low
+mustard,Madhya Pradesh,21.9,56.1,18.3,0.56,10,3,81,Low
+mustard,Uttar Pradesh,16.9,76.8,8.9,0.58,7,5,79,Low
+mustard,Rajasthan,31.2,53.0,13.3,0.51,5,1,71,Low
+mustard,Uttar Pradesh,17.9,68.6,7.7,0.66,5,1,71,Low
+mustard,Rajasthan,24.0,62.0,2.4,0.61,4,3,91,Low
+mustard,Uttar Pradesh,15.7,59.3,11.8,0.39,3,4,70,Low
+mustard,Madhya Pradesh,27.7,75.0,6.7,0.7,5,2,84,Low
+mustard,Rajasthan,16.8,82.4,11.5,0.66,4,1,63,Medium
+mustard,Madhya Pradesh,20.6,58.7,10.0,0.77,7,1,79,Low
+mustard,Uttar Pradesh,24.9,60.0,3.3,0.75,6,3,94,Low
+mustard,Uttar Pradesh,20.6,54.7,0.7,0.54,6,3,85,Low
+mustard,Rajasthan,14.2,52.4,2.7,0.66,7,1,55,Medium
+mustard,Uttar Pradesh,19.2,71.9,25.0,0.58,8,1,62,Medium
+mustard,Uttar Pradesh,20.0,51.3,19.5,0.63,9,4,92,Low
+mustard,Uttar Pradesh,23.1,69.5,38.5,0.6,2,3,83,Low
+mustard,Madhya Pradesh,23.2,49.8,8.6,0.55,8,4,76,Low
+mustard,Madhya Pradesh,27.1,60.9,12.0,0.67,5,4,90,Low
+mustard,Rajasthan,20.5,44.2,5.1,0.32,6,1,52,Medium
+mustard,Madhya Pradesh,23.1,76.8,2.6,0.6,7,1,71,Low
+mustard,Rajasthan,19.8,67.4,0.7,0.61,1,4,78,Low
+mustard,Madhya Pradesh,18.9,61.8,31.7,0.62,4,1,74,Low
+mustard,Rajasthan,25.3,50.2,3.9,0.57,7,2,82,Low
+mustard,Uttar Pradesh,24.1,67.8,3.9,0.43,9,4,87,Low
+mustard,Uttar Pradesh,13.8,50.5,3.2,0.44,6,2,54,Medium
+mustard,Madhya Pradesh,20.8,49.0,18.3,0.59,3,3,71,Low
+mustard,Rajasthan,17.1,44.5,16.1,0.63,4,1,63,Medium
+mustard,Uttar Pradesh,20.8,52.3,4.1,0.54,5,5,80,Low
+mustard,Rajasthan,20.6,81.1,13.1,0.62,4,4,90,Low
+mustard,Madhya Pradesh,20.0,69.6,1.5,0.7,9,1,83,Low
+mustard,Rajasthan,25.2,70.3,19.8,0.63,4,4,94,Low
+mustard,Madhya Pradesh,17.3,65.5,12.9,0.64,8,4,81,Low
+mustard,Uttar Pradesh,19.2,44.2,0.9,0.78,3,1,55,Medium
+mustard,Rajasthan,24.5,42.8,20.1,0.58,5,2,69,Medium
+mustard,Rajasthan,17.3,61.9,2.2,0.62,7,3,84,Low
+mustard,Uttar Pradesh,24.7,58.3,5.0,0.74,9,2,85,Low
+mustard,Rajasthan,23.5,35.8,0.5,0.61,1,2,73,Low
+mustard,Rajasthan,25.6,55.3,13.0,0.93,4,4,92,Low
+mustard,Rajasthan,23.8,65.5,4.3,0.66,5,2,91,Low
+mustard,Uttar Pradesh,20.6,71.5,9.6,0.71,8,5,93,Low
+mustard,Madhya Pradesh,19.0,73.0,4.7,0.68,4,5,90,Low
+mustard,Uttar Pradesh,16.4,66.2,9.2,0.55,3,5,78,Low
+mustard,Uttar Pradesh,23.0,62.9,4.4,0.76,4,3,92,Low
+mustard,Rajasthan,18.3,46.2,5.7,0.69,10,2,73,Low
+mustard,Rajasthan,21.1,69.2,17.9,0.67,4,4,97,Low
+mustard,Uttar Pradesh,13.7,74.2,0.4,0.55,3,1,42,Medium
+mustard,Madhya Pradesh,21.0,45.6,4.9,0.58,6,2,71,Low
+mustard,Madhya Pradesh,15.0,48.2,0.4,0.67,2,1,52,Medium
+mustard,Madhya Pradesh,17.5,58.9,7.2,0.85,3,2,79,Low
+mustard,Rajasthan,30.3,79.2,4.0,0.75,7,2,91,Low
+mustard,Rajasthan,17.8,54.8,3.0,0.54,6,2,72,Low
+mustard,Uttar Pradesh,21.8,54.0,25.4,0.82,5,4,92,Low
+mustard,Uttar Pradesh,20.9,47.5,2.8,0.69,7,4,87,Low
+mustard,Uttar Pradesh,17.6,59.3,20.4,0.59,6,2,69,Medium
+mustard,Madhya Pradesh,26.7,47.1,2.9,0.73,3,5,82,Low
+mustard,Madhya Pradesh,19.9,76.2,45.1,0.76,6,2,81,Low
+mustard,Madhya Pradesh,16.9,85.4,16.3,0.62,3,3,79,Low
+mustard,Madhya Pradesh,12.5,80.2,6.5,0.77,3,3,65,Medium
+mustard,Madhya Pradesh,17.3,53.8,9.2,0.6,8,5,77,Low
+mustard,Uttar Pradesh,29.2,53.4,0.8,0.6,7,4,83,Low
+mustard,Uttar Pradesh,19.0,54.1,4.9,0.63,7,1,65,Medium
+mustard,Uttar Pradesh,23.6,58.6,0.6,0.66,1,4,90,Low
+mustard,Madhya Pradesh,22.2,39.1,1.4,0.8,8,4,83,Low
+mustard,Madhya Pradesh,25.1,40.2,3.9,0.72,4,3,88,Low
+mustard,Uttar Pradesh,25.3,57.1,6.0,0.55,8,2,76,Low
+mustard,Uttar Pradesh,19.1,83.9,6.2,0.92,6,5,71,Low
+mustard,Madhya Pradesh,20.2,76.3,17.7,0.6,8,1,65,Medium
+mustard,Madhya Pradesh,15.7,25.1,40.9,0.72,7,2,58,Medium
+mustard,Uttar Pradesh,19.0,66.6,40.8,0.74,7,4,87,Low
+mustard,Rajasthan,19.0,58.8,4.6,0.41,5,2,63,Medium
+mustard,Uttar Pradesh,24.7,78.4,1.1,0.6,4,2,77,Low
+mustard,Madhya Pradesh,20.0,62.1,1.5,0.7,3,2,86,Low
+mustard,Madhya Pradesh,17.1,51.8,6.4,0.53,6,3,77,Low
+mustard,Rajasthan,25.3,61.2,5.3,0.66,4,4,91,Low
+mustard,Uttar Pradesh,20.6,58.0,23.8,0.79,4,5,99,Low
+mustard,Uttar Pradesh,30.3,62.2,15.0,0.5,2,5,74,Low
+mustard,Madhya Pradesh,12.3,60.6,3.6,0.52,7,4,55,Medium
+mustard,Rajasthan,20.7,50.6,19.7,0.76,5,2,93,Low
+mustard,Madhya Pradesh,19.3,49.3,8.0,0.9,5,2,73,Low
+mustard,Madhya Pradesh,20.0,55.1,5.8,0.58,7,3,86,Low
+mustard,Madhya Pradesh,20.1,58.0,0.3,0.78,7,4,96,Low
+mustard,Rajasthan,27.1,53.5,5.4,0.64,4,4,95,Low
+mustard,Rajasthan,22.5,41.6,32.2,0.73,6,5,90,Low
+mustard,Rajasthan,16.3,65.1,43.3,0.56,8,1,59,Medium
+mustard,Uttar Pradesh,20.2,68.2,0.6,0.62,5,4,95,Low
+mustard,Rajasthan,21.0,73.8,0.2,0.69,4,3,97,Low

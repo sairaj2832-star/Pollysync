@@ -1,0 +1,227 @@
+"""
+app/services/environment_service.py
+
+Pulls every real environment parameter PolliSync's ML models need, for a
+given (lat, lon, date). Output dict matches FEATURE_COLS in train_model.py
+exactly, so it can be used for both:
+  - live prediction (call get_environment_features() with today's date)
+  - batch training-data generation (loop over many lat/lon/date combos and
+    write rows to a CSV instead of flowering_data.csv's synthetic values)
+
+Sources used (all free):
+  - NASA POWER          -> temp_7d_mean, humidity, rainfall_7d, wind_speed
+  - Google Earth Engine  -> ndvi (Sentinel-2)
+  - GBIF                -> bee_richness
+  - Static seasonal table -> pollen_tree/grass/weed (no live India API exists)
+
+Install: pip install httpx earthengine-api
+Auth (Earth Engine): create a free account at earthengine.google.com/signup,
+then either run `earthengine authenticate` once locally, OR (for servers)
+create a service account, download its JSON key, and set:
+  EE_SERVICE_ACCOUNT=xxx@xxx.iam.gserviceaccount.com
+  EE_PRIVATE_KEY_FILE=/path/to/key.json
+in your .env. No key needed for NASA POWER or GBIF.
+"""
+
+from __future__ import annotations
+
+import os
+from datetime import date, timedelta
+from typing import Optional
+
+import httpx
+
+# --------------------------------------------------------------------------
+# 1. WEATHER (NASA POWER) -> temp_7d_mean, humidity, rainfall_7d, wind_speed
+# --------------------------------------------------------------------------
+
+NASA_POWER_URL = (
+    "https://power.larc.nasa.gov/api/temporal/daily/point"
+    "?parameters=T2M_MAX,T2M_MIN,RH2M,PRECTOTCORR,WS2M"
+    "&community=AG"
+    "&longitude={lon}&latitude={lat}"
+    "&start={start}&end={end}"
+    "&format=JSON"
+)
+
+
+async def fetch_nasa_power_7d(lat: float, lon: float, as_of: date) -> dict:
+    """Returns the 7-day-mean weather ending on `as_of`, in the units the
+    GDD/feature pipeline expects. Works for any date (past or recent),
+    which is what makes it usable for training-data generation, unlike
+    Open-Meteo's forecast-only current/daily endpoint."""
+    start = (as_of - timedelta(days=7)).strftime("%Y%m%d")
+    end = as_of.strftime("%Y%m%d")
+    url = NASA_POWER_URL.format(lat=lat, lon=lon, start=start, end=end)
+
+    async with httpx.AsyncClient() as client:
+        resp = await client.get(url, timeout=15)
+        resp.raise_for_status()
+        data = resp.json()
+
+    params = data["properties"]["parameter"]
+    t_max = [v for v in params["T2M_MAX"].values() if v not in (-999, None)]
+    t_min = [v for v in params["T2M_MIN"].values() if v not in (-999, None)]
+    rh = [v for v in params["RH2M"].values() if v not in (-999, None)]
+    rain = [v for v in params["PRECTOTCORR"].values() if v not in (-999, None)]
+    wind = [v for v in params["WS2M"].values() if v not in (-999, None)]
+
+    daily_mean_temp = [(mx + mn) / 2 for mx, mn in zip(t_max, t_min)]
+
+    return {
+        "temp_7d_mean": round(sum(daily_mean_temp) / len(daily_mean_temp), 2) if daily_mean_temp else None,
+        "humidity": round(sum(rh) / len(rh), 2) if rh else None,
+        "rainfall_7d": round(sum(rain), 2) if rain else None,          # total over 7d, not mean
+        "wind_speed": round((sum(wind) / len(wind)) * 3.6, 2) if wind else None,  # m/s -> km/h
+        "t_max_7d": t_max,   # kept for GDD calc (gdd_model.py needs daily max/min)
+        "t_min_7d": t_min,
+    }
+
+
+# --------------------------------------------------------------------------
+# 2. NDVI (Google Earth Engine, Sentinel-2) -> ndvi
+# --------------------------------------------------------------------------
+
+_ee_initialized = False
+
+
+def _init_earth_engine():
+    global _ee_initialized
+    if _ee_initialized:
+        return
+    import ee  # imported lazily so the rest of the module works without it installed
+
+    service_account = os.getenv("EE_SERVICE_ACCOUNT")
+    key_file = os.getenv("EE_PRIVATE_KEY_FILE")
+    if service_account and key_file:
+        credentials = ee.ServiceAccountCredentials(service_account, key_file)
+        ee.Initialize(credentials)
+    else:
+        # falls back to local `earthengine authenticate` token for dev use
+        ee.Initialize()
+    _ee_initialized = True
+
+
+async def fetch_ndvi(lat: float, lon: float, as_of: date, window_days: int = 20) -> Optional[float]:
+    """Mean NDVI from the least-cloudy Sentinel-2 scenes in a window ending
+    on `as_of`. Earth Engine's Python client is synchronous, so this runs it
+    in a thread to avoid blocking the FastAPI event loop."""
+    import anyio
+    import ee
+
+    def _query():
+        _init_earth_engine()
+        point = ee.Geometry.Point([lon, lat])
+        start = (as_of - timedelta(days=window_days)).isoformat()
+        end = as_of.isoformat()
+
+        collection = (
+            ee.ImageCollection("COPERNICUS/S2_SR_HARMONIZED")
+            .filterBounds(point)
+            .filterDate(start, end)
+            .filter(ee.Filter.lt("CLOUDY_PIXEL_PERCENTAGE", 20))
+        )
+        if collection.size().getInfo() == 0:
+            return None
+
+        def add_ndvi(img):
+            return img.addBands(img.normalizedDifference(["B8", "B4"]).rename("ndvi"))
+
+        with_ndvi = collection.map(add_ndvi)
+        mean_ndvi_img = with_ndvi.select("ndvi").mean()
+        value = mean_ndvi_img.reduceRegion(
+            reducer=ee.Reducer.mean(), geometry=point, scale=10
+        ).get("ndvi")
+        result = value.getInfo()
+        return round(result, 4) if result is not None else None
+
+    return await anyio.to_thread.run_sync(_query)
+
+
+# --------------------------------------------------------------------------
+# 3. BEE RICHNESS (GBIF) -> bee_richness
+# --------------------------------------------------------------------------
+
+GBIF_URL = (
+    "https://api.gbif.org/v1/occurrence/search"
+    "?taxonKey=4334"  # Apidae (bees)
+    "&decimalLatitude={lat_min},{lat_max}"
+    "&decimalLongitude={lon_min},{lon_max}"
+    "&limit=300"
+)
+
+
+async def fetch_bee_richness(lat: float, lon: float, radius_km: float = 25) -> int:
+    """Distinct bee species recorded within radius_km. India's GBIF density
+    is sparse (see project README) so treat this as a lower-bound signal,
+    not a precise count -- it's a proxy feature, same caveat as pollinator_proxy_v2."""
+    deg = radius_km / 111  # rough km->degree conversion
+    url = GBIF_URL.format(
+        lat_min=lat - deg, lat_max=lat + deg,
+        lon_min=lon - deg, lon_max=lon + deg,
+    )
+    async with httpx.AsyncClient() as client:
+        resp = await client.get(url, timeout=15)
+        if resp.status_code != 200:
+            return 0
+        results = resp.json().get("results", [])
+
+    species = {r.get("species") for r in results if r.get("species")}
+    return len(species)
+
+
+# --------------------------------------------------------------------------
+# 4. POLLEN (static seasonal proxy -- no live India API exists)
+# --------------------------------------------------------------------------
+
+from app.services.feature_engineering import get_pollen_for_month  # noqa: E402
+
+
+# --------------------------------------------------------------------------
+# Combined fetch -> ready-to-train/predict feature dict
+# --------------------------------------------------------------------------
+
+async def get_environment_features(
+    lat: float,
+    lon: float,
+    crop_type: str,
+    as_of: Optional[date] = None,
+) -> dict:
+    """Single entry point. Returns a dict matching FEATURE_COLS in
+    train_model.py / _build_feature_dict() in predict.py.
+
+    Use this both in the live /predictions endpoint AND in a standalone
+    script that loops over real district coordinates + dates to build a
+    *real* flowering_data.csv (replacing generate_data.py's synthetic data)."""
+    as_of = as_of or date.today()
+
+    weather = await fetch_nasa_power_7d(lat, lon, as_of)
+    try:
+        ndvi = await fetch_ndvi(lat, lon, as_of)
+    except Exception:
+        ndvi = None  # EE not configured / no clear scenes in window -- caller should fallback
+    bee_richness = await fetch_bee_richness(lat, lon)
+    pollen = get_pollen_for_month(as_of.month)
+
+    crop = crop_type.lower()
+    return {
+        "temp_7d_mean": weather["temp_7d_mean"],
+        "humidity": weather["humidity"],
+        "rainfall_7d": weather["rainfall_7d"],
+        "wind_speed": weather["wind_speed"],
+        "ndvi": ndvi,
+        "day_of_year": as_of.timetuple().tm_yday,
+        "month": as_of.month,
+        "crop_mustard": int(crop == "mustard"),
+        "crop_wheat": int(crop == "wheat"),
+        "crop_sunflower": int(crop == "sunflower"),
+        "crop_rice": int(crop == "rice"),
+        "crop_cotton": int(crop == "cotton"),
+        "bee_richness": bee_richness,
+        "pollen_tree": pollen["tree"],
+        "pollen_grass": pollen["grass"],
+        "pollen_weed": pollen["weed"],
+        # extra, not a model feature but needed by gdd_model.py downstream
+        "_t_max_7d": weather["t_max_7d"],
+        "_t_min_7d": weather["t_min_7d"],
+    }
