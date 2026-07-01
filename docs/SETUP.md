@@ -47,7 +47,7 @@ Never force-push main or test. If main and test diverge, stop and resolve the hi
 ## Secrets expected later
 
 - SECRET_KEY for backend authentication
-- GROQ_API_KEY, GEMINI_API_KEY, or OPENAI_API_KEY for recommendations
+- GEMINI_API_KEY for recommendations
 - VITE_API_URL for the deployed backend URL
 
 Weather from Open-Meteo and occurrence data from GBIF do not require API keys for the planned MVP.
