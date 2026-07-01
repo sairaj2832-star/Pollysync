@@ -17,13 +17,13 @@ from predict import PollinationFeatures, predict
 DEMO_ENV_PARAMS = {
     "sunflower": {
         "temperature_c": 27.5, "humidity_percent": 62.0, "rainfall_mm": 4.2,
-        "wind_speed_kmh": 10.0, "ndvi": 0.58, "bee_count": 4, "pollen_level": 3,
-        "month": 7, "day_of_year": 190, "sowing_date": "2025-06-15",
+        "wind_speed_kmh": 10.0, "ndvi": 0.58, "bee_count": 4, "bee_abundance": 28,
+        "pollen_level": 3, "month": 7, "day_of_year": 190, "sowing_date": "2025-06-15",
     },
     "mustard": {
         "temperature_c": 18.0, "humidity_percent": 55.0, "rainfall_mm": 1.0,
-        "wind_speed_kmh": 8.0, "ndvi": 0.45, "bee_count": 2, "pollen_level": 4,
-        "month": 11, "day_of_year": 320, "sowing_date": "2025-10-20",
+        "wind_speed_kmh": 8.0, "ndvi": 0.45, "bee_count": 2, "bee_abundance": 11,
+        "pollen_level": 4, "month": 11, "day_of_year": 320, "sowing_date": "2025-10-20",
     },
 }
 
@@ -38,6 +38,7 @@ def run_demo():
             wind_speed_kmh=env["wind_speed_kmh"],
             ndvi=env["ndvi"],
             bee_count=env["bee_count"],
+            bee_abundance=env["bee_abundance"],
             pollen_level=env["pollen_level"],
             crop_type=crop,
             month=env["month"],
