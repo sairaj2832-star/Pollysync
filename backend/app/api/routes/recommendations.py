@@ -1,10 +1,11 @@
 import json
-import os
 
+import httpx
 from fastapi import APIRouter, Depends, HTTPException
 from pydantic import BaseModel
 from sqlalchemy.orm import Session
 
+from app.core.config import settings
 from app.database import get_db
 from app.models.farm import Farm
 from app.models.prediction import Prediction
@@ -47,6 +48,44 @@ Write a concise, actionable recommendation (max 200 words) in markdown format wi
 Be practical. Mention the crop by name."""
 
 
+def _extract_gemini_text(payload: dict) -> str:
+    candidates = payload.get("candidates") or []
+    if not candidates:
+        return ""
+    parts = candidates[0].get("content", {}).get("parts") or []
+    return "\n".join(part.get("text", "") for part in parts).strip()
+
+
+async def _generate_gemini_recommendation(farm: Farm, prediction: Prediction) -> str:
+    prompt = _build_prompt(farm, prediction)
+    url = (
+        "https://generativelanguage.googleapis.com/v1beta/models/"
+        f"{settings.gemini_model}:generateContent"
+    )
+    async with httpx.AsyncClient(timeout=15) as client:
+        response = await client.post(
+            url,
+            params={"key": settings.gemini_api_key},
+            json={
+                "contents": [
+                    {
+                        "role": "user",
+                        "parts": [{"text": prompt}],
+                    }
+                ],
+                "generationConfig": {
+                    "temperature": 0.7,
+                    "maxOutputTokens": 300,
+                },
+            },
+        )
+        response.raise_for_status()
+    recommendation = _extract_gemini_text(response.json())
+    if not recommendation:
+        raise ValueError("Gemini returned an empty recommendation")
+    return recommendation
+
+
 def _generate_local_recommendation(farm: Farm, prediction: Prediction) -> str:
     risk_advisory = ""
     if prediction.risk_level == "High":
@@ -79,7 +118,7 @@ def _generate_local_recommendation(farm: Farm, prediction: Prediction) -> str:
 
 
 @router.post("/generate", response_model=dict)
-def generate_recommendation(
+async def generate_recommendation(
     payload: GenerateRequest,
     db: Session = Depends(get_db),
 ) -> dict:
@@ -90,23 +129,10 @@ def generate_recommendation(
     if not prediction:
         raise HTTPException(status_code=404, detail="Prediction not found")
 
-    api_key = os.getenv("OPENAI_API_KEY") or ""
-    if api_key and api_key != "change-me-in-production":
+    if settings.gemini_api_key and settings.gemini_api_key != "change-me-in-production":
         try:
-            from openai import OpenAI
-            client = OpenAI(api_key=api_key)
-            prompt = _build_prompt(farm, prediction)
-            response = client.chat.completions.create(
-                model="gpt-3.5-turbo",
-                messages=[
-                    {"role": "system", "content": "You are a helpful agronomist."},
-                    {"role": "user", "content": prompt},
-                ],
-                temperature=0.7,
-                max_tokens=300,
-            )
-            recommendation = response.choices[0].message.content
-        except Exception:
+            recommendation = await _generate_gemini_recommendation(farm, prediction)
+        except (httpx.HTTPError, ValueError):
             recommendation = _generate_local_recommendation(farm, prediction)
     else:
         recommendation = _generate_local_recommendation(farm, prediction)

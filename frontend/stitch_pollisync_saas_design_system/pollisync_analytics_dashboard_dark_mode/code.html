@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>PolliSync - Dashboard</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Geist+Sans:wght@400;500;600;700&amp;family=Inter:wght@400;500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-secondary-fixed": "#2a1700",
+                        "secondary-fixed": "#ffddb8",
+                        "on-primary-fixed-variant": "#005236",
+                        "tertiary-fixed": "#ffdad7",
+                        "on-primary": "#ffffff",
+                        "surface-container-high": "#f0e6e0",
+                        "inverse-surface": "#342f2b",
+                        "surface-variant": "#eae1da",
+                        "on-secondary-container": "#684000",
+                        "on-primary-fixed": "#002113",
+                        "surface-bright": "#fff8f5",
+                        "on-tertiary-container": "#79000e",
+                        "primary": "#006c49",
+                        "tertiary-container": "#ff7a73",
+                        "surface-container": "#f6ece6",
+                        "secondary-fixed-dim": "#ffb95f",
+                        "outline-variant": "#bbcabf",
+                        "on-tertiary": "#ffffff",
+                        "on-tertiary-fixed": "#410004",
+                        "on-surface": "#1f1b17",
+                        "inverse-primary": "#4edea3",
+                        "on-error": "#ffffff",
+                        "on-error-container": "#93000a",
+                        "secondary-container": "#fea619",
+                        "inverse-on-surface": "#f9efe8",
+                        "secondary": "#855300",
+                        "primary-container": "#10b981",
+                        "surface-dim": "#e2d8d2",
+                        "primary-fixed": "#6ffbbe",
+                        "surface-container-lowest": "#ffffff",
+                        "tertiary": "#b91a24",
+                        "surface-tint": "#006c49",
+                        "background": "#fff8f5",
+                        "error-container": "#ffdad6",
+                        "surface": "#fff8f5",
+                        "tertiary-fixed-dim": "#ffb3ad",
+                        "surface-container-low": "#fcf2eb",
+                        "on-primary-container": "#00422b",
+                        "on-background": "#1f1b17",
+                        "on-tertiary-fixed-variant": "#930013",
+                        "primary-fixed-dim": "#4edea3",
+                        "on-secondary": "#ffffff",
+                        "error": "#ba1a1a",
+                        "on-surface-variant": "#3c4a42",
+                        "surface-container-highest": "#eae1da",
+                        "outline": "#6c7a71",
+                        "on-secondary-fixed-variant": "#653e00"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "lg": "24px",
+                        "base": "4px",
+                        "3xl": "64px",
+                        "sm": "8px",
+                        "container-max": "1280px",
+                        "gutter": "24px",
+                        "xl": "32px",
+                        "xs": "4px",
+                        "2xl": "48px",
+                        "md": "16px"
+                    },
+                    "fontFamily": {
+                        "headline-sm": ["Geist Sans"],
+                        "label-sm": ["Geist Sans"],
+                        "label-md": ["Geist Sans"],
+                        "body-md": ["Inter"],
+                        "body-sm": ["Inter"],
+                        "headline-lg-mobile": ["Geist Sans"],
+                        "display": ["Geist Sans"],
+                        "headline-lg": ["Geist Sans"],
+                        "body-lg": ["Inter"],
+                        "headline-md": ["Geist Sans"]
+                    },
+                    "fontSize": {
+                        "headline-sm": ["20px", { "lineHeight": "28px", "letterSpacing": "0em", "fontWeight": "600" }],
+                        "label-sm": ["12px", { "lineHeight": "16px", "letterSpacing": "0.02em", "fontWeight": "600" }],
+                        "label-md": ["14px", { "lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "500" }],
+                        "body-md": ["16px", { "lineHeight": "24px", "letterSpacing": "0em", "fontWeight": "400" }],
+                        "body-sm": ["14px", { "lineHeight": "20px", "letterSpacing": "0em", "fontWeight": "400" }],
+                        "headline-lg-mobile": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+                        "display": ["48px", { "lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "headline-lg": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "600" }],
+                        "body-lg": ["18px", { "lineHeight": "28px", "letterSpacing": "0em", "fontWeight": "400" }],
+                        "headline-md": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body { background-color: #0f172a; color: #f1f5f9; } /* slate-900, slate-100 */
+        .glass-card { background-color: #1e293b; border: 1px solid #334155; border-radius: 12px; } /* slate-800, slate-700 */
+    </style>
+</head>
+<body class="flex h-screen overflow-hidden font-body-md text-body-md antialiased">
+<!-- SideNavBar -->
+<nav class="bg-surface dark:bg-surface-dim h-screen w-64 fixed left-0 top-0 flex flex-col border-r border-outline-variant dark:border-outline z-20">
+<div class="flex flex-col h-full p-md">
+<div class="mb-lg flex items-center gap-sm">
+<div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center text-on-primary font-bold">P</div>
+<div>
+<h1 class="font-headline-md text-headline-md font-bold text-primary dark:text-primary-fixed">PolliSync</h1>
+<p class="font-label-sm text-label-sm text-on-surface-variant dark:text-surface-variant">Agrotech Analytics</p>
+</div>
+</div>
+<button class="mb-lg w-full bg-primary text-on-primary font-label-md text-label-md py-sm rounded-lg hover:bg-primary/90 transition-colors">
+                New Analysis
+            </button>
+<div class="flex-1 overflow-y-auto space-y-xs">
+<a class="flex items-center gap-md text-primary dark:text-primary-fixed font-bold bg-primary-container/10 dark:bg-primary-container/20 rounded-lg px-md py-sm" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">dashboard</span>
+<span class="font-label-md text-label-md">Dashboard</span>
+</a>
+<a class="flex items-center gap-md text-on-surface-variant dark:text-surface-variant hover:text-on-surface dark:hover:text-surface-bright px-md py-sm hover:bg-surface-container-high dark:hover:bg-surface-container transition-colors duration-200 rounded-lg" href="#">
+<span class="material-symbols-outlined">analytics</span>
+<span class="font-label-md text-label-md">Predictions</span>
+</a>
+<a class="flex items-center gap-md text-on-surface-variant dark:text-surface-variant hover:text-on-surface dark:hover:text-surface-bright px-md py-sm hover:bg-surface-container-high dark:hover:bg-surface-container transition-colors duration-200 rounded-lg" href="#">
+<span class="material-symbols-outlined">agriculture</span>
+<span class="font-label-md text-label-md">Farms</span>
+</a>
+<a class="flex items-center gap-md text-on-surface-variant dark:text-surface-variant hover:text-on-surface dark:hover:text-surface-bright px-md py-sm hover:bg-surface-container-high dark:hover:bg-surface-container transition-colors duration-200 rounded-lg" href="#">
+<span class="material-symbols-outlined">cloud</span>
+<span class="font-label-md text-label-md">Weather</span>
+</a>
+<a class="flex items-center gap-md text-on-surface-variant dark:text-surface-variant hover:text-on-surface dark:hover:text-surface-bright px-md py-sm hover:bg-surface-container-high dark:hover:bg-surface-container transition-colors duration-200 rounded-lg" href="#">
+<span class="material-symbols-outlined">pest_control_rodent</span>
+<span class="font-label-md text-label-md">Bees</span>
+</a>
+<a class="flex items-center gap-md text-on-surface-variant dark:text-surface-variant hover:text-on-surface dark:hover:text-surface-bright px-md py-sm hover:bg-surface-container-high dark:hover:bg-surface-container transition-colors duration-200 rounded-lg" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-label-md text-label-md">Settings</span>
+</a>
+</div>
+<div class="mt-auto pt-md border-t border-outline-variant dark:border-outline space-y-xs">
+<a class="flex items-center gap-md text-on-surface-variant dark:text-surface-variant hover:text-on-surface dark:hover:text-surface-bright px-md py-sm hover:bg-surface-container-high dark:hover:bg-surface-container transition-colors duration-200 rounded-lg" href="#">
+<span class="material-symbols-outlined">help</span>
+<span class="font-label-md text-label-md">Support</span>
+</a>
+<a class="flex items-center gap-md text-on-surface-variant dark:text-surface-variant hover:text-on-surface dark:hover:text-surface-bright px-md py-sm hover:bg-surface-container-high dark:hover:bg-surface-container transition-colors duration-200 rounded-lg" href="#">
+<span class="material-symbols-outlined">person</span>
+<span class="font-label-md text-label-md">Account</span>
+</a>
+</div>
+</div>
+</nav>
+<!-- Main Content Area -->
+<div class="flex-1 ml-64 flex flex-col h-screen overflow-hidden">
+<!-- TopNavBar -->
+<header class="bg-surface/80 dark:bg-surface-dim/80 backdrop-blur-md docked full-width top-0 sticky z-10 border-b border-outline-variant dark:border-outline">
+<div class="flex justify-between items-center h-16 px-xl w-full">
+<div class="flex items-center gap-md">
+<div class="flex items-center text-on-surface-variant dark:text-surface-variant font-label-md text-label-md gap-sm">
+<span>Farms</span>
+<span class="material-symbols-outlined text-sm">chevron_right</span>
+<span class="text-primary dark:text-primary-fixed-dim font-semibold">Season 2024</span>
+</div>
+</div>
+<div class="flex items-center gap-md">
+<button class="text-on-surface-variant dark:text-surface-variant hover:text-primary dark:hover:text-primary-fixed transition-colors">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<button class="text-on-surface-variant dark:text-surface-variant hover:text-primary dark:hover:text-primary-fixed transition-colors">
+<span class="material-symbols-outlined">help</span>
+</button>
+<button class="text-on-surface-variant dark:text-surface-variant hover:text-primary dark:hover:text-primary-fixed transition-colors">
+<span class="material-symbols-outlined">account_circle</span>
+</button>
+</div>
+</div>
+</header>
+<!-- Dashboard Canvas -->
+<main class="flex-1 overflow-y-auto p-xl bg-[#0f172a]">
+<div class="grid grid-cols-12 gap-md max-w-container-max mx-auto">
+<!-- 1. PSI GAUGE -->
+<div class="col-span-12 md:col-span-4 glass-card p-lg flex flex-col items-center justify-center relative">
+<h2 class="font-headline-sm text-headline-sm w-full text-left mb-auto">Pollination Suitability Index</h2>
+<div class="relative w-48 h-48 my-md">
+<svg class="w-full h-full transform -rotate-90" viewbox="0 0 100 100">
+<circle cx="50" cy="50" fill="none" r="40" stroke="#334155" stroke-width="8"></circle>
+<circle class="transition-all duration-1000" cx="50" cy="50" fill="none" r="40" stroke="#34d399" stroke-dasharray="251.2" stroke-dashoffset="22.6" stroke-width="8"></circle>
+</svg>
+<div class="absolute inset-0 flex flex-col items-center justify-center">
+<span class="font-display text-display font-bold text-[#34d399]">91</span>
+<span class="font-label-sm text-label-sm text-slate-400">/ 100</span>
+</div>
+</div>
+<div class="bg-[#34d399]/10 text-[#34d399] font-label-sm text-label-sm px-md py-xs rounded-full border border-[#34d399]/20 mt-auto">
+                        Optimal Conditions
+                    </div>
+</div>
+<!-- 2. WEATHER GRID -->
+<div class="col-span-12 md:col-span-5 glass-card p-lg flex flex-col">
+<h2 class="font-headline-sm text-headline-sm mb-md">Current Microclimate</h2>
+<div class="grid grid-cols-2 gap-sm flex-1">
+<div class="bg-slate-700/50 rounded-lg p-md flex flex-col justify-between">
+<span class="material-symbols-outlined text-slate-400 mb-xs">thermostat</span>
+<div>
+<div class="font-headline-md text-headline-md">24°C</div>
+<div class="font-label-sm text-label-sm text-slate-400">Temperature</div>
+</div>
+</div>
+<div class="bg-slate-700/50 rounded-lg p-md flex flex-col justify-between">
+<span class="material-symbols-outlined text-slate-400 mb-xs">humidity_mid</span>
+<div>
+<div class="font-headline-md text-headline-md">62%</div>
+<div class="font-label-sm text-label-sm text-slate-400">Humidity</div>
+</div>
+</div>
+<div class="bg-slate-700/50 rounded-lg p-md flex flex-col justify-between">
+<span class="material-symbols-outlined text-slate-400 mb-xs">rainy</span>
+<div>
+<div class="font-headline-md text-headline-md">0mm</div>
+<div class="font-label-sm text-label-sm text-slate-400">Rainfall</div>
+</div>
+</div>
+<div class="bg-slate-700/50 rounded-lg p-md flex flex-col justify-between">
+<span class="material-symbols-outlined text-slate-400 mb-xs">air</span>
+<div>
+<div class="font-headline-md text-headline-md">12km/h</div>
+<div class="font-label-sm text-label-sm text-slate-400">Wind</div>
+</div>
+</div>
+</div>
+</div>
+<!-- 3. RISK/ACTIONS -->
+<div class="col-span-12 md:col-span-3 glass-card p-lg flex flex-col justify-between">
+<h2 class="font-headline-sm text-headline-sm mb-md">Status Overview</h2>
+<div class="bg-[#34d399]/10 text-[#34d399] p-md rounded-xl border border-[#34d399]/20 text-center mb-md">
+<span class="material-symbols-outlined text-4xl mb-xs block">check_circle</span>
+<div class="font-headline-sm text-headline-sm">Low Risk</div>
+</div>
+<div class="space-y-sm">
+<button class="w-full bg-[#10b981] text-white font-label-md text-label-md py-sm rounded-lg hover:bg-[#059669] transition-colors shadow-[inset_0_1px_0_rgba(255,255,255,0.2)]">
+                            Deploy Hives
+                        </button>
+<button class="w-full bg-slate-800 text-slate-200 border border-slate-600 font-label-md text-label-md py-sm rounded-lg hover:bg-slate-700 transition-colors">
+                            View Details
+                        </button>
+</div>
+</div>
+<!-- 6. AI RECOMMENDATION (Full Width spanning) -->
+<div class="col-span-12 glass-card border-[#10b981] border-2 bg-[#064e3b]/20 p-lg relative overflow-hidden">
+<div class="absolute top-0 right-0 w-64 h-64 bg-[#10b981]/10 rounded-full blur-3xl -mr-32 -mt-32 pointer-events-none"></div>
+<h2 class="font-headline-sm text-headline-sm flex items-center gap-sm mb-md text-[#34d399]">
+<span class="material-symbols-outlined">smart_toy</span>
+                        AI Agronomist Recommendation
+                    </h2>
+<div class="font-body-md text-body-md text-slate-300 space-y-2">
+<p>Based on current predictive models, conditions remain optimal for pollination over the next 72 hours. Wind speeds are forecasted to stay below critical thresholds (15km/h).</p>
+<ul class="list-disc list-inside ml-sm text-slate-400">
+<li>Maintain current hive density in Sector A.</li>
+<li>Monitor humidity levels on Friday morning; mild risk of morning dew affecting early foraging.</li>
+</ul>
+</div>
+</div>
+<!-- 4. FLOWERING CALENDAR -->
+<div class="col-span-12 md:col-span-6 glass-card p-lg">
+<div class="flex justify-between items-start mb-md">
+<h2 class="font-headline-sm text-headline-sm">Flowering Window</h2>
+<span class="bg-blue-500/10 text-blue-400 font-label-sm text-label-sm px-sm py-xs rounded-full border border-blue-500/20">87% Confident</span>
+</div>
+<div class="font-headline-md text-headline-md mb-sm">18 Jan - 25 Jan</div>
+<div class="h-2 bg-slate-700 rounded-full mb-md overflow-hidden flex">
+<div class="w-1/4 bg-slate-500"></div>
+<div class="w-1/2 bg-[#34d399]"></div>
+<div class="w-1/4 bg-slate-700"></div>
+</div>
+<div class="flex justify-between text-slate-400 font-label-sm text-label-sm">
+<span>Pre-bloom</span>
+<span class="text-[#34d399]">Peak Bloom</span>
+<span>Post-bloom</span>
+</div>
+</div>
+<!-- 8. BEE ACTIVITY MAP -->
+<div class="col-span-12 md:col-span-6 glass-card p-0 relative overflow-hidden h-64">
+<!-- Faking a map layer -->
+<div class="absolute inset-0 bg-slate-900 opacity-80" style="background-image: radial-gradient(#334155 1px, transparent 1px); background-size: 20px 20px;"></div>
+<div class="absolute top-md left-md bg-slate-800/90 backdrop-blur-sm p-sm rounded-lg border border-slate-700 z-10">
+<h3 class="font-label-md text-label-md mb-xs">Activity Map</h3>
+</div>
+<!-- Faux Map Markers -->
+<div class="absolute top-1/2 left-1/2 w-4 h-4 bg-[#10b981] rounded-full shadow-[0_0_15px_rgba(16,185,129,0.8)] animate-pulse"></div>
+<div class="absolute top-1/3 left-1/4 w-2 h-2 bg-[#10b981] rounded-full opacity-50"></div>
+<div class="absolute top-2/3 left-2/3 w-3 h-3 bg-[#10b981] rounded-full opacity-70"></div>
+</div>
+</div>
+</main>
+</div>
+</body></html>

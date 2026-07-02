@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>PolliSync | Precision Pollination Analytics</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&amp;family=Geist+Sans:wght@500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-secondary-fixed-variant": "#653e00",
+                    "on-primary-container": "#00422b",
+                    "on-primary": "#ffffff",
+                    "surface-bright": "#fff8f5",
+                    "inverse-surface": "#342f2b",
+                    "primary": "#006c49",
+                    "error-container": "#ffdad6",
+                    "on-surface": "#1f1b17",
+                    "on-secondary-fixed": "#2a1700",
+                    "secondary-fixed-dim": "#ffb95f",
+                    "inverse-on-surface": "#f9efe8",
+                    "tertiary": "#b91a24",
+                    "primary-fixed": "#6ffbbe",
+                    "tertiary-fixed-dim": "#ffb3ad",
+                    "on-tertiary-fixed": "#410004",
+                    "outline": "#6c7a71",
+                    "inverse-primary": "#4edea3",
+                    "on-primary-fixed": "#002113",
+                    "background": "#0F172A", // Forced Slate-950 per prompt
+                    "surface-container": "#1E293B", // Forced Slate-800 per prompt
+                    "secondary-fixed": "#ffddb8",
+                    "primary-container": "#10b981",
+                    "tertiary-container": "#ff7a73",
+                    "surface-container-low": "#1e293b",
+                    "on-background": "#f1f5f9",
+                    "on-error": "#ffffff",
+                    "on-secondary": "#ffffff",
+                    "secondary": "#855300",
+                    "surface-variant": "#334155",
+                    "on-tertiary-container": "#79000e",
+                    "primary-fixed-dim": "#4edea3",
+                    "surface": "#0F172A",
+                    "on-tertiary-fixed-variant": "#930013",
+                    "on-secondary-container": "#684000",
+                    "tertiary-fixed": "#ffdad7",
+                    "surface-dim": "#0F172A",
+                    "on-primary-fixed-variant": "#005236",
+                    "surface-container-high": "#334155",
+                    "outline-variant": "#475569",
+                    "on-error-container": "#93000a",
+                    "secondary-container": "#fea619",
+                    "surface-container-highest": "#475569",
+                    "on-surface-variant": "#94a3b8",
+                    "surface-container-lowest": "#020617",
+                    "on-tertiary": "#ffffff",
+                    "error": "#ba1a1a",
+                    "surface-tint": "#006c49"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "xs": "4px",
+                    "md": "16px",
+                    "base": "4px",
+                    "lg": "24px",
+                    "container-max": "1280px",
+                    "2xl": "48px",
+                    "xl": "32px",
+                    "gutter": "24px",
+                    "3xl": "64px",
+                    "sm": "8px"
+            },
+            "fontFamily": {
+                    "headline-md": ["Geist Sans"],
+                    "headline-sm": ["Geist Sans"],
+                    "display": ["Geist Sans"],
+                    "body-md": ["Inter"],
+                    "label-sm": ["Geist Sans"],
+                    "headline-lg": ["Geist Sans"],
+                    "body-sm": ["Inter"],
+                    "label-md": ["Geist Sans"],
+                    "body-lg": ["Inter"]
+            },
+            "fontSize": {
+                    "headline-md": ["24px", {"lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                    "headline-sm": ["20px", {"lineHeight": "28px", "letterSpacing": "0em", "fontWeight": "600"}],
+                    "display": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "body-md": ["16px", {"lineHeight": "24px", "letterSpacing": "0em", "fontWeight": "400"}],
+                    "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "600"}],
+                    "body-sm": ["14px", {"lineHeight": "20px", "letterSpacing": "0em", "fontWeight": "400"}],
+                    "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "500"}],
+                    "body-lg": ["18px", {"lineHeight": "28px", "letterSpacing": "0em", "fontWeight": "400"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fade-up { animation: fadeUp 0.8s ease-out forwards; }
+        .delay-100 { animation-delay: 0.1s; }
+        .delay-200 { animation-delay: 0.2s; }
+
+        .glass-card {
+            background: rgba(30, 41, 59, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .emerald-glow:hover {
+            box-shadow: 0 0 25px rgba(16, 185, 129, 0.15);
+            border-color: rgba(16, 185, 129, 0.3);
+        }
+
+        .amber-glow:hover {
+            box-shadow: 0 0 25px rgba(251, 191, 36, 0.15);
+            border-color: rgba(251, 191, 36, 0.3);
+        }
+
+        .scroll-smooth { scroll-behavior: smooth; }
+        
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background font-body-md selection:bg-primary/30 scroll-smooth">
+<!-- Top Navigation Bar -->
+<nav class="bg-surface/80 dark:bg-surface-dim/80 backdrop-blur-md border-b border-outline-variant/30 dark:border-outline/20 shadow-sm dark:shadow-none docked full-width top-0 sticky z-50">
+<div class="flex justify-between items-center w-full px-6 py-4 max-w-container-max mx-auto">
+<div class="font-headline-sm text-headline-sm font-bold text-primary dark:text-inverse-primary flex items-center gap-2">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">eco</span>
+                PolliSync
+            </div>
+<div class="hidden md:flex items-center gap-xl">
+<a class="font-label-md text-label-md text-on-surface-variant dark:text-surface-variant hover:text-primary dark:hover:text-primary-fixed transition-colors" href="#features">Features</a>
+<a class="font-label-md text-label-md text-on-surface-variant dark:text-surface-variant hover:text-primary dark:hover:text-primary-fixed transition-colors" href="#how-it-works">How It Works</a>
+<a class="font-label-md text-label-md text-on-surface-variant dark:text-surface-variant hover:text-primary dark:hover:text-primary-fixed transition-colors" href="#crops">Crops</a>
+<a class="font-label-md text-label-md text-on-surface-variant dark:text-surface-variant hover:text-primary dark:hover:text-primary-fixed transition-colors" href="#pricing">Pricing</a>
+</div>
+<div class="flex items-center gap-md">
+<button class="font-label-md text-label-md text-on-surface-variant dark:text-surface-variant hover:text-primary px-4 py-2 transition-colors">Login</button>
+<button class="bg-primary hover:bg-primary/90 text-on-primary font-label-md text-label-md px-6 py-2.5 rounded-lg transition-all active:scale-95 shadow-lg shadow-primary/20">Get Started</button>
+</div>
+</div>
+</nav>
+<!-- Hero Section -->
+<header class="relative min-h-[921px] flex items-center justify-center overflow-hidden">
+<!-- STITCH_SHADER_START:ANIMATION_4 class="absolute inset-0 w-full h-full opacity-60" -->
+<div class="absolute inset-0 w-full h-full opacity-60" style="display:block;">
+<canvas id="shader-canvas-ANIMATION_4" style="display:block;width:100%;height:100%"></canvas>
+<script>
+(function() {
+  const canvas = document.getElementById('shader-canvas-ANIMATION_4');
+
+  // Sync the WebGL drawing-buffer size with the CSS-driven layout size.
+  // This fires on initial layout and whenever the element is resized.
+  function syncSize() {
+    const w = canvas.clientWidth  || 1280;
+    const h = canvas.clientHeight || 720;
+    if (canvas.width !== w || canvas.height !== h) {
+      canvas.width  = w;
+      canvas.height = h;
+    }
+  }
+  if (typeof ResizeObserver !== 'undefined') {
+    new ResizeObserver(syncSize).observe(canvas);
+  }
+  syncSize();
+
+  const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
+  if (!gl) return;
+  const vs = `attribute vec2 a_position;
+varying vec2 v_texCoord;
+void main() {
+  v_texCoord = a_position * 0.5 + 0.5;
+  gl_Position = vec4(a_position, 0.0, 1.0);
+}`;
+  const fs = `precision highp float;
+uniform float u_time;
+uniform vec2 u_resolution;
+
+varying vec2 v_texCoord;
+
+void main() {
+    vec2 uv = v_texCoord;
+    
+    // Create organic movement
+    float noise1 = sin(uv.x * 2.5 + u_time * 0.4) * 0.5 + 0.5;
+    float noise2 = sin(uv.y * 3.5 - u_time * 0.2) * 0.5 + 0.5;
+    
+    // PolliSync Colors (Dark Mode Base)
+    // Emerald: #10B981 -> vec3(0.06, 0.72, 0.50)
+    // Slate-950: #0F172A -> vec3(0.06, 0.09, 0.16)
+    // Slate-900: #0F172A (Approx)
+    
+    vec3 emerald = vec3(0.06, 0.72, 0.50);
+    vec3 slate950 = vec3(0.06, 0.09, 0.16);
+    
+    // Darker, more atmospheric mix
+    vec3 color = mix(slate950, emerald * 0.3, noise1 * 0.4);
+    color = mix(color, emerald * 0.1, noise2 * 0.2);
+    
+    // Pulse effect
+    float pulse = sin(u_time * 0.5) * 0.05 + 0.95;
+    
+    gl_FragColor = vec4(color * pulse, 1.0);
+}`;
+  function cs(type, src) {
+    const s = gl.createShader(type);
+    gl.shaderSource(s, src);
+    gl.compileShader(s);
+    return s;
+  }
+  const prog = gl.createProgram();
+  gl.attachShader(prog, cs(gl.VERTEX_SHADER, vs));
+  gl.attachShader(prog, cs(gl.FRAGMENT_SHADER, fs));
+  gl.linkProgram(prog);
+  gl.useProgram(prog);
+  const buf = gl.createBuffer();
+  gl.bindBuffer(gl.ARRAY_BUFFER, buf);
+  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1, 1,-1, -1,1, 1,1]), gl.STATIC_DRAW);
+  const pos = gl.getAttribLocation(prog, 'a_position');
+  gl.enableVertexAttribArray(pos);
+  gl.vertexAttribPointer(pos, 2, gl.FLOAT, false, 0, 0);
+  const uTime = gl.getUniformLocation(prog, 'u_time');
+  const uRes = gl.getUniformLocation(prog, 'u_resolution');
+  const uMouse = gl.getUniformLocation(prog, 'u_mouse');
+
+  // u_mouse is in pixel coordinates matching u_resolution (ShaderToy convention).
+  // Shaders that need normalized coords should use: u_mouse / u_resolution.
+  let mouse = { x: canvas.width / 2, y: canvas.height / 2 };
+  window.addEventListener('mousemove', (event) => {
+    const rect = canvas.getBoundingClientRect();
+    if (rect.width && rect.height) {
+      const nx = (event.clientX - rect.left) / rect.width;
+      const ny = 1.0 - (event.clientY - rect.top) / rect.height;
+      mouse.x = nx * canvas.width;
+      mouse.y = ny * canvas.height;
+    }
+  });
+
+  function render(t) {
+    if (typeof ResizeObserver === 'undefined') syncSize();
+    gl.viewport(0, 0, canvas.width, canvas.height);
+    if (uTime) gl.uniform1f(uTime, t * 0.001);
+    if (uRes) gl.uniform2f(uRes, canvas.width, canvas.height);
+    if (uMouse) gl.uniform2f(uMouse, mouse.x, mouse.y);
+    gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+    requestAnimationFrame(render);
+  }
+  render(0);
+})();
+</script>
+</div>
+<!-- STITCH_SHADER_END:ANIMATION_4 -->
+<div class="relative z-10 max-w-4xl mx-auto px-6 text-center">
+<div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 border border-primary/20 text-primary-fixed-dim font-label-sm text-label-sm mb-lg animate-fade-up">
+<span class="relative flex h-2 w-2">
+<span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
+<span class="relative inline-flex rounded-full h-2 w-2 bg-primary"></span>
+</span>
+                2024 Bloom Predictor Active
+            </div>
+<h1 class="font-display text-display md:text-6xl text-slate-100 leading-tight mb-md animate-fade-up delay-100">
+                Know Before Your <br class="hidden md:block"/> <span class="text-primary-container">Crops Flower</span>
+</h1>
+<p class="font-body-lg text-body-lg text-slate-400 max-w-2xl mx-auto mb-xl animate-fade-up delay-200">
+                Precision pollination intelligence for modern growers. Map every blossom, track every bee, and maximize your yield with AI-driven flowering forecasts.
+            </p>
+<div class="flex flex-col sm:flex-row gap-md justify-center animate-fade-up delay-200">
+<button class="bg-primary-container text-on-primary-container font-headline-sm text-headline-sm px-8 py-4 rounded-xl flex items-center justify-center gap-2 emerald-glow transition-all">
+                    Start Mapping
+                    <span class="material-symbols-outlined">arrow_forward</span>
+</button>
+<button class="glass-card text-slate-100 font-headline-sm text-headline-sm px-8 py-4 rounded-xl border border-slate-700 hover:bg-slate-700/50 transition-all">
+                    View Demo
+                </button>
+</div>
+</div>
+<div class="absolute bottom-10 left-1/2 -translate-x-1/2 animate-bounce opacity-40">
+<span class="material-symbols-outlined text-3xl">expand_more</span>
+</div>
+</header>
+<!-- Features Bento Grid -->
+<section class="py-3xl px-6 max-w-container-max mx-auto" id="features">
+<div class="text-center mb-3xl">
+<h2 class="font-headline-lg text-headline-lg text-slate-100 mb-sm">Engineered for Precision</h2>
+<p class="font-body-md text-body-md text-slate-400">Biological insights meets high-performance data science.</p>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-lg">
+<!-- Feature Card 1 -->
+<div class="glass-card p-xl rounded-xl emerald-glow transition-all group">
+<div class="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center text-primary mb-lg group-hover:bg-primary group-hover:text-white transition-colors">
+<span class="material-symbols-outlined text-3xl">insights</span>
+</div>
+<h3 class="font-headline-md text-headline-md text-slate-100 mb-md">Flowering Forecasts</h3>
+<p class="font-body-md text-body-md text-slate-400 leading-relaxed">
+                    Predict exactly when your orchard will hit 10%, 50%, and peak bloom using satellite imagery and local microclimate data.
+                </p>
+</div>
+<!-- Feature Card 2 -->
+<div class="glass-card p-xl rounded-xl amber-glow transition-all group">
+<div class="w-12 h-12 rounded-lg bg-secondary/10 flex items-center justify-center text-secondary mb-lg group-hover:bg-secondary group-hover:text-white transition-colors">
+<span class="material-symbols-outlined text-3xl">analytics</span>
+</div>
+<h3 class="font-headline-md text-headline-md text-slate-100 mb-md">Pollination Score</h3>
+<p class="font-body-md text-body-md text-slate-400 leading-relaxed">
+                    A real-time index combining pollinator activity, weather conditions, and floral density to quantify crop success risk.
+                </p>
+</div>
+<!-- Feature Card 3 -->
+<div class="glass-card p-xl rounded-xl emerald-glow transition-all group">
+<div class="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center text-primary mb-lg group-hover:bg-primary group-hover:text-white transition-colors">
+<span class="material-symbols-outlined text-3xl">psychology</span>
+</div>
+<h3 class="font-headline-md text-headline-md text-slate-100 mb-md">AI Recommendations</h3>
+<p class="font-body-md text-body-md text-slate-400 leading-relaxed">
+                    Receive actionable alerts on hive placement optimization, irrigation timing, and pesticide-safe flight windows.
+                </p>
+</div>
+</div>
+</section>
+<!-- Crop Support Row -->
+<section class="py-2xl bg-slate-900/50 overflow-hidden" id="crops">
+<div class="px-6 max-w-container-max mx-auto mb-xl flex items-end justify-between">
+<div>
+<h2 class="font-headline-md text-headline-md text-slate-100">Specialized Crop Intel</h2>
+<p class="font-body-sm text-body-sm text-slate-400">Custom models for specific biological requirements.</p>
+</div>
+<a class="text-primary-container font-label-md text-label-md hover:underline" href="#">View all 40+ crops</a>
+</div>
+<div class="flex gap-lg px-6 overflow-x-auto pb-lg no-scrollbar snap-x">
+<!-- Crop Card 1 -->
+<div class="min-w-[280px] snap-center glass-card overflow-hidden rounded-xl border border-slate-700">
+<div class="h-40 relative">
+<img class="w-full h-full object-cover" data-alt="A lush almond orchard in full white and pink bloom during a soft sunrise, shot from a cinematic low angle with focus on delicate blossoms and soft depth of field, high-end photography for a dark-themed UI." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAd3L0fS_aw-RdEAylect-bKV4r_IRY6eWh8oPdBxVgqwVT-OXlqz-c2aMkAukEY7WTRzzO7PN-IqZWs-MSLT0NLC3VL0pPZlUMDVtMVHNuTZU7LecFCVtWH9IZrpXBeesXe0vh_QhvqPdknoX3ugbLvvzrmRmVYvlttyTeZWc4XclRxSqdJU4fG5d5cKGsifWoz5c5rYoUNyzupLfKl6T7jF-poJj4srQrytH7GCC8usSjXM-5-PqsvrD-bxr27FEeP5DkMLUWBDZY"/>
+<div class="absolute inset-0 bg-gradient-to-t from-slate-900 to-transparent"></div>
+</div>
+<div class="p-md">
+<h4 class="font-headline-sm text-headline-sm text-slate-100">Almonds</h4>
+<p class="text-xs text-slate-400">Bee-dependent pollination focus</p>
+</div>
+</div>
+<!-- Crop Card 2 -->
+<div class="min-w-[280px] snap-center glass-card overflow-hidden rounded-xl border border-slate-700">
+<div class="h-40 relative">
+<img class="w-full h-full object-cover" data-alt="Close-up of vibrant blue blueberries on a bush, surrounded by lush green leaves, under crisp morning lighting that accentuates the waxy texture of the fruit, professional agricultural photography style." src="https://lh3.googleusercontent.com/aida-public/AB6AXuC2BQqrjV7rjp6wPn9ixJl2nfVJ0o7DBFs9zdFD6Hhz6KjRzjfjwko0ByuK1j5s589u564XjnXr5KswzgXbwHQjyWUIWMSBRqTj7q74U_riILBBiojyQeQif1giCRPiZfVrxXQ-s3fmr5oRCSM4I0h9D2Oh1mzQoDAq0azLrBH1SLAO2bOL-7jtPbqVT7KuygF5_lXIyg_9X70gsQ5trdx7zhEG9MstJvpcDDsPQyq191EP0xVQCXEkJxz_r53bWspszr9SjfD8AkoC"/>
+<div class="absolute inset-0 bg-gradient-to-t from-slate-900 to-transparent"></div>
+</div>
+<div class="p-md">
+<h4 class="font-headline-sm text-headline-sm text-slate-100">Blueberries</h4>
+<p class="text-xs text-slate-400">Buzz pollination tracking</p>
+</div>
+</div>
+<!-- Crop Card 3 -->
+<div class="min-w-[280px] snap-center glass-card overflow-hidden rounded-xl border border-slate-700">
+<div class="h-40 relative">
+<img class="w-full h-full object-cover" data-alt="Rows of deep red cherries hanging from branches in an orchard, dappled sunlight filtering through leaves, cinematic high-contrast lighting for a luxury farming dashboard aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCwQgkslWwlzxOZRxzxNMNlEDJrVBqc7sOxy2p71-dkBqoui8mOOz9cGxU2wWKpDMBSAXiOjibCgswssqpD3NTLhe_cAVvF6thz939pFaD60Fwi1JmcIrhOH4_mlXQ9z76TReQydKISXgEB2YrIz--zTzuH7pGTTdD3sGf-D9yCC25Hfcdgz3rAeAhc5wtO7CtiHj4PTd7afys_6QLVQ5EdiPm6LXAh6-fr-BvshIQ6-StM9be5fvgK_kNfwDrklRulgq29p8HEI6bV"/>
+<div class="absolute inset-0 bg-gradient-to-t from-slate-900 to-transparent"></div>
+</div>
+<div class="p-md">
+<h4 class="font-headline-sm text-headline-sm text-slate-100">Cherries</h4>
+<p class="text-xs text-slate-400">Peak bloom duration analysis</p>
+</div>
+</div>
+<!-- Crop Card 4 -->
+<div class="min-w-[280px] snap-center glass-card overflow-hidden rounded-xl border border-slate-700">
+<div class="h-40 relative">
+<img class="w-full h-full object-cover" data-alt="Golden sunflowers stretching towards a dark moody sky, captured during the golden hour with intense warm light hitting the petals, professional nature photography for agricultural technology application." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDhI9voe2I_p4UJpuN5-XSplxAggZ1QPUOQqx5Pmsu6L86uZIAMfPhXdyu0v2eazG3r6tEYH-BlGzCxRiHkKUImFzUklxxyKyZ--13gFj37Gham1jHyaiOaW9Xe3dXotguL6W6EZwHljrJdCUhCPhAQ6CTe7oqG9trBqUYDB6dNnmw5JJMHYtbvoWRCOV_jWX09DZWNQiblx-qw3z5UlZ-59jgWLRsSXNJP4kXyIh4whC381U8YTJsa7ch4wIkcHW2XsoX83lnNRecy"/>
+<div class="absolute inset-0 bg-gradient-to-t from-slate-900 to-transparent"></div>
+</div>
+<div class="p-md">
+<h4 class="font-headline-sm text-headline-sm text-slate-100">Sunflowers</h4>
+<p class="text-xs text-slate-400">Heliotropic movement modeling</p>
+</div>
+</div>
+</div>
+</section>
+<!-- How It Works Timeline -->
+<section class="py-3xl px-6 max-w-container-max mx-auto" id="how-it-works">
+<div class="text-center mb-3xl">
+<h2 class="font-headline-lg text-headline-lg text-slate-100 mb-sm">The PolliSync Path</h2>
+<p class="font-body-md text-body-md text-slate-400">Three steps to a more predictable harvest.</p>
+</div>
+<div class="relative">
+<!-- Connecting Line -->
+<div class="hidden md:block absolute top-1/2 left-0 w-full h-0.5 bg-slate-800 -translate-y-1/2 z-0"></div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-xl relative z-10">
+<!-- Step 1 -->
+<div class="flex flex-col items-center text-center">
+<div class="w-16 h-16 rounded-full bg-slate-800 border-4 border-background flex items-center justify-center text-primary-container font-bold text-xl mb-lg shadow-xl">1</div>
+<h4 class="font-headline-sm text-headline-sm text-slate-100 mb-sm">Deploy &amp; Map</h4>
+<p class="font-body-sm text-body-sm text-slate-400">Connect your orchard maps and IoT sensors to our platform in under 15 minutes.</p>
+</div>
+<!-- Step 2 -->
+<div class="flex flex-col items-center text-center">
+<div class="w-16 h-16 rounded-full bg-slate-800 border-4 border-background flex items-center justify-center text-primary-container font-bold text-xl mb-lg shadow-xl">2</div>
+<h4 class="font-headline-sm text-headline-sm text-slate-100 mb-sm">Analyze Bloom</h4>
+<p class="font-body-sm text-body-sm text-slate-400">Our AI identifies blossom density and timing patterns across your entire acreage.</p>
+</div>
+<!-- Step 3 -->
+<div class="flex flex-col items-center text-center">
+<div class="w-16 h-16 rounded-full bg-slate-800 border-4 border-background flex items-center justify-center text-primary-container font-bold text-xl mb-lg shadow-xl">3</div>
+<h4 class="font-headline-sm text-headline-sm text-slate-100 mb-sm">Optimize Yield</h4>
+<p class="font-body-sm text-body-sm text-slate-400">Adjust hive density and resource allocation based on real-time pollination deficits.</p>
+</div>
+</div>
+</div>
+</section>
+<!-- Testimonials -->
+<section class="py-3xl px-6 bg-slate-900/30">
+<div class="max-w-container-max mx-auto">
+<h2 class="font-headline-lg text-headline-lg text-slate-100 text-center mb-3xl">Trusted by Industry Leaders</h2>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-lg">
+<!-- Testimonial 1 -->
+<div class="glass-card p-xl rounded-xl">
+<div class="flex items-center gap-md mb-lg">
+<div class="w-12 h-12 rounded-full bg-slate-700 overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="Portrait of a modern female farmer in her 40s, confident expression, wearing professional outdoor workwear, blurred orchard background, high-end photography for a tech testimonial." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDKWP5Z7C_iGg9Zjxo_rBG3O6EKPoQqi4Ma41KJsKJx022HO2YFXT0pkz7c8_-vJL2yhskLUd_EGKTINZWkMSjxWadQpvWP1LQa_90N_47nyU9vkE1z-5hIGjwkBHGGQUwDhraQe7btxXlc87Eev7hkUe3ZWkYaXm0eISvfo-q7jeZsYCsZI5D11JbrtwIeUVqvXg994zfoN-O5cfSRCeQKx85FeH_-ubVzrHEejDV9YakRxDujjsO2-24FFDySsBClLI7gbyZOREQw"/>
+</div>
+<div>
+<p class="font-label-md text-label-md text-slate-100">Sarah Jenkins</p>
+<p class="text-xs text-slate-400">Valley Orchards Director</p>
+</div>
+</div>
+<p class="font-body-md text-body-md text-slate-300 italic">
+                        "PolliSync removed the guesswork from our almond season. We saw a 12% increase in set consistency simply by moving our hives 3 days earlier than our traditional schedule predicted."
+                    </p>
+</div>
+<!-- Testimonial 2 -->
+<div class="glass-card p-xl rounded-xl">
+<div class="flex items-center gap-md mb-lg">
+<div class="w-12 h-12 rounded-full bg-slate-700 overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="Portrait of an experienced agricultural analyst in his 50s, wearing glasses, soft studio lighting, professional corporate aesthetic, slate-toned color palette." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCo_wfuDYZzC-xOzxnOQTbog-915_3jzjR8LAMl9giYLQFGyPJwXGgHD7HDwWqMAT7fdnjZzalqJFNMPs0u1M5Nuv_EWjSAqAntlhceEdqmYY8i8DBCafOjJvjAEpX9LAgQyrWiPQbvDnVoIe23Vr5nq1yi9_moGoaFems0c2TLgGChD051QTlW8168MXF9lIqO0k1cUH-aV1poyYTY_1djo1EgtwLr1zS-utxU42D2u-WIFKTbWHy7jBOyRxQngTKymCgX6ienJe9_"/>
+</div>
+<div>
+<p class="font-label-md text-label-md text-slate-100">Dr. Marcus Chen</p>
+<p class="text-xs text-slate-400">Chief Agronomist, AgriData Inc.</p>
+</div>
+</div>
+<p class="font-body-md text-body-md text-slate-300 italic">
+                        "The fidelity of their flowering forecast is unparalleled. Integrating PolliSync into our broader farm management stack was seamless and immediately value-additive."
+                    </p>
+</div>
+</div>
+</div>
+</section>
+<!-- Footer -->
+<footer class="bg-surface-container-lowest dark:bg-inverse-surface border-t border-outline-variant dark:border-outline full-width relative">
+<div class="grid grid-cols-1 md:grid-cols-4 gap-lg px-6 py-3xl max-w-container-max mx-auto">
+<div class="md:col-span-1">
+<div class="font-headline-sm text-headline-sm font-bold text-on-surface dark:text-inverse-on-surface flex items-center gap-2 mb-md">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">eco</span>
+                    PolliSync
+                </div>
+<p class="font-body-sm text-body-sm text-on-surface-variant dark:text-surface-variant pr-md">
+                    Precision pollination for sustainable yields. Empowering growers with data-driven biological insights.
+                </p>
+</div>
+<div>
+<h5 class="font-label-md text-label-md text-primary dark:text-primary-fixed-dim mb-lg">Product</h5>
+<ul class="space-y-sm">
+<li><a class="font-body-sm text-body-sm text-on-surface-variant dark:text-surface-variant hover:text-primary dark:hover:text-primary-fixed underline decoration-2 underline-offset-4 transition-opacity duration-200" href="#">Features</a></li>
+<li><a class="font-body-sm text-body-sm text-on-surface-variant dark:text-surface-variant hover:text-primary dark:hover:text-primary-fixed underline decoration-2 underline-offset-4 transition-opacity duration-200" href="#">How It Works</a></li>
+<li><a class="font-body-sm text-body-sm text-on-surface-variant dark:text-surface-variant hover:text-primary dark:hover:text-primary-fixed underline decoration-2 underline-offset-4 transition-opacity duration-200" href="#">Crops</a></li>
+<li><a class="font-body-sm text-body-sm text-on-surface-variant dark:text-surface-variant hover:text-primary dark:hover:text-primary-fixed underline decoration-2 underline-offset-4 transition-opacity duration-200" href="#">Pricing</a></li>
+</ul>
+</div>
+<div>
+<h5 class="font-label-md text-label-md text-primary dark:text-primary-fixed-dim mb-lg">Support</h5>
+<ul class="space-y-sm">
+<li><a class="font-body-sm text-body-sm text-on-surface-variant dark:text-surface-variant hover:text-primary dark:hover:text-primary-fixed underline decoration-2 underline-offset-4 transition-opacity duration-200" href="#">Help Center</a></li>
+<li><a class="font-body-sm text-body-sm text-on-surface-variant dark:text-surface-variant hover:text-primary dark:hover:text-primary-fixed underline decoration-2 underline-offset-4 transition-opacity duration-200" href="#">Privacy Policy</a></li>
+<li><a class="font-body-sm text-body-sm text-on-surface-variant dark:text-surface-variant hover:text-primary dark:hover:text-primary-fixed underline decoration-2 underline-offset-4 transition-opacity duration-200" href="#">Terms of Service</a></li>
+</ul>
+</div>
+<div>
+<h5 class="font-label-md text-label-md text-primary dark:text-primary-fixed-dim mb-lg">Newsletter</h5>
+<p class="font-body-sm text-body-sm text-on-surface-variant dark:text-surface-variant mb-md">Get seasonal insights delivered to your inbox.</p>
+<div class="flex gap-2">
+<input class="bg-slate-800 border-slate-700 rounded-lg text-body-sm px-3 py-2 w-full focus:ring-primary focus:border-primary" placeholder="Email" type="email"/>
+<button class="bg-primary p-2 rounded-lg text-white">
+<span class="material-symbols-outlined">send</span>
+</button>
+</div>
+</div>
+</div>
+<div class="border-t border-outline-variant/30 dark:border-outline/10 py-6 px-6 max-w-container-max mx-auto text-center font-body-sm text-body-sm text-on-surface-variant dark:text-surface-variant">
+            © 2024 PolliSync. Precision pollination for sustainable yields.
+        </div>
+</footer>
+<script>
+        // Simple Intersection Observer for Fade-up effects
+        const observerOptions = {
+            threshold: 0.1
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('animate-fade-up');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.glass-card').forEach(card => {
+            card.style.opacity = '0';
+            observer.observe(card);
+        });
+
+        // Horizontal scroll utility for crops
+        const scrollContainer = document.querySelector('#crops .flex');
+        let isDown = false;
+        let startX;
+        let scrollLeft;
+
+        scrollContainer.addEventListener('mousedown', (e) => {
+            isDown = true;
+            startX = e.pageX - scrollContainer.offsetLeft;
+            scrollLeft = scrollContainer.scrollLeft;
+        });
+        scrollContainer.addEventListener('mouseleave', () => isDown = false);
+        scrollContainer.addEventListener('mouseup', () => isDown = false);
+        scrollContainer.addEventListener('mousemove', (e) => {
+            if(!isDown) return;
+            e.preventDefault();
+            const x = e.pageX - scrollContainer.offsetLeft;
+            const walk = (x - startX) * 2;
+            scrollContainer.scrollLeft = scrollLeft - walk;
+        });
+    </script>
+</body></html>

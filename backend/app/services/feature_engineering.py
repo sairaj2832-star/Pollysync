@@ -30,6 +30,7 @@ def build_features(
     bee_count: int,
     month: int,
     day_of_year: int,
+    bee_abundance: int = 15,
 ) -> dict:
     pollen = get_pollen_for_month(month)
     crop = crop_type.lower()
@@ -47,6 +48,7 @@ def build_features(
         "crop_rice": 1 if crop == "rice" else 0,
         "crop_cotton": 1 if crop == "cotton" else 0,
         "bee_richness": bee_count,
+        "bee_count": bee_abundance,
         "pollen_tree": pollen["tree"],
         "pollen_grass": pollen["grass"],
         "pollen_weed": pollen["weed"],
