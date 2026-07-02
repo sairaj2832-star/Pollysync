@@ -53,6 +53,10 @@ def latest_prediction(farm_id: int = Query(...), db: Session = Depends(get_db)) 
 
 @router.get("/dashboard/summary", response_model=DashboardSummary)
 def dashboard_summary(farm_id: int = Query(...), db: Session = Depends(get_db)) -> DashboardSummary:
+    return build_dashboard_summary(farm_id, db)
+
+
+def build_dashboard_summary(farm_id: int, db: Session) -> DashboardSummary:
     farm = db.get(Farm, farm_id)
     if not farm:
         raise HTTPException(status_code=404, detail="Farm not found")

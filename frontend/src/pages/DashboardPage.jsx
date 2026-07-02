@@ -20,7 +20,7 @@ export default function DashboardPage() {
   useEffect(() => {
     async function fetchData() {
       try {
-        const res = await api.get(`/api/predictions/dashboard/summary?farm_id=${farmId}`);
+        const res = await api.get(`/api/dashboard/summary?farm_id=${farmId}`);
         setData(res.data);
       } catch (err) {
         setError(err?.response?.data?.detail || "Failed to load dashboard");

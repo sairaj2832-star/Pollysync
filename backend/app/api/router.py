@@ -1,6 +1,6 @@
 from fastapi import APIRouter
 
-from app.api.routes import auth, farms, health, maps, predictions, recommendations, weather
+from app.api.routes import auth, dashboard, farms, health, maps, predictions, recommendations, weather
 
 api_router = APIRouter()
 api_router.include_router(health.router)
@@ -10,3 +10,4 @@ api_router.include_router(weather.router)
 api_router.include_router(predictions.router)
 api_router.include_router(recommendations.router)
 api_router.include_router(maps.router)
+api_router.include_router(dashboard.router)

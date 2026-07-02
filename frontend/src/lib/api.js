@@ -69,7 +69,7 @@ export async function getLatestPrediction(farm_id) {
 }
 
 export async function getDashboardSummary(farm_id) {
-  const { data } = await api.get("/api/predictions/dashboard/summary", { params: { farm_id } });
+  const { data } = await api.get("/api/dashboard/summary", { params: { farm_id } });
   return data;
 }
 

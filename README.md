@@ -60,14 +60,14 @@ See docs/SETUP.md for the complete setup and team workflow.
 
 ## Current starter scope
 
-The initial code provides:
+The MVP code now provides:
 
-- a responsive React landing/status screen;
+- a responsive React landing page, auth flow, prediction form, dashboard, and map components;
 - a central API client boundary for future frontend work;
-- FastAPI health and farm endpoints;
+- FastAPI auth, farms, weather, predictions, recommendations, maps, dashboard, and health endpoints;
 - SQLite persistence with SQLAlchemy;
-- one backend smoke-test module;
-- an ML module contract and honest placeholder implementation;
+- backend API coverage for auth, farms, weather, predictions, and dashboard summary;
+- ML data, training scripts, model loading hooks, and baseline prediction fallback;
 - CI checks for frontend builds and backend tests.
 
-Authentication, live weather and GBIF integrations, trained model artifacts, dashboards, and deployment configuration are intentionally left for the planned project milestones.
+Live weather and GBIF integrations have local fallbacks so the demo can still run when a free external API is slow or unavailable. Deployment to Vercel/Render still needs project-specific account setup and production environment variables.

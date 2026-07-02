@@ -79,3 +79,68 @@ def test_auth_register_login_refresh_and_logout() -> None:
             json={"refresh_token": refreshed.json()["refresh_token"]},
         )
         assert logged_out.status_code == 204
+
+
+def test_current_weather_uses_farm_coordinates(monkeypatch) -> None:
+    calls = []
+
+    async def fake_fetch_weather(lat: float, lng: float) -> dict:
+        calls.append((lat, lng))
+        return {
+            "current": {
+                "temperature_2m": 27,
+                "relative_humidity_2m": 66,
+                "precipitation": 1.2,
+                "wind_speed_10m": 7.5,
+            }
+        }
+
+    monkeypatch.setattr("app.api.routes.weather.fetch_weather", fake_fetch_weather)
+
+    payload = {
+        "name": "Weather Farm Unique",
+        "crop_type": "Mustard",
+        "location_lat": 19.9975,
+        "location_lng": 73.7898,
+    }
+
+    with TestClient(app) as client:
+        farm = client.post("/api/farms", json=payload).json()
+        response = client.get("/api/weather/current", params={"farm_id": farm["id"]})
+
+    assert response.status_code == 200
+    assert calls == [(payload["location_lat"], payload["location_lng"])]
+    assert response.json()["temperature"] == 27
+
+
+def test_prediction_creates_recommendation_and_dashboard_alias(monkeypatch) -> None:
+    async def fake_fetch_weather(lat: float, lng: float) -> dict:
+        return {
+            "current": {
+                "temperature_2m": 25,
+                "relative_humidity_2m": 64,
+                "precipitation": 0,
+                "wind_speed_10m": 8,
+            }
+        }
+
+    monkeypatch.setattr("app.services.prediction_service.fetch_weather", fake_fetch_weather)
+
+    payload = {
+        "name": "Prediction Farm Unique",
+        "crop_type": "Mustard",
+        "location_lat": 20.011,
+        "location_lng": 73.79,
+    }
+
+    with TestClient(app) as client:
+        farm = client.post("/api/farms", json=payload).json()
+        prediction = client.post("/api/predictions", json={"farm_id": farm["id"]})
+        dashboard = client.get("/api/dashboard/summary", params={"farm_id": farm["id"]})
+
+    assert prediction.status_code == 201
+    body = prediction.json()
+    assert body["recommendation"]
+    assert body["weather_summary"]["temperature"] == 25
+    assert dashboard.status_code == 200
+    assert dashboard.json()["latest_prediction"]["id"] == body["id"]
