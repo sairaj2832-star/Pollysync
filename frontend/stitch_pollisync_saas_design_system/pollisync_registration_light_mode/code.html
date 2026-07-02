@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Register - PolliSync</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700;800;900&amp;family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-surface-variant": "#3c4a42",
+                        "inverse-surface": "#342f2b",
+                        "on-primary-container": "#00422b",
+                        "on-secondary": "#ffffff",
+                        "on-background": "#1f1b17",
+                        "inverse-primary": "#4edea3",
+                        "surface-container": "#f6ece6",
+                        "tertiary-fixed": "#ffdad7",
+                        "on-secondary-container": "#684000",
+                        "on-tertiary": "#ffffff",
+                        "surface": "#fff8f5",
+                        "surface-container-low": "#fcf2eb",
+                        "secondary": "#855300",
+                        "tertiary": "#b91a24",
+                        "on-tertiary-fixed-variant": "#930013",
+                        "tertiary-fixed-dim": "#ffb3ad",
+                        "surface-container-high": "#f0e6e0",
+                        "secondary-container": "#fea619",
+                        "primary-container": "#10b981",
+                        "on-tertiary-fixed": "#410004",
+                        "on-primary-fixed": "#002113",
+                        "on-secondary-fixed-variant": "#653e00",
+                        "outline": "#6c7a71",
+                        "surface-container-highest": "#eae1da",
+                        "error-container": "#ffdad6",
+                        "primary-fixed": "#6ffbbe",
+                        "on-surface": "#1f1b17",
+                        "surface-tint": "#006c49",
+                        "on-tertiary-container": "#79000e",
+                        "on-primary-fixed-variant": "#005236",
+                        "tertiary-container": "#ff7a73",
+                        "inverse-on-surface": "#f9efe8",
+                        "surface-variant": "#eae1da",
+                        "error": "#ba1a1a",
+                        "on-primary": "#ffffff",
+                        "surface-bright": "#fff8f5",
+                        "background": "#fff8f5",
+                        "surface-dim": "#e2d8d2",
+                        "on-error-container": "#93000a",
+                        "secondary-fixed-dim": "#ffb95f",
+                        "on-error": "#ffffff",
+                        "primary": "#006c49",
+                        "surface-container-lowest": "#ffffff",
+                        "primary-fixed-dim": "#4edea3",
+                        "outline-variant": "#bbcabf",
+                        "on-secondary-fixed": "#2a1700",
+                        "secondary-fixed": "#ffddb8"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "md": "16px",
+                        "base": "4px",
+                        "container-max": "1280px",
+                        "xl": "32px",
+                        "gutter": "24px",
+                        "xs": "4px",
+                        "sm": "8px",
+                        "lg": "24px",
+                        "2xl": "48px",
+                        "3xl": "64px"
+                    },
+                    "fontFamily": {
+                        "headline-md": ["Geist Sans", "sans-serif"],
+                        "headline-lg": ["Geist Sans", "sans-serif"],
+                        "display": ["Geist Sans", "sans-serif"],
+                        "label-md": ["Geist Sans", "sans-serif"],
+                        "headline-sm": ["Geist Sans", "sans-serif"],
+                        "body-sm": ["Inter", "sans-serif"],
+                        "headline-lg-mobile": ["Geist Sans", "sans-serif"],
+                        "body-lg": ["Inter", "sans-serif"],
+                        "label-sm": ["Geist Sans", "sans-serif"],
+                        "body-md": ["Inter", "sans-serif"]
+                    },
+                    "fontSize": {
+                        "headline-md": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+                        "headline-lg": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "600" }],
+                        "display": ["48px", { "lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "label-md": ["14px", { "lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "500" }],
+                        "headline-sm": ["20px", { "lineHeight": "28px", "letterSpacing": "0em", "fontWeight": "600" }],
+                        "body-sm": ["14px", { "lineHeight": "20px", "letterSpacing": "0em", "fontWeight": "400" }],
+                        "headline-lg-mobile": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+                        "body-lg": ["18px", { "lineHeight": "28px", "letterSpacing": "0em", "fontWeight": "400" }],
+                        "label-sm": ["12px", { "lineHeight": "16px", "letterSpacing": "0.02em", "fontWeight": "600" }],
+                        "body-md": ["16px", { "lineHeight": "24px", "letterSpacing": "0em", "fontWeight": "400" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body { font-family: 'Inter', sans-serif; }
+        h1, h2, h3, h4, h5, h6, .font-geist { font-family: 'Geist Sans', sans-serif; }
+    </style>
+</head>
+<body class="bg-background min-h-screen flex items-center justify-center p-lg md:p-2xl relative overflow-hidden">
+<!-- Decorative Background Elements -->
+<div class="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-primary-container/10 rounded-full blur-3xl pointer-events-none"></div>
+<div class="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-secondary-container/10 rounded-full blur-3xl pointer-events-none"></div>
+<main class="w-full max-w-[480px] bg-surface-container-lowest rounded-xl border border-outline-variant/30 shadow-[0_1px_3px_rgba(0,0,0,0.05)] p-xl relative z-10">
+<!-- Header -->
+<div class="text-center mb-xl">
+<div class="inline-flex items-center justify-center w-12 h-12 rounded-lg bg-primary-container/20 text-primary mb-md">
+<span class="material-symbols-outlined text-[28px]" style="font-variation-settings: 'FILL' 1;">agriculture</span>
+</div>
+<h1 class="font-headline-lg text-headline-lg text-on-surface mb-xs hidden md:block">Start Your Pollination Journey</h1>
+<h1 class="font-headline-lg-mobile text-headline-lg-mobile text-on-surface mb-xs md:hidden">Start Your Pollination Journey</h1>
+<p class="font-body-md text-body-md text-on-surface-variant">Create your PolliSync account to begin.</p>
+</div>
+<!-- 2-Step Visual Indicator -->
+<div class="flex items-center justify-between mb-2xl relative">
+<div class="absolute left-0 top-1/2 w-full h-[2px] bg-surface-variant -translate-y-1/2 z-0"></div>
+<div class="relative z-10 flex flex-col items-center gap-sm bg-surface-container-lowest px-sm">
+<div class="w-8 h-8 rounded-full bg-primary text-on-primary flex items-center justify-center font-label-sm text-label-sm shadow-[inset_0_1px_1px_rgba(255,255,255,0.4)]">1</div>
+<span class="font-label-sm text-label-sm text-on-surface">Account</span>
+</div>
+<div class="relative z-10 flex flex-col items-center gap-sm bg-surface-container-lowest px-sm">
+<div class="w-8 h-8 rounded-full bg-surface-variant text-on-surface-variant flex items-center justify-center font-label-sm text-label-sm border border-outline-variant/50">2</div>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Farm</span>
+</div>
+</div>
+<!-- Form (Step 1 currently visible in this static design) -->
+<form class="space-y-lg">
+<div class="space-y-md">
+<!-- Full Name -->
+<div class="flex flex-col gap-xs">
+<label class="font-label-md text-label-md text-on-surface" for="fullName">Full Name</label>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-md top-1/2 -translate-y-1/2 text-on-surface-variant pointer-events-none">person</span>
+<input class="w-full bg-surface-container-lowest border border-outline-variant rounded-lg pl-2xl pr-md py-sm font-body-md text-body-md text-on-surface focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all placeholder:text-on-surface-variant/50" id="fullName" placeholder="Jane Doe" type="text"/>
+</div>
+</div>
+<!-- Email -->
+<div class="flex flex-col gap-xs">
+<label class="font-label-md text-label-md text-on-surface" for="email">Email Address</label>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-md top-1/2 -translate-y-1/2 text-on-surface-variant pointer-events-none">mail</span>
+<input class="w-full bg-surface-container-lowest border border-outline-variant rounded-lg pl-2xl pr-md py-sm font-body-md text-body-md text-on-surface focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all placeholder:text-on-surface-variant/50" id="email" placeholder="jane@farm.com" type="email"/>
+</div>
+</div>
+<!-- Password -->
+<div class="flex flex-col gap-xs">
+<label class="font-label-md text-label-md text-on-surface" for="password">Password</label>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-md top-1/2 -translate-y-1/2 text-on-surface-variant pointer-events-none">lock</span>
+<input class="w-full bg-surface-container-lowest border border-outline-variant rounded-lg pl-2xl pr-md py-sm font-body-md text-body-md text-on-surface focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all placeholder:text-on-surface-variant/50" id="password" placeholder="••••••••" type="password"/>
+</div>
+</div>
+<!-- Confirm Password -->
+<div class="flex flex-col gap-xs">
+<label class="font-label-md text-label-md text-on-surface" for="confirmPassword">Confirm Password</label>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-md top-1/2 -translate-y-1/2 text-on-surface-variant pointer-events-none">lock_reset</span>
+<input class="w-full bg-surface-container-lowest border border-outline-variant rounded-lg pl-2xl pr-md py-sm font-body-md text-body-md text-on-surface focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all placeholder:text-on-surface-variant/50" id="confirmPassword" placeholder="••••••••" type="password"/>
+</div>
+</div>
+</div>
+<!-- Note: Step 2 fields would go here, hidden by default -->
+<!-- Terms -->
+<div class="flex items-start gap-sm mt-md">
+<input class="mt-1 w-4 h-4 rounded border-outline-variant text-primary focus:ring-primary/20" id="terms" type="checkbox"/>
+<label class="font-body-sm text-body-sm text-on-surface-variant" for="terms">
+                    I agree to the <a class="text-primary hover:underline font-medium" href="#">Terms of Service</a> and <a class="text-primary hover:underline font-medium" href="#">Privacy Policy</a>.
+                </label>
+</div>
+<!-- Action -->
+<button class="w-full bg-[#10b981] hover:bg-[#0ea5e9] text-white rounded-lg py-sm font-label-md text-label-md shadow-[inset_0_1px_1px_rgba(255,255,255,0.4)] transition-colors duration-200 mt-xl flex items-center justify-center gap-sm" type="button">
+                Next Step
+                <span class="material-symbols-outlined text-[20px]">arrow_forward</span>
+</button>
+<!-- Hidden final button for layout context -->
+<button class="hidden w-full bg-[#10b981] hover:bg-[#0ea5e9] text-white rounded-lg py-sm font-label-md text-label-md shadow-[inset_0_1px_1px_rgba(255,255,255,0.4)] transition-colors duration-200 mt-xl items-center justify-center gap-sm" type="button">
+                Create Account &amp; Add Farm
+            </button>
+</form>
+<!-- Footer -->
+<div class="mt-2xl text-center border-t border-outline-variant/30 pt-lg">
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+                Already have an account? <a class="text-primary hover:underline font-medium ml-xs" href="#">Sign In</a>
+</p>
+</div>
+</main>
+</body></html>

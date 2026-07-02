@@ -257,7 +257,7 @@ def predict(features: PollinationFeatures) -> PredictionResult:
                 print(f"   ✅ Reordered DataFrame to match model features")
             
             # Scale features for flowering
-            X_scaled = flowering_scaler.transform(df)
+            X_scaled = pd.DataFrame(flowering_scaler.transform(df), columns=df.columns)
             
             # Predict flowering
             start_doy = int(round(flowering_model.predict(X_scaled)[0]))
@@ -274,7 +274,7 @@ def predict(features: PollinationFeatures) -> PredictionResult:
             else:
                 df_psi = df
             
-            X_psi_scaled = psi_scaler.transform(df_psi)
+            X_psi_scaled = pd.DataFrame(psi_scaler.transform(df_psi), columns=df_psi.columns)
             psi = int(round(psi_model.predict(X_psi_scaled)[0]))
             psi = max(0, min(100, psi))
             print(f"   ✅ PSI prediction: {psi}")
@@ -286,8 +286,9 @@ def predict(features: PollinationFeatures) -> PredictionResult:
             else:
                 df_risk = df
             
-            X_risk_scaled = risk_scaler.transform(df_risk)
-            risk = risk_model.predict(X_risk_scaled)[0]
+            X_risk_scaled = pd.DataFrame(risk_scaler.transform(df_risk), columns=df_risk.columns)
+            risk_raw = risk_model.predict(X_risk_scaled)[0]
+            risk = risk_raw if isinstance(risk_raw, str) else risk_model._label_encoder.inverse_transform([risk_raw])[0]
             print(f"   ✅ Risk prediction: {risk}")
             
             # Calculate gap days

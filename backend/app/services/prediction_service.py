@@ -10,26 +10,27 @@ from app.services.bee_service import get_mock_bees
 from app.services.feature_engineering import build_features
 from app.services.weather_service import cache_weather, fetch_weather, get_cached_weather
 
-MODELS_DIR = Path(__file__).resolve().parent.parent.parent / "models"
+MODELS_DIR = Path(__file__).resolve().parent.parent.parent.parent / "ml" / "models"
 
 flowering_model = None
+flowering_scaler = None
 psi_model = None
+psi_scaler = None
 risk_model = None
+risk_scaler = None
 
 
 def _load_models():
-    global flowering_model, psi_model, risk_model
+    global flowering_model, flowering_scaler, psi_model, psi_scaler, risk_model, risk_scaler
     try:
         import joblib
-        flowering_path = MODELS_DIR / "flowering_model.pkl"
-        psi_path = MODELS_DIR / "psi_model.pkl"
-        risk_path = MODELS_DIR / "risk_model.pkl"
-        if flowering_path.exists():
-            flowering_model = joblib.load(str(flowering_path))
-        if psi_path.exists():
-            psi_model = joblib.load(str(psi_path))
-        if risk_path.exists():
-            risk_model = joblib.load(str(risk_path))
+        for name in ("flowering", "psi", "risk"):
+            model_path = MODELS_DIR / f"{name}_model.pkl"
+            scaler_path = MODELS_DIR / f"{name}_scaler.pkl"
+            if model_path.exists():
+                globals()[f"{name}_model"] = joblib.load(str(model_path))
+            if scaler_path.exists():
+                globals()[f"{name}_scaler"] = joblib.load(str(scaler_path))
     except Exception:
         pass
 
@@ -114,14 +115,25 @@ async def run_prediction(farm: Farm, db: Session) -> Prediction:
         day_of_year=now.timetuple().tm_yday,
     )
 
-    if flowering_model and psi_model:
+    if all([flowering_model, flowering_scaler, psi_model, psi_scaler, risk_model, risk_scaler]):
         import pandas as pd
-        df = pd.DataFrame([features])
-        start_doy = int(flowering_model.predict(df)[0])
+        from app.services.feature_engineering import CROP_ENCODER
+        expected_cols = sorted(features.keys())
+        df = pd.DataFrame([features])[expected_cols]
+
+        X_scaled = flowering_scaler.transform(df)
+        start_doy = int(round(flowering_model.predict(X_scaled)[0]))
+        start_doy = max(1, min(365, start_doy))
         confidence = 0.87
-        psi = int(psi_model.predict(df)[0])
+
+        psi = int(round(psi_model.predict(psi_scaler.transform(df))[0]))
         psi = max(0, min(100, psi))
-        risk = risk_model.predict(df)[0] if risk_model else "Medium"
+
+        risk_raw = risk_model.predict(risk_scaler.transform(df))[0]
+        if hasattr(risk_model, '_label_encoder'):
+            risk = risk_model._label_encoder.inverse_transform([risk_raw])[0]
+        else:
+            risk = risk_raw
     else:
         start_doy, confidence = _predict_flowering_baseline(features)
         psi, risk = _predict_psi_baseline(features)

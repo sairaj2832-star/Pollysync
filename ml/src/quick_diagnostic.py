@@ -10,7 +10,7 @@ sys.path.append(str(Path(__file__).parent))
 from datetime import date
 import pandas as pd
 import joblib
-from predict import PollinationFeatures, predict, _build_feature_dict, _load_model_with_scaler
+from predict import PollinationFeatures, predict, _build_feature_dict
 
 def debug_prediction_detailed():
     """Detailed debug of prediction pipeline."""
@@ -95,7 +95,7 @@ def debug_prediction_detailed():
             
             # Scale
             print(f"   Scaling features...")
-            X_scaled = flowering_scaler.transform(df)
+            X_scaled = pd.DataFrame(flowering_scaler.transform(df), columns=df.columns)
             print(f"   ✅ Scaled features: shape {X_scaled.shape}")
             
             # Predict
