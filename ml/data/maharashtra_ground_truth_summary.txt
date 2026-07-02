@@ -1,0 +1,10 @@
+Maharashtra Ground Truth Dataset Summary
+==================================================
+Total rows: 1545
+Crops: {'sunflower': 330, 'mustard': 330, 'rice': 330, 'cotton': 330, 'wheat': 225}
+Districts: ['amravati', 'aurangabad', 'jalgaon', 'kolhapur', 'latur', 'nagpur', 'nashik', 'pune', 'satara', 'solapur']
+Years: 2015–2025
+start_doy range: 199–365
+temp_7d_mean range: 16.8–33.0
+Data source: NASA POWER + GDD model
+Real data labels (not synthetic): 1545

@@ -21,6 +21,8 @@ class Prediction(Base):
     ndvi_value: Mapped[float] = mapped_column(Float, default=0.0)
     bee_species: Mapped[str] = mapped_column(Text, default="[]")
     recommendation: Mapped[str] = mapped_column(Text, default="")
+    model_source: Mapped[str] = mapped_column(String(32), default="general")
+    data_confidence: Mapped[str] = mapped_column(String(32), default="standard")
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True),
         server_default=func.now(),

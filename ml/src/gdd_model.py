@@ -28,6 +28,24 @@ CROP_PARAMS = {
         "gdd_to_maturity": 1700,
         "confidence": "low",
     },
+    "wheat": {
+        "t_base": 4.5,           # °C (common for winter wheat)
+        "gdd_to_flowering": 750,  # medium-maturity varieties, Maharashtra Rabi
+        "gdd_to_maturity": 1600,
+        "confidence": "medium",
+    },
+    "rice": {
+        "t_base": 10.0,          # °C (rice is warm-season)
+        "gdd_to_flowering": 900,  # medium-duration Kharif varieties
+        "gdd_to_maturity": 1800,
+        "confidence": "medium",
+    },
+    "cotton": {
+        "t_base": 12.0,          # °C (heat-loving crop)
+        "gdd_to_flowering": 800,  # hybrid cotton, Maharashtra conditions
+        "gdd_to_maturity": 2200,
+        "confidence": "medium",
+    },
 }
 
 
