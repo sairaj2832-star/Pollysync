@@ -98,18 +98,23 @@ def compute_flowering_doy(weather_df: pd.DataFrame, crop: str,
     return None
 
 
-def get_seven_day_window(weather_df: pd.DataFrame, flowering_date: date) -> dict:
+def get_early_season_weather(weather_df: pd.DataFrame, sowing_date: date) -> dict:
+    """Compute weather features from the first 7 days after sowing.
+    
+    Unlike the old get_seven_day_window which used flowering_date (the label),
+    this uses the sowing date — known at inference time — eliminating target leakage.
+    """
     window = weather_df[
-        (weather_df["date_parsed"] > pd.Timestamp(flowering_date) - pd.Timedelta(days=7)) &
-        (weather_df["date_parsed"] <= pd.Timestamp(flowering_date))
+        (weather_df["date_parsed"] >= pd.Timestamp(sowing_date)) &
+        (weather_df["date_parsed"] < pd.Timestamp(sowing_date) + pd.Timedelta(days=7))
     ]
-    if window.empty:
-        last_rows = weather_df.tail(7)
+    if len(window) < 3:
+        first_rows = weather_df.head(7)
         return {
-            "temp_7d_mean": round(((last_rows["T2M_MAX"] + last_rows["T2M_MIN"]) / 2).mean(), 1),
-            "humidity": round(last_rows["RH2M"].mean(), 1),
-            "rainfall_7d": round(last_rows["PRECTOTCORR"].sum(), 1),
-            "wind_speed": round(last_rows["WS2M"].mean() * 3.6, 1),
+            "temp_7d_mean": round(((first_rows["T2M_MAX"] + first_rows["T2M_MIN"]) / 2).mean(), 1),
+            "humidity": round(first_rows["RH2M"].mean(), 1),
+            "rainfall_7d": round(first_rows["PRECTOTCORR"].sum(), 1),
+            "wind_speed": round(first_rows["WS2M"].mean() * 3.6, 1),
         }
 
     return {
@@ -194,9 +199,8 @@ def build_rows() -> pd.DataFrame:
 
             flowering_doy = gdd_result.predicted_flowering_date.timetuple().tm_yday
 
-            # Get 7-day window before flowering
-            window_data = get_seven_day_window(season_weather,
-                                                gdd_result.predicted_flowering_date)
+            # Get early-season weather from first 7 days after sowing (no target leakage)
+            window_data = get_early_season_weather(season_weather, sowing_this_year)
 
             # Get NDVI for this district/year/crop
             ndvi_match = ndvi_df[
@@ -213,40 +217,35 @@ def build_rows() -> pd.DataFrame:
                 ndvi_inflection = None
                 ndvi_r2 = None
 
-            # Generate multiple rows per district×year×crop with weather variations
-            monthly_variations = [0, 1, 2]
-            for var_idx in monthly_variations:
-                temp_shift = var_idx * 1.5
-                rain_factor = 1.0 - var_idx * 0.1
-
-                row = {
-                    "crop": crop,
-                    "region": "Maharashtra",
-                    "district": district,
-                    "year": year,
-                    "start_doy": max(1, min(365, flowering_doy)),
-                    "end_doy": max(1, min(365, flowering_doy + 7)),
-                    "temp_7d_mean": round(window_data["temp_7d_mean"] + temp_shift, 1),
-                    "humidity": round(window_data["humidity"], 1),
-                    "rainfall_7d": round(window_data["rainfall_7d"] * rain_factor, 1),
-                    "wind_speed": round(window_data["wind_speed"], 1),
-                    "ndvi": round(ndvi_val, 3),
-                    "month": gdd_result.predicted_flowering_date.month,
-                    "day_of_year": flowering_doy,
-                    "bee_richness": bee_richness,
-                    "bee_count": max(5, bee_richness * np.random.randint(3, 6)),
-                    "pollen_tree": SEASONAL_POLLEN.get(gdd_result.predicted_flowering_date.month, {}).get("tree", 3),
-                    "pollen_grass": SEASONAL_POLLEN.get(gdd_result.predicted_flowering_date.month, {}).get("grass", 3),
-                    "pollen_weed": SEASONAL_POLLEN.get(gdd_result.predicted_flowering_date.month, {}).get("weed", 3),
-                    "shannon_diversity": round(shannon, 4),
-                    "gdd_flowering_doy": flowering_doy,
-                    "ndvi_inflection_doy": ndvi_inflection if ndvi_inflection else None,
-                    "ndvi_fit_r2": round(ndvi_r2, 4) if ndvi_r2 else None,
-                    "gdd_method": gdd_result.method,
-                    "gdd_confidence": gdd_result.confidence,
-                    "data_source": "nasa_power_gdd",
-                }
-                records.append(row)
+            row = {
+                "crop": crop,
+                "region": "Maharashtra",
+                "district": district,
+                "year": year,
+                "start_doy": max(1, min(365, flowering_doy)),
+                "end_doy": max(1, min(365, flowering_doy + 7)),
+                "sowing_doy": sowing_this_year.timetuple().tm_yday,
+                "temp_7d_mean": round(window_data["temp_7d_mean"], 1),
+                "humidity": round(window_data["humidity"], 1),
+                "rainfall_7d": round(window_data["rainfall_7d"], 1),
+                "wind_speed": round(window_data["wind_speed"], 1),
+                "ndvi": round(ndvi_val, 3),
+                "month": sowing_this_year.month,
+                "day_of_year": sowing_this_year.timetuple().tm_yday,
+                "bee_richness": bee_richness,
+                "bee_count": max(5, bee_richness * np.random.randint(3, 6)),
+                "pollen_tree": SEASONAL_POLLEN.get(sowing_this_year.month, {}).get("tree", 3),
+                "pollen_grass": SEASONAL_POLLEN.get(sowing_this_year.month, {}).get("grass", 3),
+                "pollen_weed": SEASONAL_POLLEN.get(sowing_this_year.month, {}).get("weed", 3),
+                "shannon_diversity": round(shannon, 4),
+                "gdd_flowering_doy": flowering_doy,
+                "ndvi_inflection_doy": ndvi_inflection if ndvi_inflection else None,
+                "ndvi_fit_r2": round(ndvi_r2, 4) if ndvi_r2 else None,
+                "gdd_method": gdd_result.method,
+                "gdd_confidence": gdd_result.confidence,
+                "data_source": "nasa_power_gdd",
+            }
+            records.append(row)
 
     return pd.DataFrame(records)
 
@@ -271,6 +270,7 @@ def main():
     print(f"  Years: {df['year'].min()}–{df['year'].max()}")
     print(f"  start_doy range: {df['start_doy'].min()}–{df['start_doy'].max()}")
     print(f"  temp_7d_mean range: {df['temp_7d_mean'].min():.1f}–{df['temp_7d_mean'].max():.1f}")
+    print(f"  Features use early-season weather (post-sowing) — no target leakage")
 
     real_count = len(df)
     print(f"\n  Real data rows: {real_count}")
@@ -285,6 +285,7 @@ def main():
         f.write(f"Years: {df['year'].min()}–{df['year'].max()}\n")
         f.write(f"start_doy range: {df['start_doy'].min()}–{df['start_doy'].max()}\n")
         f.write(f"temp_7d_mean range: {df['temp_7d_mean'].min():.1f}–{df['temp_7d_mean'].max():.1f}\n")
+        f.write(f"Feature window: first 7 days after sowing (no target leakage)\n")
         f.write(f"Data source: NASA POWER + GDD model\n")
         f.write(f"Real data labels (not synthetic): {real_count}\n")
 

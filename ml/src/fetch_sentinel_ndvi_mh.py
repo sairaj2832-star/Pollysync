@@ -81,9 +81,13 @@ def _try_earth_engine(district: dict, year: int, season_start: date,
         import ee
 
         try:
-            ee.Initialize()
+            # Try with project ID from main branch's fetch_ee_data.py
+            ee.Initialize(project='studymate-4fc50')
         except Exception:
-            return None
+            try:
+                ee.Initialize()
+            except Exception:
+                return None
 
         point = ee.Geometry.Point([district["lon"], district["lat"]])
 

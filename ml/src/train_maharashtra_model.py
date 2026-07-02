@@ -73,19 +73,58 @@ def load_augmented_synthetic(n_desired: int = 3000) -> pd.DataFrame:
     return result
 
 
-def train_flowering_model(X, y, sample_weight=None):
+def temporal_split_by_year(df, X, y, sample_weight=None, test_years=None):
+    """Split data temporally: train on earlier years, test on later years.
+
+    This prevents future data from leaking into training (unlike random train_test_split).
+    Synthetic rows (no year column) always go to training.
+    """
+    if test_years is None:
+        test_years = [2020, 2021]
+
+    if "year" not in df.columns:
+        df = df.copy()
+        df["year"] = -1
+    train_mask = ~df["year"].fillna(-1).isin(test_years)
+    test_mask = df["year"].fillna(-1).isin(test_years)
+
+    X_tr = X[train_mask.values]
+    X_te = X[test_mask.values]
+    y_tr = y[train_mask.values]
+    y_te = y[test_mask.values]
+
+    if sample_weight is not None:
+        sw_tr = sample_weight[train_mask.values]
+        sw_te = sample_weight[test_mask.values]
+    else:
+        sw_tr = None
+        sw_te = None
+
+    print(f"  Temporal split: train years = {sorted(df.loc[train_mask, 'year'].unique())}")
+    print(f"                  test years  = {sorted(df.loc[test_mask, 'year'].unique())}")
+    print(f"  Train: {len(X_tr)}, Test: {len(X_te)}")
+    y_tr_a = y_tr.values if hasattr(y_tr, "values") else y_tr
+    y_te_a = y_te.values if hasattr(y_te, "values") else y_te
+    return X_tr, X_te, y_tr_a, y_te_a, sw_tr, sw_te
+
+
+def train_flowering_model(df, X, y, sample_weight=None):
     print(f"\n--- Training Flowering Model (MH) ---")
     print(f"  Samples: {len(X)}, Features: {X.shape[1]}")
 
     scaler = StandardScaler()
     X_scaled = scaler.fit_transform(X)
-    X_tr, X_te, y_tr, y_te, sw_tr, sw_te = train_test_split(
-        X_scaled, y, sample_weight, test_size=0.2, random_state=42
-    ) if sample_weight is not None else (
-        *train_test_split(X_scaled, y, test_size=0.2, random_state=42), None, None
+    X_tr, X_te, y_tr, y_te, sw_tr, sw_te = temporal_split_by_year(
+        df, X_scaled, y, sample_weight
     )
 
-    print(f"  Train: {len(X_tr)}, Test: {len(X_te)}")
+    if len(X_te) == 0:
+        from sklearn.model_selection import train_test_split
+        X_tr, X_te, y_tr, y_te, sw_tr, sw_te = train_test_split(
+            X_scaled, y, sample_weight, test_size=0.2, random_state=42
+        ) if sample_weight is not None else (
+            *train_test_split(X_scaled, y, test_size=0.2, random_state=42), None, None
+        )
 
     # RF with GridSearch
     rf_grid = GridSearchCV(
@@ -138,16 +177,41 @@ def train_flowering_model(X, y, sample_weight=None):
     return best, scaler
 
 
-def train_psi_and_risk(X, y_psi, y_risk, sample_weight=None):
+def train_psi_and_risk(df, X, y_psi, y_risk, sample_weight=None):
     print(f"\n--- Training PSI & Risk Models (MH) ---")
     print(f"  Samples: {len(X)}, Features: {X.shape[1]}")
 
+    from sklearn.model_selection import train_test_split
+
     scaler = StandardScaler()
     X_scaled = scaler.fit_transform(X)
-    X_tr, X_te, y_psi_tr, y_psi_te, y_risk_tr, y_risk_te, sw_tr, sw_te = (
-        train_test_split(X_scaled, y_psi, y_risk, sample_weight,
-                         test_size=0.2, random_state=42)
-    )
+
+    # Use temporal split if year column exists and has multiple years; else random split
+    has_year = "year" in df.columns and df["year"].nunique() > 1
+    if has_year:
+        test_years = [2020, 2021]
+        train_mask = ~df["year"].fillna(-1).isin(test_years)
+        test_mask = df["year"].fillna(-1).isin(test_years)
+        X_tr = X_scaled[train_mask.values]
+        X_te = X_scaled[test_mask.values]
+        y_psi_tr = y_psi[train_mask.values]
+        y_psi_te = y_psi[test_mask.values]
+        y_risk_tr = y_risk[train_mask.values]
+        y_risk_te = y_risk[test_mask.values]
+        sw_tr = sample_weight[train_mask.values] if sample_weight is not None else None
+        sw_te = sample_weight[test_mask.values] if sample_weight is not None else None
+        print(f"  Temporal split: train={train_mask.sum()} test={test_mask.sum()}")
+    else:
+        split = train_test_split(X_scaled, y_psi, y_risk, sample_weight,
+                                 test_size=0.2, random_state=42)
+        X_tr, X_te, y_psi_tr, y_psi_te, y_risk_tr, y_risk_te, sw_tr, sw_te = split
+        print(f"  Random split: train={len(X_tr)} test={len(X_te)}")
+
+    if len(X_te) == 0:
+        X_tr, X_te, y_psi_tr, y_psi_te, y_risk_tr, y_risk_te, sw_tr, sw_te = train_test_split(
+            X_scaled, y_psi, y_risk, sample_weight, test_size=0.2, random_state=42
+        )
+        print(f"  (fallback random split: train={len(X_tr)} test={len(X_te)})")
 
     # PSI model
     psi_rf = RandomForestRegressor(
@@ -231,7 +295,8 @@ def train_on_available_psi(df_f, df_psi, sample_weight_f, sample_weight_psi):
         return None, None, None
 
     X_psi = prepare_mh_features(df_f if "psi_score" in df_f.columns else df_psi)
-    return train_psi_and_risk(X_psi, psi_target, risk_target,
+    psi_df = df_f if "psi_score" in df_f.columns else df_psi
+    return train_psi_and_risk(psi_df, X_psi, psi_target, risk_target,
                               sample_weight_f if "psi_score" in df_f.columns else sample_weight_psi)
 
 
@@ -264,8 +329,8 @@ def main():
     y_f = df_f["start_doy"]
     print(f"Flowering feature matrix: {X_f.shape}")
 
-    # Train flowering model
-    f_model, f_scaler = train_flowering_model(X_f, y_f, sample_weights)
+    # Train flowering model (with temporal split to prevent leakage)
+    f_model, f_scaler = train_flowering_model(df_f, X_f, y_f, sample_weights)
 
     # Save flowering model
     joblib.dump(f_model, MODELS_DIR / "flowering_model_mh.pkl")

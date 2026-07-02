@@ -142,12 +142,11 @@ def build_row(site: dict) -> list:
     flowering_date = result.predicted_flowering_date
     start_doy = flowering_date.timetuple().tm_yday
     
-    # Get 7-day window before flowering
-    window = temp_df[(temp_df["date"] > flowering_date - timedelta(days=7)) & 
-                     (temp_df["date"] <= flowering_date)]
+    # Get early-season weather (first 7 days after sowing — no target leakage)
+    window = temp_df[(temp_df["date"] >= sowing) & 
+                     (temp_df["date"] < sowing + timedelta(days=7))]
     
-    if window.empty:
-        # Fallback if no data in window
+    if len(window) < 3:
         temp_7d_mean = 25.0
         humidity = 65.0
         rainfall_7d = 5.0

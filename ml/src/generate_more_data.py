@@ -69,13 +69,13 @@ def generate_improved_dataset(n_per_crop=2000, seed=42):
             start_doy = flowering_date.timetuple().tm_yday
             end_doy = min(365, start_doy + 7 + np.random.randint(-2, 3))
 
-            # Pre-flowering 7-day window weather
-            window = temp_df[
-                (temp_df["date"] > flowering_date - timedelta(days=7)) &
-                (temp_df["date"] <= flowering_date)
+            # Early-season temperature (first 7 days after sowing — no target leakage)
+            early_window = temp_df[
+                (temp_df["date"] >= sowing) &
+                (temp_df["date"] < sowing + timedelta(days=7))
             ]
-            if not window.empty:
-                avg_temp = ((window["T2M_MAX"] + window["T2M_MIN"]) / 2).mean()
+            if len(early_window) >= 3:
+                avg_temp = ((early_window["T2M_MAX"] + early_window["T2M_MIN"]) / 2).mean()
             else:
                 avg_temp = base_temp
 

@@ -2,6 +2,7 @@ import json
 from datetime import datetime, timezone
 from pathlib import Path
 
+import joblib
 from sqlalchemy.orm import Session
 
 from app.models.farm import Farm
@@ -12,51 +13,31 @@ from app.services.weather_service import cache_weather, fetch_weather, get_cache
 
 MODELS_DIR = Path(__file__).resolve().parent.parent.parent.parent / "ml" / "models"
 
-flowering_model = None
-flowering_scaler = None
-psi_model = None
-psi_scaler = None
-risk_model = None
-risk_scaler = None
-
-# Maharashtra-specific models
-flowering_model_mh = None
-flowering_scaler_mh = None
-psi_model_mh = None
-psi_scaler_mh = None
-risk_model_mh = None
-risk_scaler_mh = None
+_model_cache = {}
 
 # Maharashtra bounding box (approximate)
 MAHARASHTRA_BBOX = {"lat_min": 15.5, "lat_max": 22.0, "lon_min": 72.5, "lon_max": 80.5}
 
 
-def _load_models():
-    global flowering_model, flowering_scaler, psi_model, psi_scaler, risk_model, risk_scaler
-    global flowering_model_mh, flowering_scaler_mh, psi_model_mh, psi_scaler_mh, risk_model_mh, risk_scaler_mh
-    try:
-        import joblib
-        # General models
+def _get_models(use_mh: bool):
+    """Lazy-load model group (general or MH) and cache it per worker.
+    
+    Only loads the model group actually needed — avoids loading all 12
+    model/scaler files at startup across every uvicorn worker.
+    """
+    suffix = "_mh" if use_mh else ""
+    cache_key = f"models{suffix}"
+    if cache_key not in _model_cache:
+        models = {}
         for name in ("flowering", "psi", "risk"):
-            model_path = MODELS_DIR / f"{name}_model.pkl"
-            scaler_path = MODELS_DIR / f"{name}_scaler.pkl"
+            model_path = MODELS_DIR / f"{name}_model{suffix}.pkl"
+            scaler_path = MODELS_DIR / f"{name}_scaler{suffix}.pkl"
             if model_path.exists():
-                globals()[f"{name}_model"] = joblib.load(str(model_path))
+                models[f"{name}_model"] = joblib.load(str(model_path))
             if scaler_path.exists():
-                globals()[f"{name}_scaler"] = joblib.load(str(scaler_path))
-        # MH-specific models
-        for name in ("flowering", "psi", "risk"):
-            model_path = MODELS_DIR / f"{name}_model_mh.pkl"
-            scaler_path = MODELS_DIR / f"{name}_scaler_mh.pkl"
-            if model_path.exists():
-                globals()[f"{name}_model_mh"] = joblib.load(str(model_path))
-            if scaler_path.exists():
-                globals()[f"{name}_scaler_mh"] = joblib.load(str(scaler_path))
-    except Exception:
-        pass
-
-
-_load_models()
+                models[f"{name}_scaler"] = joblib.load(str(scaler_path))
+        _model_cache[cache_key] = models
+    return _model_cache[cache_key]
 
 
 def _is_in_maharashtra(lat: float, lon: float) -> bool:
@@ -204,25 +185,16 @@ async def run_prediction(farm: Farm, db: Session, region: str = "auto") -> Predi
     elif region == "auto":
         use_mh = _is_in_maharashtra(farm.location_lat, farm.location_lng)
 
-    # Select models
-    if use_mh:
-        f_model = flowering_model_mh
-        f_scaler = flowering_scaler_mh
-        p_model = psi_model_mh
-        p_scaler = psi_scaler_mh
-        r_model = risk_model_mh
-        r_scaler = risk_scaler_mh
-        model_source = "maharashtra_v2"
-        data_confidence = "high (1545 real MH rows)"
-    else:
-        f_model = flowering_model
-        f_scaler = flowering_scaler
-        p_model = psi_model
-        p_scaler = psi_scaler
-        r_model = risk_model
-        r_scaler = risk_scaler
-        model_source = "general_v1"
-        data_confidence = "standard"
+    # Lazy-load only the model group needed (general or MH)
+    models = _get_models(use_mh)
+    f_model = models.get("flowering_model")
+    f_scaler = models.get("flowering_scaler")
+    p_model = models.get("psi_model")
+    p_scaler = models.get("psi_scaler")
+    r_model = models.get("risk_model")
+    r_scaler = models.get("risk_scaler")
+    model_source = "maharashtra_v2" if use_mh else "general_v1"
+    data_confidence = "high (1545 real MH rows)" if use_mh else "standard"
 
     models_loaded = all([f_model, f_scaler, p_model, p_scaler, r_model, r_scaler])
 

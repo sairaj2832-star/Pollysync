@@ -28,9 +28,9 @@
       "mae": 15.0
     },
     "maharashtra_v2": {
-      "r2": 0.9457,
-      "mae": 12.2
+      "r2": 0.5322,
+      "mae": 37.2
     },
-    "mae_improvement_pct": 18.5
+    "mae_improvement_pct": -148.1
   }
 }
