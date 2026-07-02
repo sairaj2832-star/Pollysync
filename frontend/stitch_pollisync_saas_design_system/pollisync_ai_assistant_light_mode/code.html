@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>PolliSync Dashboard</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-secondary-fixed": "#2a1700",
+                        "secondary-fixed": "#ffddb8",
+                        "on-primary-fixed-variant": "#005236",
+                        "tertiary-fixed": "#ffdad7",
+                        "on-primary": "#ffffff",
+                        "surface-container-high": "#f0e6e0",
+                        "inverse-surface": "#342f2b",
+                        "surface-variant": "#eae1da",
+                        "on-secondary-container": "#684000",
+                        "on-primary-fixed": "#002113",
+                        "surface-bright": "#fff8f5",
+                        "on-tertiary-container": "#79000e",
+                        "primary": "#006c49",
+                        "tertiary-container": "#ff7a73",
+                        "surface-container": "#f6ece6",
+                        "secondary-fixed-dim": "#ffb95f",
+                        "outline-variant": "#bbcabf",
+                        "on-tertiary": "#ffffff",
+                        "on-tertiary-fixed": "#410004",
+                        "on-surface": "#1f1b17",
+                        "inverse-primary": "#4edea3",
+                        "on-error": "#ffffff",
+                        "on-error-container": "#93000a",
+                        "secondary-container": "#fea619",
+                        "inverse-on-surface": "#f9efe8",
+                        "secondary": "#855300",
+                        "primary-container": "#10b981",
+                        "surface-dim": "#e2d8d2",
+                        "primary-fixed": "#6ffbbe",
+                        "surface-container-lowest": "#ffffff",
+                        "tertiary": "#b91a24",
+                        "surface-tint": "#006c49",
+                        "background": "#fff8f5",
+                        "error-container": "#ffdad6",
+                        "surface": "#fff8f5",
+                        "tertiary-fixed-dim": "#ffb3ad",
+                        "surface-container-low": "#fcf2eb",
+                        "on-primary-container": "#00422b",
+                        "on-background": "#1f1b17",
+                        "on-tertiary-fixed-variant": "#930013",
+                        "primary-fixed-dim": "#4edea3",
+                        "on-secondary": "#ffffff",
+                        "error": "#ba1a1a",
+                        "on-surface-variant": "#3c4a42",
+                        "surface-container-highest": "#eae1da",
+                        "outline": "#6c7a71",
+                        "on-secondary-fixed-variant": "#653e00"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "lg": "24px",
+                        "base": "4px",
+                        "3xl": "64px",
+                        "sm": "8px",
+                        "container-max": "1280px",
+                        "gutter": "24px",
+                        "xl": "32px",
+                        "xs": "4px",
+                        "2xl": "48px",
+                        "md": "16px"
+                    },
+                    "fontFamily": {
+                        "headline-sm": ["Geist Sans", "sans-serif"],
+                        "label-sm": ["Geist Sans", "sans-serif"],
+                        "label-md": ["Geist Sans", "sans-serif"],
+                        "body-md": ["Inter", "sans-serif"],
+                        "body-sm": ["Inter", "sans-serif"],
+                        "headline-lg-mobile": ["Geist Sans", "sans-serif"],
+                        "display": ["Geist Sans", "sans-serif"],
+                        "headline-lg": ["Geist Sans", "sans-serif"],
+                        "body-lg": ["Inter", "sans-serif"],
+                        "headline-md": ["Geist Sans", "sans-serif"]
+                    },
+                    "fontSize": {
+                        "headline-sm": ["20px", { "lineHeight": "28px", "fontWeight": "600" }],
+                        "label-sm": ["12px", { "lineHeight": "16px", "letterSpacing": "0.02em", "fontWeight": "600" }],
+                        "label-md": ["14px", { "lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "500" }],
+                        "body-md": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "body-sm": ["14px", { "lineHeight": "20px", "fontWeight": "400" }],
+                        "headline-lg-mobile": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+                        "display": ["48px", { "lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "headline-lg": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "600" }],
+                        "body-lg": ["18px", { "lineHeight": "28px", "fontWeight": "400" }],
+                        "headline-md": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body { font-family: 'Inter', sans-serif; background-color: #FAFAF9; }
+        h1, h2, h3, h4, h5, h6, .geist { font-family: 'Geist Sans', sans-serif; }
+        
+        .glass-card {
+            background: white;
+            border: 1px solid #E2E8F0;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            border-radius: 12px;
+        }
+
+        .chart-ring {
+            stroke-dasharray: 283;
+            stroke-dashoffset: 25; /* 91% */
+            transition: stroke-dashoffset 1s ease-in-out;
+        }
+
+        /* Material Symbols Outline config */
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .material-symbols-outlined.filled {
+            font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+</head>
+<body class="text-on-surface bg-[#FAFAF9] flex h-screen overflow-hidden">
+<!-- SideNavBar Component (Semantic Match: Dashboard) -->
+<nav class="bg-surface border-r border-outline-variant h-screen w-64 fixed left-0 top-0 flex flex-col p-md z-20">
+<!-- Brand Logo -->
+<div class="flex items-center gap-sm mb-lg px-sm">
+<span class="material-symbols-outlined text-primary text-3xl filled">eco</span>
+<div class="flex flex-col">
+<span class="font-headline-md text-headline-md font-bold text-primary">PolliSync</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Agrotech Analytics</span>
+</div>
+</div>
+<!-- CTA -->
+<button class="bg-primary-container text-on-primary font-label-md text-label-md py-sm px-md rounded-lg flex items-center justify-center gap-sm mb-lg hover:bg-primary transition-colors">
+<span class="material-symbols-outlined">add</span>
+            New Analysis
+        </button>
+<!-- Navigation Links -->
+<div class="flex flex-col gap-sm flex-1">
+<a class="flex items-center gap-md text-primary font-bold bg-primary-container/10 rounded-lg px-md py-sm" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="font-label-md text-label-md">Dashboard</span>
+</a><a class="flex items-center gap-md text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high rounded-lg px-md py-sm transition-colors duration-200" href="#">
+<span class="material-symbols-outlined">smart_toy</span>
+<span class="font-label-md text-label-md">AI Assistant</span>
+</a>
+<a class="flex items-center gap-md text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high rounded-lg px-md py-sm transition-colors duration-200" href="#">
+<span class="material-symbols-outlined">analytics</span>
+<span class="font-label-md text-label-md">Predictions</span>
+</a>
+<a class="flex items-center gap-md text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high rounded-lg px-md py-sm transition-colors duration-200" href="#">
+<span class="material-symbols-outlined">agriculture</span>
+<span class="font-label-md text-label-md">Farms</span>
+</a>
+<a class="flex items-center gap-md text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high rounded-lg px-md py-sm transition-colors duration-200" href="#">
+<span class="material-symbols-outlined">cloud</span>
+<span class="font-label-md text-label-md">Weather</span>
+</a>
+<a class="flex items-center gap-md text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high rounded-lg px-md py-sm transition-colors duration-200" href="#">
+<span class="material-symbols-outlined">pest_control_rodent</span>
+<span class="font-label-md text-label-md">Bees</span>
+</a>
+<a class="flex items-center gap-md text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high rounded-lg px-md py-sm transition-colors duration-200" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-label-md text-label-md">Settings</span>
+</a>
+</div>
+<!-- Footer Links -->
+<div class="flex flex-col gap-sm border-t border-outline-variant pt-md mt-auto">
+<a class="flex items-center gap-md text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high rounded-lg px-md py-sm transition-colors duration-200" href="#">
+<span class="material-symbols-outlined">help</span>
+<span class="font-label-md text-label-md">Support</span>
+</a>
+<a class="flex items-center gap-md text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high rounded-lg px-md py-sm transition-colors duration-200" href="#">
+<span class="material-symbols-outlined">person</span>
+<span class="font-label-md text-label-md">Account</span>
+</a>
+</div>
+</nav>
+<!-- Main Content Area -->
+<main class="ml-64 flex-1 flex flex-col h-screen overflow-y-auto bg-[#FAFAF9]">
+<!-- TopNavBar Component -->
+<header class="bg-surface/80 backdrop-blur-md border-b border-outline-variant flex justify-between items-center h-16 px-xl w-full sticky top-0 z-10">
+<!-- Breadcrumbs / Farm Selector -->
+<div class="flex items-center gap-sm">
+<span class="font-label-md text-label-md text-on-surface-variant">Dashboard</span>
+<span class="material-symbols-outlined text-outline text-sm">chevron_right</span>
+<div class="flex items-center gap-xs cursor-pointer hover:bg-surface-container-highest px-sm py-xs rounded-md transition-colors">
+<span class="font-headline-sm text-headline-sm text-on-surface">Nashik Mustard Farm</span>
+<span class="material-symbols-outlined text-outline">expand_more</span>
+</div>
+</div>
+<!-- Trailing Actions -->
+<div class="flex items-center gap-md">
+<button class="text-on-surface-variant hover:text-primary transition-colors opacity-80 hover:opacity-100 p-sm rounded-full hover:bg-surface-container-highest">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<button class="text-on-surface-variant hover:text-primary transition-colors opacity-80 hover:opacity-100 p-sm rounded-full hover:bg-surface-container-highest">
+<span class="material-symbols-outlined">help</span>
+</button>
+<div class="w-8 h-8 rounded-full bg-primary-container/20 border border-primary-container flex items-center justify-center overflow-hidden cursor-pointer">
+<img alt="User Profile" class="w-full h-full object-cover" data-alt="A professional headshot of a female agricultural data scientist in her 30s. Soft, natural lighting, wearing a modern stone-colored linen shirt. Clean, minimalist light-mode aesthetic background." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDqhy7nUKy2Pb0fMiIBKh5MxNiGy7LZ_ANFt-vP2-t88sqaa-tbwqWQscnHzbVt2eSGgHNZvcBYErN3VLTQinAUY8Rd9taAcD6NLRuqM8_gYU6odP8Val37LVpObUP9ltphLDQVFbmJNpLm230BntOgYqLt-hq8H-xNkbzDS_52n9yzgWwMsO8pyoeHAJCk5xTbRAnHyzunAYY356uTu_xNtBMcp4G0rtDRwTYQaV3eLU0Xe4Rn3ht1KipAWsZOdl88jD8nLHmO-HAH"/>
+</div>
+</div>
+</header>
+<!-- Dashboard Canvas -->
+<div class="p-xl flex-1 max-w-[1600px] mx-auto w-full"><div class="flex h-[calc(100vh-128px)] gap-lg">
+<!-- History Panel -->
+<aside class="w-[280px] glass-card flex flex-col overflow-hidden">
+<div class="p-md border-b border-outline-variant">
+<h3 class="font-headline-sm text-headline-sm">History</h3>
+</div>
+<div class="flex-1 overflow-y-auto p-sm space-y-xs">
+<div class="p-sm rounded-lg bg-primary-container/10 text-primary cursor-pointer">
+<p class="font-label-md">Mustard Yield Prediction</p>
+<p class="text-xs opacity-70">2 hours ago</p>
+</div>
+<div class="p-sm rounded-lg hover:bg-surface-container-high cursor-pointer transition-colors">
+<p class="font-label-md">Bee Activity Analysis</p>
+<p class="text-xs text-on-surface-variant">Yesterday</p>
+</div>
+<div class="p-sm rounded-lg hover:bg-surface-container-high cursor-pointer transition-colors">
+<p class="font-label-md">Weather Impact on Flowering</p>
+<p class="text-xs text-on-surface-variant">3 days ago</p>
+</div>
+</div>
+</aside>
+<!-- Chat Area -->
+<section class="flex-1 glass-card flex flex-col overflow-hidden">
+<!-- Chat Header -->
+<div class="p-md border-b border-outline-variant flex items-center justify-between bg-surface-container-lowest">
+<div class="flex items-center gap-sm">
+<span class="material-symbols-outlined text-primary">smart_toy</span>
+<h3 class="font-headline-sm text-headline-sm">PolliSync AI Assistant</h3>
+</div>
+<div class="bg-primary-container/10 text-primary px-sm py-xs rounded-full text-xs font-label-sm">Online</div>
+</div>
+<!-- Messages -->
+<div class="flex-1 overflow-y-auto p-lg space-y-lg">
+<!-- AI Message -->
+<div class="flex flex-col items-start max-w-[80%]">
+<div class="bg-surface-container-high p-md rounded-xl rounded-tl-none text-body-md">
+                    Hello! I've analyzed your Nashik Mustard Farm data. The current <span class="text-primary font-bold">NDVI of 0.82</span> suggests healthy growth. Would you like to see how the upcoming temperature rise might affect pollination?
+                    <div class="mt-sm flex items-center gap-xs">
+<span class="text-xs font-label-sm text-on-surface-variant bg-surface-container-highest px-xs py-0.5 rounded border border-outline-variant">Source: Dashboard Data</span>
+</div>
+</div>
+<span class="text-xs text-on-surface-variant mt-xs ml-1">AI Assistant • 10:24 AM</span>
+</div>
+<!-- User Message -->
+<div class="flex flex-col items-end ml-auto max-w-[80%]">
+<div class="bg-primary text-on-primary p-md rounded-xl rounded-tr-none text-body-md">
+                    Yes, please. Also, check if the current soil moisture is sufficient for the pre-flowering stage.
+                </div>
+<span class="text-xs text-on-surface-variant mt-xs mr-1">You • 10:25 AM</span>
+</div>
+<!-- AI Message -->
+<div class="flex flex-col items-start max-w-[80%]">
+<div class="bg-surface-container-high p-md rounded-xl rounded-tl-none text-body-md">
+                    Soil moisture is currently <span class="text-secondary font-bold">62%</span>. Based on the <span class="text-primary font-bold">AI Agronomist Recommendation</span>, you should hold off on irrigation until it drops below 55% to encourage deeper root growth.
+                    <div class="mt-sm flex items-center gap-xs">
+<span class="text-xs font-label-sm text-on-surface-variant bg-surface-container-highest px-xs py-0.5 rounded border border-outline-variant">Source: Agronomist Report</span>
+</div>
+</div>
+<span class="text-xs text-on-surface-variant mt-xs ml-1">AI Assistant • 10:25 AM</span>
+</div>
+</div>
+<!-- Input Bar -->
+<div class="p-md border-t border-outline-variant bg-surface-container-lowest">
+<div class="relative flex items-center">
+<input class="w-full bg-surface border border-outline-variant rounded-lg py-md pl-md pr-12 focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all" placeholder="Ask about your farm data..." type="text"/>
+<button class="absolute right-2 p-sm text-primary hover:bg-primary-container/10 rounded-md transition-colors">
+<span class="material-symbols-outlined">send</span>
+</button>
+</div>
+</div>
+</section>
+</div></div>
+</main>
+</body></html>

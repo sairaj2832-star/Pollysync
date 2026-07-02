@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>PolliSync | Precision Pollination for Sustainable Yields</title>
+<!-- Fonts & Icons -->
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Geist+Sans:wght@100..900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Tailwind Theme Configuration -->
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-secondary-fixed-variant": "#653e00",
+                    "on-primary-container": "#00422b",
+                    "on-primary": "#ffffff",
+                    "surface-bright": "#fff8f5",
+                    "inverse-surface": "#342f2b",
+                    "primary": "#006c49",
+                    "error-container": "#ffdad6",
+                    "on-surface": "#1f1b17",
+                    "on-secondary-fixed": "#2a1700",
+                    "secondary-fixed-dim": "#ffb95f",
+                    "inverse-on-surface": "#f9efe8",
+                    "tertiary": "#b91a24",
+                    "primary-fixed": "#6ffbbe",
+                    "tertiary-fixed-dim": "#ffb3ad",
+                    "on-tertiary-fixed": "#410004",
+                    "outline": "#6c7a71",
+                    "inverse-primary": "#4edea3",
+                    "on-primary-fixed": "#002113",
+                    "background": "#fff8f5",
+                    "surface-container": "#f6ece6",
+                    "secondary-fixed": "#ffddb8",
+                    "primary-container": "#10b981",
+                    "tertiary-container": "#ff7a73",
+                    "surface-container-low": "#fcf2eb",
+                    "on-background": "#1f1b17",
+                    "on-error": "#ffffff",
+                    "on-secondary": "#ffffff",
+                    "secondary": "#855300",
+                    "surface-variant": "#eae1da",
+                    "on-tertiary-container": "#79000e",
+                    "primary-fixed-dim": "#4edea3",
+                    "surface": "#fff8f5",
+                    "on-tertiary-fixed-variant": "#930013",
+                    "on-secondary-container": "#684000",
+                    "tertiary-fixed": "#ffdad7",
+                    "surface-dim": "#e2d8d2",
+                    "on-primary-fixed-variant": "#005236",
+                    "surface-container-high": "#f0e6e0",
+                    "outline-variant": "#bbcabf",
+                    "on-error-container": "#93000a",
+                    "secondary-container": "#fea619",
+                    "surface-container-highest": "#eae1da",
+                    "on-surface-variant": "#3c4a42",
+                    "surface-container-lowest": "#ffffff",
+                    "on-tertiary": "#ffffff",
+                    "error": "#ba1a1a",
+                    "surface-tint": "#006c49"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "12px",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "xs": "4px",
+                    "md": "16px",
+                    "base": "4px",
+                    "lg": "24px",
+                    "container-max": "1280px",
+                    "2xl": "48px",
+                    "xl": "32px",
+                    "gutter": "24px",
+                    "3xl": "64px",
+                    "sm": "8px"
+            },
+            "fontFamily": {
+                    "headline-md": ["Geist Sans"],
+                    "headline-sm": ["Geist Sans"],
+                    "display": ["Geist Sans"],
+                    "body-md": ["Inter"],
+                    "label-sm": ["Geist Sans"],
+                    "headline-lg": ["Geist Sans"],
+                    "body-sm": ["Inter"],
+                    "label-md": ["Geist Sans"],
+                    "body-lg": ["Inter"]
+            },
+            "fontSize": {
+                    "headline-md": ["24px", {"lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                    "headline-sm": ["20px", {"lineHeight": "28px", "letterSpacing": "0em", "fontWeight": "600"}],
+                    "display": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "body-md": ["16px", {"lineHeight": "24px", "letterSpacing": "0em", "fontWeight": "400"}],
+                    "label-sm": ["12px", {"lineHeight": "16px", "letterSpacing": "0.02em", "fontWeight": "600"}],
+                    "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "600"}],
+                    "body-sm": ["14px", {"lineHeight": "20px", "letterSpacing": "0em", "fontWeight": "400"}],
+                    "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "500"}],
+                    "body-lg": ["18px", {"lineHeight": "28px", "letterSpacing": "0em", "fontWeight": "400"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body { font-family: 'Inter', sans-serif; background-color: #fff8f5; color: #1f1b17; overflow-x: hidden; }
+        .font-geist { font-family: 'Geist Sans', sans-serif; }
+        .fade-up { opacity: 0; transform: translateY(20px); transition: all 0.8s ease-out; }
+        .fade-up.visible { opacity: 1; transform: translateY(0); }
+        .glass-card { background: rgba(255, 255, 255, 0.7); backdrop-filter: blur(10px); border: 1px solid rgba(0, 108, 73, 0.1); }
+        .step-line { background: linear-gradient(to right, #10b981 33%, transparent 33%); background-size: 30px 2px; }
+        .scroll-smooth { scroll-behavior: smooth; }
+    </style>
+</head>
+<body class="scroll-smooth">
+<!-- TopNavBar -->
+<nav class="bg-surface/80 backdrop-blur-md font-label-md text-label-md docked full-width top-0 sticky z-50 border-b border-outline-variant/30 shadow-sm">
+<div class="flex justify-between items-center w-full px-6 py-4 max-w-container-max mx-auto">
+<div class="font-headline-sm text-headline-sm font-bold text-primary flex items-center gap-2">
+<span class="material-symbols-outlined text-primary-container" style="font-variation-settings: 'FILL' 1;">eco</span>
+<span>PolliSync</span>
+</div>
+<div class="hidden md:flex items-center gap-xl">
+<a class="text-on-surface-variant hover:text-primary transition-colors" href="#features">Features</a>
+<a class="text-on-surface-variant hover:text-primary transition-colors" href="#how-it-works">How It Works</a>
+<a class="text-on-surface-variant hover:text-primary transition-colors" href="#crops">Crops</a>
+<a class="text-on-surface-variant hover:text-primary transition-colors" href="#pricing">Pricing</a>
+</div>
+<div class="flex items-center gap-md">
+<button class="px-md py-sm border border-outline rounded-lg text-on-surface font-label-md hover:bg-surface-container-low transition-all">Login</button>
+<button class="px-md py-sm bg-primary text-on-primary rounded-lg font-label-md shadow-md hover:opacity-90 active:scale-95 transition-all">Get Started</button>
+</div>
+</div>
+</nav>
+<!-- HERO Section -->
+<section class="relative min-h-[921px] flex flex-col items-center justify-center text-center px-6 overflow-hidden">
+<!-- Shader Background -->
+<!-- STITCH_SHADER_START:ANIMATION_5 class="absolute inset-0 w-full h-full -z-10 opacity-40" -->
+<div class="absolute inset-0 w-full h-full -z-10 opacity-40" style="display:block;">
+<canvas id="shader-canvas-ANIMATION_5" style="display:block;width:100%;height:100%"></canvas>
+<script>
+(function() {
+  const canvas = document.getElementById('shader-canvas-ANIMATION_5');
+
+  // Sync the WebGL drawing-buffer size with the CSS-driven layout size.
+  // This fires on initial layout and whenever the element is resized.
+  function syncSize() {
+    const w = canvas.clientWidth  || 1280;
+    const h = canvas.clientHeight || 720;
+    if (canvas.width !== w || canvas.height !== h) {
+      canvas.width  = w;
+      canvas.height = h;
+    }
+  }
+  if (typeof ResizeObserver !== 'undefined') {
+    new ResizeObserver(syncSize).observe(canvas);
+  }
+  syncSize();
+
+  const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
+  if (!gl) return;
+  const vs = `attribute vec2 a_position;
+varying vec2 v_texCoord;
+void main() {
+  v_texCoord = a_position * 0.5 + 0.5;
+  gl_Position = vec4(a_position, 0.0, 1.0);
+}`;
+  const fs = `precision highp float;
+uniform float u_time;
+uniform vec2 u_resolution;
+
+varying vec2 v_texCoord;
+
+void main() {
+    vec2 uv = v_texCoord;
+    
+    // Create organic movement using sine waves
+    float noise1 = sin(uv.x * 3.0 + u_time * 0.5) * 0.5 + 0.5;
+    float noise2 = sin(uv.y * 2.0 - u_time * 0.3) * 0.5 + 0.5;
+    
+    // PolliSync Colors (Light Mode Base)
+    // Emerald: #10B981 -> vec3(0.06, 0.72, 0.50)
+    // Amber: #F59E0B -> vec3(0.96, 0.62, 0.04)
+    // Surface: #FAFAF9 -> vec3(0.98, 0.98, 0.97)
+    
+    vec3 emerald = vec3(0.06, 0.72, 0.50);
+    vec3 amber = vec3(0.96, 0.62, 0.04);
+    vec3 surface = vec3(0.98, 0.98, 0.97);
+    
+    // Mix colors based on UV and time-based noise
+    vec3 color = mix(surface, emerald, noise1 * 0.2);
+    color = mix(color, amber, noise2 * 0.15);
+    
+    // Add a subtle vignette
+    float vignette = 1.0 - length(uv - 0.5) * 0.5;
+    
+    gl_FragColor = vec4(color * vignette, 1.0);
+}`;
+  function cs(type, src) {
+    const s = gl.createShader(type);
+    gl.shaderSource(s, src);
+    gl.compileShader(s);
+    return s;
+  }
+  const prog = gl.createProgram();
+  gl.attachShader(prog, cs(gl.VERTEX_SHADER, vs));
+  gl.attachShader(prog, cs(gl.FRAGMENT_SHADER, fs));
+  gl.linkProgram(prog);
+  gl.useProgram(prog);
+  const buf = gl.createBuffer();
+  gl.bindBuffer(gl.ARRAY_BUFFER, buf);
+  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1, 1,-1, -1,1, 1,1]), gl.STATIC_DRAW);
+  const pos = gl.getAttribLocation(prog, 'a_position');
+  gl.enableVertexAttribArray(pos);
+  gl.vertexAttribPointer(pos, 2, gl.FLOAT, false, 0, 0);
+  const uTime = gl.getUniformLocation(prog, 'u_time');
+  const uRes = gl.getUniformLocation(prog, 'u_resolution');
+  const uMouse = gl.getUniformLocation(prog, 'u_mouse');
+
+  // u_mouse is in pixel coordinates matching u_resolution (ShaderToy convention).
+  // Shaders that need normalized coords should use: u_mouse / u_resolution.
+  let mouse = { x: canvas.width / 2, y: canvas.height / 2 };
+  window.addEventListener('mousemove', (event) => {
+    const rect = canvas.getBoundingClientRect();
+    if (rect.width && rect.height) {
+      const nx = (event.clientX - rect.left) / rect.width;
+      const ny = 1.0 - (event.clientY - rect.top) / rect.height;
+      mouse.x = nx * canvas.width;
+      mouse.y = ny * canvas.height;
+    }
+  });
+
+  function render(t) {
+    if (typeof ResizeObserver === 'undefined') syncSize();
+    gl.viewport(0, 0, canvas.width, canvas.height);
+    if (uTime) gl.uniform1f(uTime, t * 0.001);
+    if (uRes) gl.uniform2f(uRes, canvas.width, canvas.height);
+    if (uMouse) gl.uniform2f(uMouse, mouse.x, mouse.y);
+    gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+    requestAnimationFrame(render);
+  }
+  render(0);
+})();
+</script>
+</div>
+<!-- STITCH_SHADER_END:ANIMATION_5 -->
+<div class="max-w-4xl mx-auto space-y-lg mt-3xl fade-up" id="hero-content">
+<h1 class="font-display text-display md:text-[64px] md:leading-[1.1] text-on-surface">
+                Know Before Your <br class="hidden md:block"/> <span class="text-primary">Crops Flower</span>
+</h1>
+<p class="font-body-lg text-body-lg text-on-surface-variant max-w-2xl mx-auto">
+                AI-powered pollination forecasts for Indian farmers. Predict flowering windows, bee activity, and weather risks — all in one dashboard.
+            </p>
+<div class="flex flex-col md:flex-row items-center justify-center gap-md pt-md">
+<button class="px-3xl py-md bg-primary-container text-on-primary-container font-label-md text-lg rounded-xl shadow-lg hover:shadow-xl transition-all flex items-center gap-2">
+                    Start Predicting
+                    <span class="material-symbols-outlined">arrow_forward</span>
+</button>
+<button class="px-3xl py-md border-2 border-outline/30 text-on-surface font-label-md text-lg rounded-xl hover:bg-surface-container-high transition-all flex items-center gap-2">
+<span class="material-symbols-outlined">play_circle</span>
+                    Watch Demo
+                </button>
+</div>
+</div>
+<!-- Trust Bar -->
+<div class="mt-3xl w-full max-w-container-max fade-up" style="transition-delay: 200ms;">
+<div class="pt-2xl border-t border-outline-variant/30 flex flex-wrap justify-center items-center gap-xl opacity-60 grayscale hover:grayscale-0 transition-all duration-500">
+<div class="flex flex-col items-center gap-sm">
+<div class="w-12 h-12 bg-surface-container-highest rounded-full flex items-center justify-center">
+<span class="material-symbols-outlined">map</span>
+</div>
+<span class="font-label-sm uppercase tracking-widest">Maharashtra</span>
+</div>
+<div class="flex flex-col items-center gap-sm">
+<div class="w-12 h-12 bg-surface-container-highest rounded-full flex items-center justify-center">
+<span class="material-symbols-outlined">map</span>
+</div>
+<span class="font-label-sm uppercase tracking-widest">Punjab</span>
+</div>
+<div class="flex flex-col items-center gap-sm">
+<div class="w-12 h-12 bg-surface-container-highest rounded-full flex items-center justify-center">
+<span class="material-symbols-outlined">map</span>
+</div>
+<span class="font-label-sm uppercase tracking-widest">Rajasthan</span>
+</div>
+<div class="flex flex-col items-center gap-sm">
+<div class="w-12 h-12 bg-surface-container-highest rounded-full flex items-center justify-center">
+<span class="material-symbols-outlined">map</span>
+</div>
+<span class="font-label-sm uppercase tracking-widest">Gujarat</span>
+</div>
+<div class="flex flex-col items-center gap-sm">
+<div class="w-12 h-12 bg-surface-container-highest rounded-full flex items-center justify-center">
+<span class="material-symbols-outlined">map</span>
+</div>
+<span class="font-label-sm uppercase tracking-widest">Haryana</span>
+</div>
+</div>
+</div>
+</section>
+<!-- FEATURES Section -->
+<section class="py-3xl px-6 bg-surface-container-lowest" id="features">
+<div class="max-w-container-max mx-auto">
+<div class="text-center mb-2xl">
+<h2 class="font-headline-lg text-headline-lg text-on-surface">Precision Features</h2>
+<p class="text-on-surface-variant font-body-md mt-sm">Data-driven insights for maximum yield optimization.</p>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-lg">
+<!-- Card 1 -->
+<div class="group p-xl bg-surface border border-outline-variant/30 rounded-xl hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
+<div class="w-12 h-12 bg-primary/10 text-primary rounded-lg flex items-center justify-center mb-md group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined" data-icon="calendar_month">calendar_month</span>
+</div>
+<h3 class="font-headline-sm text-headline-sm mb-sm">Flowering Forecasts</h3>
+<p class="font-body-md text-on-surface-variant">Get hyper-local predictions for exact flowering windows based on weather patterns and crop history.</p>
+</div>
+<!-- Card 2 -->
+<div class="group p-xl bg-surface border border-outline-variant/30 rounded-xl hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
+<div class="w-12 h-12 bg-primary/10 text-primary rounded-lg flex items-center justify-center mb-md group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined" data-icon="shield">shield</span>
+</div>
+<h3 class="font-headline-sm text-headline-sm mb-sm">Pollination Score</h3>
+<p class="font-body-md text-on-surface-variant">Real-time risk assessment of bee activity and climatic conditions affecting fertilization.</p>
+</div>
+<!-- Card 3 -->
+<div class="group p-xl bg-surface border border-outline-variant/30 rounded-xl hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
+<div class="w-12 h-12 bg-primary/10 text-primary rounded-lg flex items-center justify-center mb-md group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined" data-icon="auto_awesome">auto_awesome</span>
+</div>
+<h3 class="font-headline-sm text-headline-sm mb-sm">AI Recommendations</h3>
+<p class="font-body-md text-on-surface-variant">Customized actionable advice on when to intervene and how to protect your sensitive flowering crops.</p>
+</div>
+</div>
+</div>
+</section>
+<!-- CROPS Section -->
+<section class="py-3xl px-6 bg-surface" id="crops">
+<div class="max-w-container-max mx-auto overflow-hidden">
+<h2 class="font-headline-lg text-headline-lg text-on-surface mb-2xl text-center md:text-left">Supported Crops</h2>
+<div class="flex flex-nowrap md:grid md:grid-cols-5 gap-md overflow-x-auto pb-6 scrollbar-hide">
+<!-- Crop Card -->
+<div class="min-w-[200px] bg-surface-container-low p-lg rounded-xl border border-outline-variant/20 flex flex-col items-center text-center group hover:bg-primary-container/10 transition-colors">
+<span class="text-4xl mb-md">🌼</span>
+<h4 class="font-headline-sm text-headline-sm mb-xs">Mustard</h4>
+<a class="text-primary font-label-md flex items-center gap-1 group-hover:translate-x-1 transition-transform" href="#">View Insights <span class="material-symbols-outlined text-sm">chevron_right</span></a>
+</div>
+<div class="min-w-[200px] bg-surface-container-low p-lg rounded-xl border border-outline-variant/20 flex flex-col items-center text-center group hover:bg-primary-container/10 transition-colors">
+<span class="text-4xl mb-md">🌾</span>
+<h4 class="font-headline-sm text-headline-sm mb-xs">Wheat</h4>
+<a class="text-primary font-label-md flex items-center gap-1 group-hover:translate-x-1 transition-transform" href="#">View Insights <span class="material-symbols-outlined text-sm">chevron_right</span></a>
+</div>
+<div class="min-w-[200px] bg-surface-container-low p-lg rounded-xl border border-outline-variant/20 flex flex-col items-center text-center group hover:bg-primary-container/10 transition-colors">
+<span class="text-4xl mb-md">🌻</span>
+<h4 class="font-headline-sm text-headline-sm mb-xs">Sunflower</h4>
+<a class="text-primary font-label-md flex items-center gap-1 group-hover:translate-x-1 transition-transform" href="#">View Insights <span class="material-symbols-outlined text-sm">chevron_right</span></a>
+</div>
+<div class="min-w-[200px] bg-surface-container-low p-lg rounded-xl border border-outline-variant/20 flex flex-col items-center text-center group hover:bg-primary-container/10 transition-colors">
+<span class="text-4xl mb-md">🍚</span>
+<h4 class="font-headline-sm text-headline-sm mb-xs">Rice</h4>
+<a class="text-primary font-label-md flex items-center gap-1 group-hover:translate-x-1 transition-transform" href="#">View Insights <span class="material-symbols-outlined text-sm">chevron_right</span></a>
+</div>
+<div class="min-w-[200px] bg-surface-container-low p-lg rounded-xl border border-outline-variant/20 flex flex-col items-center text-center group hover:bg-primary-container/10 transition-colors">
+<span class="text-4xl mb-md">☁️</span>
+<h4 class="font-headline-sm text-headline-sm mb-xs">Cotton</h4>
+<a class="text-primary font-label-md flex items-center gap-1 group-hover:translate-x-1 transition-transform" href="#">View Insights <span class="material-symbols-outlined text-sm">chevron_right</span></a>
+</div>
+</div>
+</div>
+</section>
+<!-- HOW IT WORKS Section -->
+<section class="py-3xl px-6 bg-surface-container-lowest relative" id="how-it-works">
+<div class="max-w-4xl mx-auto">
+<h2 class="font-headline-lg text-headline-lg text-on-surface mb-3xl text-center">Your Path to Precision</h2>
+<div class="relative">
+<!-- Vertical connector for mobile, horizontal logic for desktop -->
+<div class="absolute left-1/2 md:left-0 md:top-12 md:w-full w-0.5 h-full md:h-0.5 bg-outline-variant/30 -translate-x-1/2 md:translate-x-0 hidden md:block">
+<div class="w-full h-full step-line opacity-50"></div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-2xl relative z-10">
+<!-- Step 1 -->
+<div class="flex flex-col items-center text-center group">
+<div class="w-20 h-20 bg-primary text-on-primary rounded-full flex items-center justify-center font-headline-md shadow-lg group-hover:scale-110 transition-transform mb-md border-4 border-surface">01</div>
+<h3 class="font-headline-sm text-headline-sm mb-xs">Select Your Crop</h3>
+<p class="font-body-sm text-on-surface-variant">Choose from our vast library of region-specific Indian crops.</p>
+</div>
+<!-- Step 2 -->
+<div class="flex flex-col items-center text-center group">
+<div class="w-20 h-20 bg-primary text-on-primary rounded-full flex items-center justify-center font-headline-md shadow-lg group-hover:scale-110 transition-transform mb-md border-4 border-surface">02</div>
+<h3 class="font-headline-sm text-headline-sm mb-xs">Set Your Location</h3>
+<p class="font-body-sm text-on-surface-variant">Our AI analyzes your specific farm coordinate's micro-climate.</p>
+</div>
+<!-- Step 3 -->
+<div class="flex flex-col items-center text-center group">
+<div class="w-20 h-20 bg-primary text-on-primary rounded-full flex items-center justify-center font-headline-md shadow-lg group-hover:scale-110 transition-transform mb-md border-4 border-surface">03</div>
+<h3 class="font-headline-sm text-headline-sm mb-xs">Get AI Forecast</h3>
+<p class="font-body-sm text-on-surface-variant">Receive daily alerts and 10-day precision flowering windows.</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- TESTIMONIALS Section -->
+<section class="py-3xl px-6 bg-surface">
+<div class="max-w-container-max mx-auto">
+<h2 class="font-headline-lg text-headline-lg text-on-surface mb-2xl text-center">Trusted by Leading Growers</h2>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-xl">
+<!-- Testimonial 1 -->
+<div class="p-xl bg-surface-container-high rounded-xl flex gap-lg items-start relative overflow-hidden">
+<div class="absolute -right-4 -top-4 opacity-10">
+<span class="material-symbols-outlined text-[120px]">format_quote</span>
+</div>
+<div class="w-16 h-16 rounded-full overflow-hidden flex-shrink-0 border-2 border-primary-container">
+<img class="w-full h-full object-cover" data-alt="A professional portrait of an Indian farmer in his mid-40s, Rajesh K., wearing a light cotton shirt, smiling warmly against a backdrop of a vibrant yellow mustard field in Nashik. The lighting is bright and natural, capturing the essence of a successful harvest. High-end photography style with soft bokeh effect." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBoqdWK1oKgMycvN08x2aWOG1MvLTbE_xzoXuftFfr7wTLwpZxv9RF1j8EejH4lSCjofIgdGYgayZp_IHyMf_p6TGO2B_umnEJ7serGyt8G3uY33HTwxAbEofnDsIDiGhBnYE419HeadrRGDsSrtVmkap8W8iHsBSIR_MZFC1qoTWj_UIgB6WlVedCL5VXS6MjzNREq_6hiK4gVIkcfeOxg3P3AM6kVeRT88e6ylOZcpQFo1jagrV8gJfE5TLFT0sO2PnuqNQcRCK54"/>
+</div>
+<div class="space-y-sm relative z-10">
+<p class="font-body-lg italic text-on-surface">"PolliSync saved my mustard crop during the unexpected heatwave last season. The alerts allowed us to adjust irrigation just in time for the peak flowering window."</p>
+<p class="font-label-md text-primary">— Rajesh K., <span class="text-on-surface-variant font-normal">Nashik</span></p>
+</div>
+</div>
+<!-- Testimonial 2 -->
+<div class="p-xl bg-surface-container-high rounded-xl flex gap-lg items-start relative overflow-hidden">
+<div class="absolute -right-4 -top-4 opacity-10">
+<span class="material-symbols-outlined text-[120px]">format_quote</span>
+</div>
+<div class="w-16 h-16 rounded-full overflow-hidden flex-shrink-0 border-2 border-primary-container">
+<img class="w-full h-full object-cover" data-alt="Close-up portrait of Harpreet S., a smiling farmer from Punjab wearing a traditional turban, standing in front of a lush green wheat field under a clear blue sky. The photo is well-lit with golden hour sunlight, conveying a sense of pride and agricultural success in a modern, professional aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDZld_OMnEIGUSOTixJsY0T2wM83ipkqMHtTgB_9i8itdBZ7S4C5VKhGuB8DnC1P9FWWWrBX4lcyMONu7YPcuFjxAJjvreweEafWFzNA0InZcrYIyrGqaOuSdE27jIOBvW8-EuE06W746OyKRE2ZVw6ivWbbqoLvzadVEBo0ESaQlvSEX8ZIhN0QGW-x0clQKm9P1s3_DxQGYfTy3_B59vcevq2NPqxyqGH5nhd6F6pSnJvRBJz5hY3kwKsLTc6oXzO_dtMS7jOLDCo"/>
+</div>
+<div class="space-y-sm relative z-10">
+<p class="font-body-lg italic text-on-surface">"Incredible accuracy for our wheat flowering window. It’s no longer guesswork; we have the data right on our phones. Essential for modern farming."</p>
+<p class="font-label-md text-primary">— Harpreet S., <span class="text-on-surface-variant font-normal">Punjab</span></p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Footer -->
+<footer class="bg-surface-container-lowest font-body-sm text-body-sm border-t border-outline-variant full-width relative">
+<div class="grid grid-cols-1 md:grid-cols-4 gap-lg px-6 py-3xl max-w-container-max mx-auto">
+<div class="col-span-1 md:col-span-1">
+<div class="font-headline-sm text-headline-sm font-bold text-on-surface mb-md flex items-center gap-2">
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">eco</span>
+                    PolliSync
+                </div>
+<p class="text-on-surface-variant leading-relaxed">
+                    © 2024 PolliSync. Precision pollination for sustainable yields. 
+                    Empowering the future of global agriculture through AI.
+                </p>
+</div>
+<div class="space-y-sm">
+<h4 class="font-label-md text-on-surface uppercase tracking-wider mb-md">Company</h4>
+<nav class="flex flex-col gap-sm">
+<a class="text-on-surface-variant hover:text-primary transition-opacity underline decoration-2 underline-offset-4" href="#">Features</a>
+<a class="text-on-surface-variant hover:text-primary transition-opacity underline decoration-2 underline-offset-4" href="#">Crops</a>
+<a class="text-on-surface-variant hover:text-primary transition-opacity underline decoration-2 underline-offset-4" href="#">Pricing</a>
+</nav>
+</div>
+<div class="space-y-sm">
+<h4 class="font-label-md text-on-surface uppercase tracking-wider mb-md">Legal</h4>
+<nav class="flex flex-col gap-sm">
+<a class="text-on-surface-variant hover:text-primary transition-opacity underline decoration-2 underline-offset-4" href="#">Privacy Policy</a>
+<a class="text-on-surface-variant hover:text-primary transition-opacity underline decoration-2 underline-offset-4" href="#">Terms of Service</a>
+</nav>
+</div>
+<div class="space-y-sm">
+<h4 class="font-label-md text-on-surface uppercase tracking-wider mb-md">Newsletter</h4>
+<p class="mb-md text-on-surface-variant">Stay updated with the latest harvest insights.</p>
+<div class="flex gap-sm">
+<input class="bg-surface-container px-md py-sm rounded-lg border-none focus:ring-2 focus:ring-primary w-full" placeholder="Email" type="email"/>
+<button class="bg-primary text-on-primary p-sm rounded-lg hover:opacity-90">
+<span class="material-symbols-outlined">send</span>
+</button>
+</div>
+</div>
+</div>
+</footer>
+<script>
+        // Intersection Observer for fade-up animations
+        const observerOptions = {
+            threshold: 0.1
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+
+        // Smooth reveal of hero on load
+        window.addEventListener('load', () => {
+            document.getElementById('hero-content').classList.add('visible');
+        });
+    </script>
+</body></html>

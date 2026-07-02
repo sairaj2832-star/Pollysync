@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Dashboard - PolliSync</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-surface-variant": "#3c4a42",
+                        "inverse-surface": "#342f2b",
+                        "on-primary-container": "#00422b",
+                        "on-secondary": "#ffffff",
+                        "on-background": "#1f1b17",
+                        "inverse-primary": "#4edea3",
+                        "surface-container": "#f6ece6",
+                        "tertiary-fixed": "#ffdad7",
+                        "on-secondary-container": "#684000",
+                        "on-tertiary": "#ffffff",
+                        "surface": "#fff8f5",
+                        "surface-container-low": "#fcf2eb",
+                        "secondary": "#855300",
+                        "tertiary": "#b91a24",
+                        "on-tertiary-fixed-variant": "#930013",
+                        "tertiary-fixed-dim": "#ffb3ad",
+                        "surface-container-high": "#f0e6e0",
+                        "secondary-container": "#fea619",
+                        "primary-container": "#10b981",
+                        "on-tertiary-fixed": "#410004",
+                        "on-primary-fixed": "#002113",
+                        "on-secondary-fixed-variant": "#653e00",
+                        "outline": "#6c7a71",
+                        "surface-container-highest": "#eae1da",
+                        "error-container": "#ffdad6",
+                        "primary-fixed": "#6ffbbe",
+                        "on-surface": "#1f1b17",
+                        "surface-tint": "#006c49",
+                        "on-tertiary-container": "#79000e",
+                        "on-primary-fixed-variant": "#005236",
+                        "tertiary-container": "#ff7a73",
+                        "inverse-on-surface": "#f9efe8",
+                        "surface-variant": "#eae1da",
+                        "error": "#ba1a1a",
+                        "on-primary": "#ffffff",
+                        "surface-bright": "#fff8f5",
+                        "background": "#fff8f5",
+                        "surface-dim": "#e2d8d2",
+                        "on-error-container": "#93000a",
+                        "secondary-fixed-dim": "#ffb95f",
+                        "on-error": "#ffffff",
+                        "primary": "#006c49",
+                        "surface-container-lowest": "#ffffff",
+                        "primary-fixed-dim": "#4edea3",
+                        "outline-variant": "#bbcabf",
+                        "on-secondary-fixed": "#2a1700",
+                        "secondary-fixed": "#ffddb8"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "md": "16px",
+                        "base": "4px",
+                        "container-max": "1280px",
+                        "xl": "32px",
+                        "gutter": "24px",
+                        "xs": "4px",
+                        "sm": "8px",
+                        "lg": "24px",
+                        "2xl": "48px",
+                        "3xl": "64px"
+                    },
+                    "fontFamily": {
+                        "headline-md": ["Geist Sans"],
+                        "headline-lg": ["Geist Sans"],
+                        "display": ["Geist Sans"],
+                        "label-md": ["Geist Sans"],
+                        "headline-sm": ["Geist Sans"],
+                        "body-sm": ["Inter"],
+                        "headline-lg-mobile": ["Geist Sans"],
+                        "body-lg": ["Inter"],
+                        "label-sm": ["Geist Sans"],
+                        "body-md": ["Inter"]
+                    },
+                    "fontSize": {
+                        "headline-md": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+                        "headline-lg": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "600" }],
+                        "display": ["48px", { "lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "label-md": ["14px", { "lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "500" }],
+                        "headline-sm": ["20px", { "lineHeight": "28px", "letterSpacing": "0em", "fontWeight": "600" }],
+                        "body-sm": ["14px", { "lineHeight": "20px", "letterSpacing": "0em", "fontWeight": "400" }],
+                        "headline-lg-mobile": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+                        "body-lg": ["18px", { "lineHeight": "28px", "letterSpacing": "0em", "fontWeight": "400" }],
+                        "label-sm": ["12px", { "lineHeight": "16px", "letterSpacing": "0.02em", "fontWeight": "600" }],
+                        "body-md": ["16px", { "lineHeight": "24px", "letterSpacing": "0em", "fontWeight": "400" }]
+                    }
+                }
+            }
+        }
+    </script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Geist+Sans:wght@100..900&family=Inter:wght@100..900&display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background font-body-md antialiased h-screen flex overflow-hidden">
+<!-- SideNavBar -->
+<nav class="bg-surface dark:bg-surface-dim h-screen w-64 fixed left-0 top-0 flex flex-col border-r border-outline-variant dark:border-outline z-20">
+<div class="flex flex-col h-full p-md">
+<!-- Brand -->
+<div class="flex items-center gap-md px-md py-lg mb-lg">
+<div class="w-10 h-10 rounded-lg bg-primary flex items-center justify-center">
+<span class="material-symbols-outlined text-on-primary" data-icon="energy_savings_leaf">energy_savings_leaf</span>
+</div>
+<div>
+<h1 class="font-headline-md text-headline-md font-bold text-primary dark:text-primary-fixed">PolliSync</h1>
+<p class="font-label-sm text-label-sm text-on-surface-variant">Agrotech Analytics</p>
+</div>
+</div>
+<!-- CTA -->
+<button class="w-full bg-primary-container text-on-primary-container rounded-lg px-md py-sm font-label-md text-label-md font-bold mb-xl shadow-sm hover:opacity-90 transition-opacity">
+                New Analysis
+            </button>
+<!-- Navigation Links -->
+<div class="flex-1 space-y-sm">
+<!-- Active Item -->
+<a class="flex items-center gap-md text-primary dark:text-primary-fixed font-bold bg-primary-container/10 dark:bg-primary-container/20 rounded-lg px-md py-sm" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span class="font-label-md text-label-md">Dashboard</span>
+</a>
+<!-- Inactive Items -->
+<a class="flex items-center gap-md text-on-surface-variant dark:text-surface-variant hover:text-on-surface dark:hover:text-surface-bright px-md py-sm hover:bg-surface-container-high dark:hover:bg-surface-container transition-colors duration-200 rounded-lg" href="#">
+<span class="material-symbols-outlined" data-icon="analytics">analytics</span>
+<span class="font-label-md text-label-md">Predictions</span>
+</a>
+<a class="flex items-center gap-md text-on-surface-variant dark:text-surface-variant hover:text-on-surface dark:hover:text-surface-bright px-md py-sm hover:bg-surface-container-high dark:hover:bg-surface-container transition-colors duration-200 rounded-lg" href="#">
+<span class="material-symbols-outlined" data-icon="agriculture">agriculture</span>
+<span class="font-label-md text-label-md">Farms</span>
+</a>
+<a class="flex items-center gap-md text-on-surface-variant dark:text-surface-variant hover:text-on-surface dark:hover:text-surface-bright px-md py-sm hover:bg-surface-container-high dark:hover:bg-surface-container transition-colors duration-200 rounded-lg" href="#">
+<span class="material-symbols-outlined" data-icon="cloud">cloud</span>
+<span class="font-label-md text-label-md">Weather</span>
+</a>
+<a class="flex items-center gap-md text-on-surface-variant dark:text-surface-variant hover:text-on-surface dark:hover:text-surface-bright px-md py-sm hover:bg-surface-container-high dark:hover:bg-surface-container transition-colors duration-200 rounded-lg" href="#">
+<span class="material-symbols-outlined" data-icon="pest_control_rodent">pest_control_rodent</span>
+<span class="font-label-md text-label-md">Bees</span>
+</a>
+<a class="flex items-center gap-md text-on-surface-variant dark:text-surface-variant hover:text-on-surface dark:hover:text-surface-bright px-md py-sm hover:bg-surface-container-high dark:hover:bg-surface-container transition-colors duration-200 rounded-lg" href="#">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+<span class="font-label-md text-label-md">Settings</span>
+</a>
+</div>
+<!-- Footer Links -->
+<div class="mt-auto border-t border-outline-variant pt-md space-y-sm">
+<a class="flex items-center gap-md text-on-surface-variant hover:text-on-surface px-md py-sm rounded-lg hover:bg-surface-container-high transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="help">help</span>
+<span class="font-label-md text-label-md">Support</span>
+</a>
+<a class="flex items-center gap-md text-on-surface-variant hover:text-on-surface px-md py-sm rounded-lg hover:bg-surface-container-high transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="person">person</span>
+<span class="font-label-md text-label-md">Account</span>
+</a>
+</div>
+</div>
+</nav>
+<!-- Main Content Area -->
+<main class="flex-1 ml-64 flex flex-col h-full bg-background overflow-hidden relative">
+<!-- TopNavBar (Simulated minimal top bar for layout context) -->
+<header class="bg-surface/80 dark:bg-surface-dim/80 backdrop-blur-md h-16 px-xl w-full flex justify-between items-center z-10 border-b border-outline-variant">
+<div class="flex items-center gap-md">
+<!-- Left empty to focus on content, or add breadcrumbs later -->
+<span class="font-headline-sm text-headline-sm font-semibold text-on-surface">Dashboard</span>
+</div>
+<div class="flex items-center gap-md text-on-surface-variant">
+<button class="hover:text-primary transition-colors"><span class="material-symbols-outlined" data-icon="notifications">notifications</span></button>
+</div>
+</header>
+<!-- Canvas Area (Empty State) -->
+<div class="flex-1 flex flex-col items-center justify-center p-gutter relative overflow-y-auto">
+<!-- Subtle background pattern for visual interest in empty state -->
+<div class="absolute inset-0 opacity-[0.03] pointer-events-none" style="background-image: radial-gradient(var(--tw-colors-primary) 1px, transparent 1px); background-size: 24px 24px;"></div>
+<div class="relative z-10 max-w-lg w-full flex flex-col items-center text-center">
+<!-- Illustration Placeholder -->
+<div class="w-64 h-64 mb-xl rounded-full bg-surface-container-high border border-outline-variant shadow-sm flex items-center justify-center overflow-hidden">
+<img class="object-cover w-full h-full opacity-80 mix-blend-multiply" data-alt="A minimalist, soft-lit digital illustration of a serene, empty agricultural field at dawn. The style is modern corporate SaaS, using primarily light neutral tones with subtle, clean lines and shapes. The mood is calm and inviting, conveying a blank canvas ready for data. High-key lighting, clean aesthetics." src="https://lh3.googleusercontent.com/aida-public/AB6AXuB28ZAfLHV_RpYhPo2pS2kg7xqFIbaVewLTRVmvhXpOhK8MNzAKDy5-Ljw4Tq7_4aKbVbuCS_r5V6A1gMMnxdKwkC13Ao9tnWWdPQbejBSTI_5mMh9E7Sj2eVBBmvUthSsROf7n0zSlSUROYfrezwBUhJSTpCOBFOh_GV_gw-oT7G8rc7sqxf3VTZ36tlrJuEJQW1Xsu_B4zJnkqQXADUONug6cjZuKNto2ULg86im407ebdXKTWuybyW8tIljqDBd1jSlZN41MaZMI"/>
+</div>
+<!-- Text Content -->
+<h2 class="font-display text-display text-on-background mb-sm">No Predictions Yet</h2>
+<p class="font-body-lg text-body-lg text-on-surface-variant mb-2xl max-w-md">
+                    Your pollination forecasting dashboard is empty. Add your first farm location and crop data to generate precision pollination insights and weather impact models.
+                </p>
+<!-- CTA -->
+<button class="group relative inline-flex items-center justify-center gap-sm px-xl py-lg bg-primary text-on-primary rounded-lg font-headline-sm text-headline-sm font-semibold shadow-[0_1px_3px_rgba(0,0,0,0.1)] hover:bg-[#005a3c] transition-all duration-200 overflow-hidden">
+<span class="absolute inset-0 w-full h-full bg-white/10 group-hover:bg-transparent transition-colors"></span>
+<span class="material-symbols-outlined text-[24px]" data-icon="add_circle">add_circle</span>
+<span>Create First Prediction</span>
+</button>
+<!-- Secondary Helper -->
+<div class="mt-lg flex items-center gap-sm text-on-surface-variant/70 text-body-sm font-body-sm">
+<span class="material-symbols-outlined text-[16px]" data-icon="info">info</span>
+<span>Need help? Check out our <a class="text-primary hover:underline" href="#">Quick Start Guide</a>.</span>
+</div>
+</div>
+</div>
+</main>
+</body></html>
