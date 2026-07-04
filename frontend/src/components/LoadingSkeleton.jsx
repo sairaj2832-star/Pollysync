@@ -1,20 +1,22 @@
 export function Skeleton({ className = "" }) {
   return (
-    <div
-      className={`animate-pulse rounded-xl bg-slate-200 ${className}`}
-    />
+    <div className={`animate-pulse rounded-xl bg-surface-container-highest ${className}`} />
   );
 }
 
 export function DashboardSkeleton() {
   return (
-    <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-      <Skeleton className="h-64" />
-      <Skeleton className="h-64" />
-      <Skeleton className="h-64" />
-      <Skeleton className="h-48 md:col-span-2" />
-      <Skeleton className="h-48" />
-      <Skeleton className="h-72 md:col-span-3" />
+    <div className="grid grid-cols-12 gap-lg">
+      <Skeleton className="col-span-12 md:col-span-4 h-64" />
+      <Skeleton className="col-span-12 md:col-span-5 h-64" />
+      <Skeleton className="col-span-12 md:col-span-3 h-64" />
+      <Skeleton className="col-span-12 md:col-span-6 h-48" />
+      <Skeleton className="col-span-12 md:col-span-6 h-48" />
+      <Skeleton className="col-span-12 md:col-span-8 h-56" />
+      <Skeleton className="col-span-12 md:col-span-4 h-56" />
+      <Skeleton className="col-span-12 md:col-span-6 h-64" />
+      <Skeleton className="col-span-12 md:col-span-6 h-64" />
+      <Skeleton className="col-span-12 h-72" />
     </div>
   );
 }

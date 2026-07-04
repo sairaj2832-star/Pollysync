@@ -1,10 +1,12 @@
 import { Navigate, Route, Routes } from "react-router-dom";
 import ProtectedRoute from "./components/ProtectedRoute";
 import Layout from "./components/Layout";
+import ChatPage from "./pages/ChatPage";
 import DashboardPage from "./pages/DashboardPage";
 import HomePage from "./pages/HomePage";
 import LoginPage from "./pages/LoginPage";
 import PredictPage from "./pages/PredictPage";
+import PredictionHistoryPage from "./pages/PredictionHistoryPage";
 import RegisterPage from "./pages/RegisterPage";
 
 export default function App() {
@@ -29,6 +31,26 @@ export default function App() {
           <ProtectedRoute>
             <Layout>
               <PredictPage />
+            </Layout>
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/predictions"
+        element={
+          <ProtectedRoute>
+            <Layout>
+              <PredictionHistoryPage />
+            </Layout>
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/chat"
+        element={
+          <ProtectedRoute>
+            <Layout>
+              <ChatPage />
             </Layout>
           </ProtectedRoute>
         }
