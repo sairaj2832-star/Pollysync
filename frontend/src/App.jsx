@@ -3,11 +3,14 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import Layout from "./components/Layout";
 import ChatPage from "./pages/ChatPage";
 import DashboardPage from "./pages/DashboardPage";
+import HelpDesk from "./pages/HelpDesk";
 import HomePage from "./pages/HomePage";
 import LoginPage from "./pages/LoginPage";
 import PredictPage from "./pages/PredictPage";
 import PredictionHistoryPage from "./pages/PredictionHistoryPage";
+import ProfilePage from "./pages/ProfilePage";
 import RegisterPage from "./pages/RegisterPage";
+import SettingsPage from "./pages/SettingsPage";
 
 export default function App() {
   return (
@@ -51,6 +54,36 @@ export default function App() {
           <ProtectedRoute>
             <Layout>
               <ChatPage />
+            </Layout>
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/account"
+        element={
+          <ProtectedRoute>
+            <Layout>
+              <ProfilePage />
+            </Layout>
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/settings"
+        element={
+          <ProtectedRoute>
+            <Layout>
+              <SettingsPage />
+            </Layout>
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/support"
+        element={
+          <ProtectedRoute>
+            <Layout>
+              <HelpDesk />
             </Layout>
           </ProtectedRoute>
         }

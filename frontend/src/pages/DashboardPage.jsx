@@ -87,118 +87,127 @@ export default function DashboardPage() {
   const beeSpecies = data.bee_species || [];
 
   return (
-    <div className="grid grid-cols-12 gap-lg">
-      {/* 1. PSI GAUGE - 4 columns */}
-      <div className="col-span-12 md:col-span-4 bg-surface border border-outline-variant rounded-xl p-lg flex flex-col items-center justify-center text-center shadow-[0_1px_3px_rgba(0,0,0,0.05)]">
-        <h3 className="font-headline-sm text-headline-sm text-on-surface mb-md w-full text-left">
-          Pollination Suitability Index
-        </h3>
-        <PSIgauge score={prediction?.psi_score} />
-        <div className={`mt-sm rounded-full font-label-md text-label-md flex items-center gap-xs px-md py-xs ${
-          prediction?.risk_level === "Low" ? "bg-primary-container/10 text-primary"
-          : prediction?.risk_level === "Medium" ? "bg-secondary/10 text-secondary"
-          : "bg-tertiary/10 text-tertiary"
-        }`}>
-          <span className="material-symbols-outlined text-sm">check_circle</span>
-          {prediction?.risk_level || "Unknown"} Risk
-        </div>
-      </div>
-
-      {/* 2. WEATHER GRID - 5 columns */}
-      <div className="col-span-12 md:col-span-5 bg-surface border border-outline-variant rounded-xl p-lg flex flex-col shadow-[0_1px_3px_rgba(0,0,0,0.05)]">
-        <h3 className="font-headline-sm text-headline-sm text-on-surface mb-md">Current Microclimate</h3>
-        <div className="grid grid-cols-2 gap-md flex-1">
-          <WeatherCard label="Temperature" value={weather.temperature ?? "--"} unit="°C" icon="temperature" trend={2} />
-          <WeatherCard label="Humidity" value={weather.humidity ?? "--"} unit="%" icon="humidity" trend={-4} />
-          <WeatherCard label="Rainfall" value={weather.rainfall ?? "--"} unit="mm" icon="rainfall" />
-          <WeatherCard label="Wind" value={weather.wind_speed ?? "--"} unit="km/h" icon="wind" trend={-2} />
-        </div>
-      </div>
-
-      {/* 3. FARM STATUS / RISK - 3 columns */}
-      <div className="col-span-12 md:col-span-3 bg-surface border border-outline-variant rounded-xl p-lg flex flex-col justify-between shadow-[0_1px_3px_rgba(0,0,0,0.05)]">
-        <div>
-          <h3 className="font-headline-sm text-headline-sm text-on-surface mb-sm">Farm Status</h3>
-          <div className={`w-full border rounded-xl p-md flex flex-col items-center justify-center mt-md text-center ${
-            prediction?.risk_level === "Low" ? "bg-primary-container/10 border-primary-container/20"
-            : prediction?.risk_level === "Medium" ? "bg-secondary/10 border-secondary/20"
-            : "bg-tertiary/10 border-tertiary/20"
-          }`}>
-            <div className={`w-12 h-12 rounded-full flex items-center justify-center mb-sm shadow-sm ${
-              prediction?.risk_level === "Low" ? "bg-primary-container text-on-primary"
-              : prediction?.risk_level === "Medium" ? "bg-secondary text-on-secondary"
-              : "bg-tertiary text-on-tertiary"
+    <div className="relative">
+      <div className="absolute inset-0 opacity-[0.02] pointer-events-none" style={{ backgroundImage: "radial-gradient(#006c49 1px, transparent 1px)", backgroundSize: "24px 24px" }} />
+      <div className="relative z-10 grid grid-cols-12 gap-lg">
+        {/* 1. PSI GAUGE - 4 columns */}
+        <div className="col-span-12 md:col-span-4 animate-fade-in-up stagger-1">
+          <div className="bg-surface border border-outline-variant rounded-xl p-lg flex flex-col items-center justify-center text-center shadow-[0_1px_3px_rgba(0,0,0,0.05)] card-hover">
+            <h3 className="font-headline-sm text-headline-sm text-on-surface mb-md w-full text-left">
+              Pollination Suitability Index
+            </h3>
+            <PSIgauge score={prediction?.psi_score} />
+            <div className={`mt-sm rounded-full font-label-md text-label-md flex items-center gap-xs px-md py-xs ${
+              prediction?.risk_level === "Low" ? "bg-primary-container/10 text-primary"
+              : prediction?.risk_level === "Medium" ? "bg-secondary/10 text-secondary"
+              : "bg-tertiary/10 text-tertiary"
             }`}>
-              <span className="material-symbols-outlined text-2xl">verified_user</span>
+              <span className="material-symbols-outlined text-sm">check_circle</span>
+              {prediction?.risk_level || "Unknown"} Risk
             </div>
-            <span className={`font-headline-sm text-headline-sm ${
-              prediction?.risk_level === "Low" ? "text-primary"
-              : prediction?.risk_level === "Medium" ? "text-secondary"
-              : "text-tertiary"
-            }`}>
-              {prediction?.risk_level || "--"} Risk
-            </span>
-            <span className="font-body-sm text-body-sm text-on-surface-variant mt-xs">
-              Conditions {prediction?.risk_level === "Low" ? "optimal" : prediction?.risk_level === "Medium" ? "moderate" : "challenging"} for pollination.
-            </span>
           </div>
         </div>
-        <div className="flex flex-col gap-sm mt-lg">
-          <button
-            onClick={() => navigate(`/map?farm_id=${farmId}`)}
-            className="w-full bg-primary-container text-on-primary font-label-md text-label-md py-sm rounded-lg hover:bg-primary transition-colors flex justify-center items-center gap-xs"
-          >
-            <span className="material-symbols-outlined text-[18px]">map</span>
-            View Bee Map
-          </button>
-          <button className="w-full bg-surface border border-outline-variant text-on-surface font-label-md text-label-md py-sm rounded-lg hover:bg-surface-container-high transition-colors flex justify-center items-center gap-xs">
-            <span className="material-symbols-outlined text-[18px]">download</span>
-            Export Report
-          </button>
+
+        {/* 2. WEATHER GRID - 5 columns */}
+        <div className="col-span-12 md:col-span-5 animate-fade-in-up stagger-2">
+          <div className="bg-surface border border-outline-variant rounded-xl p-lg flex flex-col shadow-[0_1px_3px_rgba(0,0,0,0.05)] card-hover">
+            <h3 className="font-headline-sm text-headline-sm text-on-surface mb-md">Current Microclimate</h3>
+            <div className="grid grid-cols-2 gap-md flex-1">
+              <WeatherCard label="Temperature" value={weather.temperature ?? "--"} unit="°C" icon="temperature" trend={2} />
+              <WeatherCard label="Humidity" value={weather.humidity ?? "--"} unit="%" icon="humidity" trend={-4} />
+              <WeatherCard label="Rainfall" value={weather.rainfall ?? "--"} unit="mm" icon="rainfall" />
+              <WeatherCard label="Wind" value={weather.wind_speed ?? "--"} unit="km/h" icon="wind" trend={-2} />
+            </div>
+          </div>
         </div>
-      </div>
 
-      {/* 4. FLOWERING CALENDAR - 6 columns */}
-      <div className="col-span-12 md:col-span-6">
-        <FloweringCalendar
-          start={prediction?.flowering_start}
-          end={prediction?.flowering_end}
-          confidence={prediction?.flowering_confidence}
-        />
-      </div>
+        {/* 3. FARM STATUS / RISK - 3 columns */}
+        <div className="col-span-12 md:col-span-3 animate-fade-in-up stagger-3">
+          <div className="bg-surface border border-outline-variant rounded-xl p-lg flex flex-col justify-between shadow-[0_1px_3px_rgba(0,0,0,0.05)] card-hover">
+            <div>
+              <h3 className="font-headline-sm text-headline-sm text-on-surface mb-sm">Farm Status</h3>
+              <div className={`w-full border rounded-xl p-md flex flex-col items-center justify-center mt-md text-center ${
+                prediction?.risk_level === "Low" ? "bg-primary-container/10 border-primary-container/20"
+                : prediction?.risk_level === "Medium" ? "bg-secondary/10 border-secondary/20"
+                : "bg-tertiary/10 border-tertiary/20"
+              }`}>
+                <div className={`w-12 h-12 rounded-full flex items-center justify-center mb-sm shadow-sm ${
+                  prediction?.risk_level === "Low" ? "bg-primary-container text-on-primary"
+                  : prediction?.risk_level === "Medium" ? "bg-secondary text-on-secondary"
+                  : "bg-tertiary text-on-tertiary"
+                }`}>
+                  <span className="material-symbols-outlined text-2xl">verified_user</span>
+                </div>
+                <span className={`font-headline-sm text-headline-sm ${
+                  prediction?.risk_level === "Low" ? "text-primary"
+                  : prediction?.risk_level === "Medium" ? "text-secondary"
+                  : "text-tertiary"
+                }`}>
+                  {prediction?.risk_level || "--"} Risk
+                </span>
+                <span className="font-body-sm text-body-sm text-on-surface-variant mt-xs">
+                  Conditions {prediction?.risk_level === "Low" ? "optimal" : prediction?.risk_level === "Medium" ? "moderate" : "challenging"} for pollination.
+                </span>
+              </div>
+            </div>
+            <div className="flex flex-col gap-sm mt-lg">
+              <button
+                onClick={() => navigate(`/map?farm_id=${farmId}`)}
+                className="w-full bg-primary-container text-on-primary font-label-md text-label-md py-sm rounded-lg hover:bg-primary transition-colors flex justify-center items-center gap-xs"
+              >
+                <span className="material-symbols-outlined text-[18px]">map</span>
+                View Bee Map
+              </button>
+              <button className="w-full bg-surface border border-outline-variant text-on-surface font-label-md text-label-md py-sm rounded-lg hover:bg-surface-container-high transition-colors flex justify-center items-center gap-xs">
+                <span className="material-symbols-outlined text-[18px]">download</span>
+                Export Report
+              </button>
+            </div>
+          </div>
+        </div>
 
-      {/* 5. POLLEN INDEX - 6 columns */}
-      <div className="col-span-12 md:col-span-6">
-        <PollenBar pollen={prediction?.pollen_summary} />
-      </div>
+        {/* 4. FLOWERING CALENDAR - 6 columns */}
+        <div className="col-span-12 md:col-span-6 animate-fade-in-up stagger-4">
+          <FloweringCalendar
+            start={prediction?.flowering_start}
+            end={prediction?.flowering_end}
+            confidence={prediction?.flowering_confidence}
+          />
+        </div>
 
-      {/* 6. AI RECOMMENDATION - 8 columns */}
-      <div className="col-span-12 md:col-span-8">
-        <RecommendationCard
-          text={prediction?.recommendation}
-          riskLevel={prediction?.risk_level}
-        />
-      </div>
+        {/* 5. POLLEN INDEX - 6 columns */}
+        <div className="col-span-12 md:col-span-6 animate-fade-in-up stagger-5">
+          <PollenBar pollen={prediction?.pollen_summary} />
+        </div>
 
-      {/* 7. CROP HEALTH NDVI - 4 columns */}
-      <div className="col-span-12 md:col-span-4">
-        <NDVICard value={prediction?.ndvi_value} />
-      </div>
+        {/* 6. AI RECOMMENDATION - 8 columns */}
+        <div className="col-span-12 md:col-span-8 animate-fade-in-up stagger-6">
+          <RecommendationCard
+            text={prediction?.recommendation}
+            riskLevel={prediction?.risk_level}
+          />
+        </div>
 
-      {/* 8. CHARTS - 6+6 */}
-      <div className="col-span-12 md:col-span-6">
-        <WeatherTrendChart farmId={farmId} />
-      </div>
-      <div className="col-span-12 md:col-span-6">
-        <PSIHistoryChart farmId={farmId} />
-      </div>
+        {/* 7. CROP HEALTH NDVI - 4 columns */}
+        <div className="col-span-12 md:col-span-4 animate-fade-in-up stagger-7">
+          <NDVICard value={prediction?.ndvi_value} />
+        </div>
 
-      {/* 9. BEE MAP - 12 columns */}
-      <div className="col-span-12">
-        <BeeMap
-          center={[farm.location_lat || 20, farm.location_lng || 78]}
-          occurrences={(data.occurrences || []).map((o) => ({ species: o.species, lat: o.lat, lng: o.lng }))}
-        />
+        {/* 8. CHARTS - 6+6 */}
+        <div className="col-span-12 md:col-span-6 animate-fade-in-up stagger-8">
+          <WeatherTrendChart farmId={farmId} />
+        </div>
+        <div className="col-span-12 md:col-span-6 animate-fade-in-up stagger-9">
+          <PSIHistoryChart farmId={farmId} />
+        </div>
+
+        {/* 9. BEE MAP - 12 columns */}
+        <div className="col-span-12 animate-fade-in">
+          <BeeMap
+            center={[farm.location_lat || 20, farm.location_lng || 78]}
+            occurrences={(data.occurrences || []).map((o) => ({ species: o.species, lat: o.lat, lng: o.lng }))}
+          />
+        </div>
       </div>
     </div>
   );

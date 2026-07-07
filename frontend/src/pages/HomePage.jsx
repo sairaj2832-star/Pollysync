@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+import ShaderBackground from "../components/ShaderBackground";
 
 const FEATURES = [
   {
@@ -73,7 +74,8 @@ export default function HomePage() {
       </nav>
 
       <section className="relative min-h-[600px] flex flex-col items-center justify-center text-center px-6 overflow-hidden">
-        <div className="max-w-4xl mx-auto space-y-lg mt-3xl">
+        <ShaderBackground variant="light" className="opacity-60" />
+        <div className="relative z-10 max-w-4xl mx-auto space-y-lg mt-3xl animate-fade-in-up">
           <h1 className="font-display text-display md:text-[64px] md:leading-[1.1] text-on-surface">
             Know Before Your <br className="hidden md:block" />
             <span className="text-primary">Crops Flower</span>
@@ -106,7 +108,7 @@ export default function HomePage() {
           </div>
         </div>
 
-        <div className="mt-3xl w-full max-w-container-max">
+        <div className="mt-3xl w-full max-w-container-max animate-fade-in-up stagger-3">
           <div className="pt-2xl border-t border-outline-variant/30 flex flex-wrap justify-center items-center gap-xl opacity-60 grayscale hover:grayscale-0 transition-all duration-500">
             {REGIONS.map((r) => (
               <div key={r} className="flex flex-col items-center gap-sm">
@@ -120,17 +122,18 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section className="py-3xl px-6 bg-surface-container-lowest" id="features">
-        <div className="max-w-container-max mx-auto">
-          <div className="text-center mb-2xl">
+      <section className="relative py-3xl px-6 bg-surface-container-lowest overflow-hidden" id="features">
+        <div className="absolute inset-0 opacity-[0.03] pointer-events-none" style={{ backgroundImage: "radial-gradient(#006c49 1px, transparent 1px)", backgroundSize: "24px 24px" }} />
+        <div className="relative z-10 max-w-container-max mx-auto">
+          <div className="text-center mb-2xl animate-fade-in-up">
             <h2 className="font-headline-lg text-headline-lg text-on-surface">Precision Features</h2>
             <p className="text-on-surface-variant font-body-md mt-sm">Data-driven insights for maximum yield optimization.</p>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-lg">
-            {FEATURES.map((f) => (
+            {FEATURES.map((f, i) => (
               <div
                 key={f.title}
-                className="group p-xl bg-surface border border-outline-variant/30 rounded-xl hover:shadow-xl hover:-translate-y-1 transition-all duration-300"
+                className={`group p-xl bg-surface border border-outline-variant/30 rounded-xl hover:shadow-xl hover:-translate-y-1 transition-all duration-300 card-hover animate-fade-in-up stagger-${i + 1}`}
               >
                 <div className="w-12 h-12 bg-primary/10 text-primary rounded-lg flex items-center justify-center mb-md group-hover:scale-110 transition-transform">
                   <span className="material-symbols-outlined">{f.icon}</span>
@@ -147,10 +150,10 @@ export default function HomePage() {
         <div className="max-w-container-max mx-auto overflow-hidden">
           <h2 className="font-headline-lg text-headline-lg text-on-surface mb-2xl text-center md:text-left">Supported Crops</h2>
           <div className="flex flex-nowrap md:grid md:grid-cols-5 gap-md overflow-x-auto pb-6">
-            {CROPS.map((c) => (
+            {CROPS.map((c, i) => (
               <div
                 key={c.name}
-                className="min-w-[200px] bg-surface-container-low p-lg rounded-xl border border-outline-variant/20 flex flex-col items-center text-center group hover:bg-primary-container/10 transition-colors"
+                className={`min-w-[200px] bg-surface-container-low p-lg rounded-xl border border-outline-variant/20 flex flex-col items-center text-center group hover:bg-primary-container/10 transition-colors animate-fade-in-up stagger-${i + 1}`}
               >
                 <span className="text-4xl mb-md">{c.emoji}</span>
                 <span className="font-label-md text-label-md text-on-surface font-medium">{c.name}</span>

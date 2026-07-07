@@ -7,6 +7,7 @@ const NAV_ITEMS = [
   { path: "/predict", label: "New Prediction", icon: "add_circle" },
   { path: "/predictions", label: "History", icon: "history" },
   { path: "/chat", label: "AI Assistant", icon: "smart_toy" },
+  { path: "/settings", label: "Settings", icon: "settings" },
 ];
 
 const PAGE_TITLES = {
@@ -14,6 +15,9 @@ const PAGE_TITLES = {
   "/predict": "New Prediction",
   "/predictions": "Prediction History",
   "/chat": "AI Assistant",
+  "/settings": "Settings",
+  "/account": "Account",
+  "/support": "Help & Support",
 };
 
 const BOTTOM_NAV = [
@@ -32,9 +36,9 @@ export default function Layout({ children }) {
 
   function NavLink({ path, label, icon, isBottom }) {
     const active = isActive(path);
-    const base = "flex items-center gap-md rounded-lg px-md py-sm transition-colors duration-200";
+    const base = "flex items-center gap-md rounded-lg px-md py-sm transition-all duration-200";
     const style = active
-      ? "bg-primary-container/10 text-primary font-bold"
+      ? "bg-primary-container/10 text-primary font-bold sidebar-link-active"
       : `${isBottom ? "" : "text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high"}`;
     return (
       <Link
@@ -42,7 +46,7 @@ export default function Layout({ children }) {
         className={`${base} ${style} ${isBottom && !active ? "text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high" : ""}`}
         onClick={() => setMobileOpen(false)}
       >
-        <span className="material-symbols-outlined text-xl">{icon}</span>
+        <span className={`material-symbols-outlined text-xl transition-transform duration-200 ${active ? "scale-110" : ""}`}>{icon}</span>
         <span className="font-label-md text-label-md">{label}</span>
       </Link>
     );
@@ -50,7 +54,7 @@ export default function Layout({ children }) {
 
   return (
     <div className="text-on-surface bg-background flex h-screen overflow-hidden">
-      <aside className={`bg-surface border-r border-outline-variant h-screen w-64 fixed left-0 top-0 flex flex-col p-md z-20 transition-transform lg:translate-x-0 ${mobileOpen ? "translate-x-0" : "-translate-x-full"}`}>
+      <aside className={`bg-surface/90 backdrop-blur-md border-r border-outline-variant h-screen w-64 fixed left-0 top-0 flex flex-col p-md z-20 transition-transform lg:translate-x-0 ${mobileOpen ? "translate-x-0" : "-translate-x-full"}`}>
         <div className="flex items-center gap-sm px-sm mb-lg">
           <span className="material-symbols-outlined text-primary text-3xl filled">eco</span>
           <div className="flex flex-col">
@@ -112,8 +116,9 @@ export default function Layout({ children }) {
             </div>
           </div>
           <div className="flex items-center gap-md">
-            <button className="text-on-surface-variant hover:text-primary transition-colors opacity-80 hover:opacity-100 p-sm rounded-full hover:bg-surface-container-highest">
+            <button className="relative text-on-surface-variant hover:text-primary transition-colors opacity-80 hover:opacity-100 p-sm rounded-full hover:bg-surface-container-highest">
               <span className="material-symbols-outlined">notifications</span>
+              <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-tertiary rounded-full animate-pulse-dot" />
             </button>
             <button className="text-on-surface-variant hover:text-primary transition-colors opacity-80 hover:opacity-100 p-sm rounded-full hover:bg-surface-container-highest">
               <span className="material-symbols-outlined">help</span>

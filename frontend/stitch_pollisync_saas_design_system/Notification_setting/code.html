@@ -1,0 +1,413 @@
+<!DOCTYPE html><html class="light" lang="en" style=""><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Notification Settings - PolliSync</title>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect">
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect">
+<link href="https://fonts.googleapis.com/css2?family=Geist+Sans:wght@100..900&amp;family=Inter:wght@100..900&amp;display=swap" rel="stylesheet">
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<!-- Design System Config -->
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-secondary-container": "#684000",
+                    "on-primary-fixed": "#002113",
+                    "secondary-container": "#fea619",
+                    "on-error": "#ffffff",
+                    "tertiary": "#b91a24",
+                    "on-primary-fixed-variant": "#005236",
+                    "on-primary": "#ffffff",
+                    "surface-container": "#f6ece6",
+                    "background": "#fff8f5",
+                    "error-container": "#ffdad6",
+                    "secondary": "#855300",
+                    "on-tertiary-fixed": "#410004",
+                    "tertiary-fixed-dim": "#ffb3ad",
+                    "outline-variant": "#bbcabf",
+                    "on-secondary": "#ffffff",
+                    "secondary-fixed": "#ffddb8",
+                    "primary": "#006c49",
+                    "on-background": "#1f1b17",
+                    "inverse-surface": "#342f2b",
+                    "tertiary-container": "#ff7a73",
+                    "surface-container-highest": "#eae1da",
+                    "surface-bright": "#fff8f5",
+                    "surface-variant": "#eae1da",
+                    "surface-container-high": "#f0e6e0",
+                    "primary-fixed-dim": "#4edea3",
+                    "on-secondary-fixed-variant": "#653e00",
+                    "on-secondary-fixed": "#2a1700",
+                    "surface-dim": "#e2d8d2",
+                    "surface-container-lowest": "#ffffff",
+                    "surface-container-low": "#fcf2eb",
+                    "on-tertiary": "#ffffff",
+                    "inverse-on-surface": "#f9efe8",
+                    "outline": "#6c7a71",
+                    "on-tertiary-fixed-variant": "#930013",
+                    "on-surface-variant": "#3c4a42",
+                    "tertiary-fixed": "#ffdad7",
+                    "surface": "#fff8f5",
+                    "surface-tint": "#006c49",
+                    "error": "#ba1a1a",
+                    "primary-container": "#10b981",
+                    "on-error-container": "#93000a",
+                    "inverse-primary": "#4edea3",
+                    "on-tertiary-container": "#79000e",
+                    "on-primary-container": "#00422b",
+                    "secondary-fixed-dim": "#ffb95f",
+                    "on-surface": "#1f1b17",
+                    "primary-fixed": "#6ffbbe"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "2xl": "48px",
+                    "sm": "8px",
+                    "xs": "4px",
+                    "md": "16px",
+                    "base": "4px",
+                    "container-max": "1280px",
+                    "lg": "24px",
+                    "gutter": "24px",
+                    "xl": "32px",
+                    "3xl": "64px"
+            },
+            "fontFamily": {
+                    "body-sm": ["Inter"],
+                    "headline-sm": ["Geist Sans"],
+                    "headline-lg-mobile": ["Geist Sans"],
+                    "label-sm": ["Geist Sans"],
+                    "display": ["Geist Sans"],
+                    "headline-md": ["Geist Sans"],
+                    "label-md": ["Geist Sans"],
+                    "body-lg": ["Inter"],
+                    "body-md": ["Inter"],
+                    "headline-lg": ["Geist Sans"]
+            },
+            "fontSize": {
+                    "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                    "headline-sm": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                    "headline-lg-mobile": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                    "label-sm": ["12px", {"lineHeight": "16px", "fontWeight": "600"}],
+                    "display": ["48px", {"lineHeight": "56px", "fontWeight": "700"}],
+                    "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                    "label-md": ["14px", {"lineHeight": "20px", "fontWeight": "500"}],
+                    "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                    "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "headline-lg": ["32px", {"lineHeight": "40px", "fontWeight": "600"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body { font-family: 'Inter', sans-serif; background-color: #fff8f5; }
+        .font-headline { font-family: 'Geist Sans', sans-serif; }
+        
+        .toggle-switch {
+            appearance: none;
+            width: 44px;
+            height: 24px;
+            background: #eae1da;
+            border-radius: 999px;
+            position: relative;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+        .toggle-switch:checked {
+            background: #006c49;
+        }
+        .toggle-switch::before {
+            content: '';
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            width: 20px;
+            height: 20px;
+            background: white;
+            border-radius: 50%;
+            transition: transform 0.3s ease;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+        }
+        .toggle-switch:checked::before {
+            transform: translateX(20px);
+        }
+        
+        .mockup-glow {
+            box-shadow: 0 0 40px rgba(16, 185, 129, 0.1);
+        }
+    </style>
+</head>
+<body class="text-on-surface">
+<!-- SIDEBAR NAVIGATION (Shared Component) -->
+<aside class="h-screen w-64 fixed left-0 top-0 bg-surface-container shadow-sm flex flex-col py-md overflow-y-auto z-50">
+<div class="px-lg mb-xl">
+<div class="flex items-center gap-sm">
+<div class="w-10 h-10 rounded-lg bg-primary flex items-center justify-center text-on-primary">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">eco</span>
+</div>
+<div>
+<h1 class="text-headline-md font-headline-md font-bold text-primary">PolliSync</h1>
+<p class="text-label-sm font-label-sm text-outline">Precision Pollination</p>
+</div>
+</div>
+</div>
+<nav class="flex-1 px-sm space-y-xs">
+<a class="flex items-center gap-md px-md py-sm rounded-lg text-on-surface-variant hover:bg-surface-container-highest transition-colors duration-200 font-label-md text-label-md" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+                Dashboard
+            </a>
+<a class="flex items-center gap-md px-md py-sm rounded-lg text-on-surface-variant hover:bg-surface-container-highest transition-colors duration-200 font-label-md text-label-md" href="#">
+<span class="material-symbols-outlined">analytics</span>
+                Pollination Forecast
+            </a>
+<a class="flex items-center gap-md px-md py-sm rounded-lg text-on-surface-variant hover:bg-surface-container-highest transition-colors duration-200 font-label-md text-label-md" href="#">
+<span class="material-symbols-outlined">cloud</span>
+                Weather Trends
+            </a>
+
+
+<a class="flex items-center gap-md px-md py-sm rounded-lg text-on-surface-variant hover:bg-surface-container-highest transition-colors duration-200 font-label-md text-label-md" href="#">
+<span class="material-symbols-outlined">description</span>
+                Reports
+            </a>
+</nav>
+<div class="px-sm mt-auto border-t border-outline-variant pt-md">
+<a class="flex items-center gap-md px-md py-sm rounded-lg text-primary font-bold border-r-4 border-primary bg-surface-container-highest transition-colors duration-200 font-label-md text-label-md" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">settings</span>
+                Settings
+            </a>
+</div>
+</aside>
+<!-- MAIN CONTENT -->
+<main class="ml-64 min-h-screen">
+<!-- TOP NAV BAR (Shared Component) -->
+<header class="flex justify-between items-center w-full px-gutter h-16 bg-surface border-b border-outline-variant">
+<nav class="flex gap-xl">
+
+
+<a class="text-primary font-bold border-b-2 border-primary pb-1 font-label-md text-label-md" href="#">Settings</a>
+</nav>
+<div class="flex items-center gap-lg">
+<div class="relative group">
+
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline-variant text-body-md">search</span>
+</div>
+<div class="flex gap-md">
+<button class="w-10 h-10 rounded-full flex items-center justify-center hover:bg-surface-container transition-colors">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<button class="w-10 h-10 rounded-full flex items-center justify-center hover:bg-surface-container transition-colors">
+<span class="material-symbols-outlined">dark_mode</span>
+</button>
+</div>
+<div class="w-10 h-10 rounded-full overflow-hidden border border-outline-variant">
+<img class="w-full h-full object-cover" data-alt="A professional headshot of a modern agricultural manager in a sunlit office, wearing a casual linen shirt, with blurred lush green fields visible through a large window behind him. The lighting is soft and warm, capturing a high-end light-mode aesthetic with natural skin tones and sharp details." src="https://lh3.googleusercontent.com/aida-public/AB6AXuA4Kg3UkTqcXRWhjeRHh8nVVF_JtNTSPcfK1w9YDFkskOEJM2Oj0GzzQANmey1-Qk_UID9Xp3TBge_cPIn7F6lF1BWb2ac44CX5WzeG16qt6-rXPPmi833iWuf7d_QpC0oyGG5r2_h_8CcG1ktOVf5snUQLMrGdVo20BQG-ZuvwW-OkWiI_BI8Q6lanR2q0qllNdYipVw1YGHJKiiMpGm-DTNiLj0i8cFdYoJzr8A-LdlgJnHpgH5GFAUW4tpqIMgFsOjnypRHjVZeK">
+</div>
+</div>
+</header>
+<!-- DASHBOARD CANVAS -->
+<section class="p-xl max-w-container-max mx-auto">
+<div class="mb-xl">
+<h2 class="text-headline-lg font-headline-lg text-on-surface mb-xs">Notification Settings</h2>
+<p class="text-body-md text-on-surface-variant max-w-2xl">Configure how and when you receive critical pollination alerts, weather trends, and farm reports across your devices.</p>
+</div>
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-xl">
+<!-- PREFERENCES GRID (Bento Style) -->
+<div class="lg:col-span-7 space-y-lg">
+<!-- Channel Section: Push Notifications -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-xl p-lg shadow-sm hover:shadow-md transition-shadow">
+<div class="flex items-center gap-md mb-lg">
+<div class="w-10 h-10 rounded-lg bg-primary-container/20 text-primary flex items-center justify-center">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">notifications_active</span>
+</div>
+<div>
+<h3 class="text-headline-sm font-headline-sm">Push Notifications</h3>
+<p class="text-label-sm font-label-sm text-on-surface-variant">Mobile &amp; Web Browser</p>
+</div>
+</div>
+<div class="space-y-md">
+<div class="flex items-center justify-between py-sm">
+<div>
+<p class="text-body-md font-semibold">Critical Risk Alerts</p>
+<p class="text-body-sm text-on-surface-variant">Immediate alerts for pollination drops or pest spikes.</p>
+</div>
+<input checked="" class="toggle-switch" type="checkbox">
+</div>
+<div class="flex items-center justify-between py-sm border-t border-outline-variant/30">
+<div>
+<p class="text-body-md font-semibold">Daily Summary</p>
+<p class="text-body-sm text-on-surface-variant">A morning briefing of today's pollination forecast.</p>
+</div>
+<input checked="" class="toggle-switch" type="checkbox">
+</div>
+<div class="flex items-center justify-between py-sm border-t border-outline-variant/30">
+<div>
+<p class="text-body-md font-semibold">System Updates</p>
+<p class="text-body-sm text-on-surface-variant">New feature announcements and app maintenance.</p>
+</div>
+<input class="toggle-switch" type="checkbox">
+</div>
+</div>
+</div>
+<!-- Channel Section: Email & Messaging -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-lg">
+<!-- Email -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-xl p-lg shadow-sm">
+<div class="flex items-center gap-md mb-md">
+<div class="w-8 h-8 rounded-lg bg-secondary-container/20 text-secondary flex items-center justify-center">
+<span class="material-symbols-outlined">mail</span>
+</div>
+<h3 class="text-body-lg font-bold">Email Alerts</h3>
+</div>
+<div class="space-y-sm">
+<div class="flex items-center justify-between py-sm">
+<p class="text-body-sm font-medium">Weekly Reports</p>
+<input checked="" class="toggle-switch scale-75" type="checkbox">
+</div>
+<div class="flex items-center justify-between py-sm border-t border-outline-variant/30">
+<p class="text-body-sm font-medium">Billing &amp; Legal</p>
+<input checked="" class="toggle-switch scale-75" type="checkbox">
+</div>
+</div>
+</div>
+<!-- WhatsApp -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-xl p-lg shadow-sm">
+<div class="flex items-center gap-md mb-md">
+<div class="w-8 h-8 rounded-lg bg-green-100 text-green-700 flex items-center justify-center">
+<span class="material-symbols-outlined">chat</span>
+</div>
+<h3 class="text-body-lg font-bold">WhatsApp</h3>
+</div>
+<div class="space-y-sm">
+<div class="flex items-center justify-between py-sm">
+<p class="text-body-sm font-medium">Urgent Risk Escalation</p>
+<input class="toggle-switch scale-75" type="checkbox">
+</div>
+<p class="text-[11px] text-on-surface-variant italic">Secondary channel for critical failures.</p>
+</div>
+</div>
+</div>
+<!-- SMS Alerts -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-xl p-lg shadow-sm">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-md">
+<div class="w-10 h-10 rounded-lg bg-tertiary-container/20 text-tertiary flex items-center justify-center">
+<span class="material-symbols-outlined">sms</span>
+</div>
+<div>
+<h3 class="text-body-lg font-bold">SMS Notifications</h3>
+<p class="text-body-sm text-on-surface-variant">Real-time weather alerts via mobile carrier.</p>
+</div>
+</div>
+<input checked="" class="toggle-switch" type="checkbox">
+</div>
+</div>
+</div>
+<!-- VISUAL MOCKUP SECTION -->
+<div class="lg:col-span-5 flex flex-col justify-center items-center">
+<div class="relative w-full max-w-[320px] aspect-[9/18.5] bg-[#1f1b17] rounded-[3rem] p-4 shadow-2xl border-4 border-[#342f2b] mockup-glow">
+<!-- Phone Screen Content -->
+<div class="w-full h-full bg-[#fcf2eb] rounded-[2.2rem] overflow-hidden relative">
+<!-- Status Bar -->
+<div class="h-10 flex justify-between items-center px-8 pt-2">
+<span class="text-xs font-bold">9:41</span>
+<div class="flex gap-1 items-center">
+<span class="material-symbols-outlined text-[14px]">signal_cellular_4_bar</span>
+<span class="material-symbols-outlined text-[14px]">wifi</span>
+<span class="material-symbols-outlined text-[14px]">battery_full</span>
+</div>
+</div>
+<!-- Wallpaper Background -->
+<div class="absolute inset-0 z-0">
+<img class="w-full h-full object-cover opacity-60" data-alt="A soft-focus macro shot of a sunlit meadow with blurred wildflowers and a clear morning sky. The lighting is golden and ethereal, creating a serene and natural background that fits a modern smartphone wallpaper aesthetic. The colors are dominated by warm ambers and soft greens." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAqV96NbcnRa4297KOs9St9oFC3i9xRiwK_xKds4ZkW8WTyVCUI3yFtzHluH_msMglP-UKlJBLn1XF-NLhXPJUfZ9QgZ0oT40l0f3zQ_njGsAIbbjcaQB5XZV9NhxTilyPPP-89O9OWhXSDKAUF_mTKDVfSrzWa_MthsyypuPQUo37npR5Tr0Vy51ktw8fLrxzBXgL6qKDZOO3xIYCZuqt2QO4v6SW1sxZ_rlZYYIwl4KnCAucdDVc05AIZ7I1P3Tjn6Wtg8EFzkSRM">
+</div>
+<!-- Notification Toast -->
+<div class="absolute top-16 left-1/2 -translate-x-1/2 w-[90%] z-10 animate-bounce-short">
+<div class="bg-white/95 backdrop-blur-md border border-white/50 rounded-2xl p-4 shadow-xl">
+<div class="flex gap-3">
+<div class="w-10 h-10 rounded-lg bg-primary flex items-center justify-center text-on-primary shrink-0">
+<span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 1;">eco</span>
+</div>
+<div class="flex-1">
+<div class="flex justify-between items-start">
+<h4 class="text-[13px] font-bold text-on-surface">PolliSync</h4>
+<span class="text-[10px] text-on-surface-variant">now</span>
+</div>
+<p class="text-[12px] text-on-surface leading-tight mt-0.5">High Pollination Risk detected in Sector B. Immediate action recommended.</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Lock Screen Elements -->
+<div class="absolute bottom-12 left-0 right-0 flex flex-col items-center gap-6">
+<div class="flex gap-16">
+<div class="w-12 h-12 rounded-full bg-black/20 backdrop-blur-lg flex items-center justify-center text-white">
+<span class="material-symbols-outlined">flashlight_on</span>
+</div>
+<div class="w-12 h-12 rounded-full bg-black/20 backdrop-blur-lg flex items-center justify-center text-white">
+<span class="material-symbols-outlined">photo_camera</span>
+</div>
+</div>
+<div class="w-32 h-1 bg-black/40 rounded-full"></div>
+</div>
+</div>
+<!-- Phone Reflection Effect -->
+<div class="absolute inset-0 pointer-events-none rounded-[3rem] border border-white/10 overflow-hidden">
+<div class="absolute -top-1/2 -left-1/2 w-full h-full bg-white/5 rotate-45"></div>
+</div>
+</div>
+<div class="mt-xl text-center">
+<span class="inline-flex items-center gap-sm px-4 py-2 rounded-full bg-primary/10 text-primary font-bold text-label-md">
+<span class="material-symbols-outlined text-[18px]">verified</span>
+                            Live Preview
+                        </span>
+<p class="text-body-sm text-on-surface-variant mt-sm">Example of an urgent risk escalation alert.</p>
+</div>
+</div>
+</div>
+<!-- ACTION BUTTONS -->
+<div class="mt-2xl flex justify-end gap-md border-t border-outline-variant pt-xl">
+<button class="px-xl py-sm rounded-lg border border-outline font-label-md text-label-md hover:bg-surface-container transition-colors">Discard Changes</button>
+<button class="px-xl py-sm rounded-lg bg-primary text-on-primary font-label-md text-label-md shadow-lg shadow-primary/20 hover:scale-[1.02] active:scale-[0.98] transition-all">Save Preferences</button>
+</div>
+</section>
+</main>
+<style>
+        @keyframes bounce-short {
+            0%, 100% { transform: translate(-50%, 0); }
+            50% { transform: translate(-50%, -10px); }
+        }
+        .animate-bounce-short {
+            animation: bounce-short 3s infinite ease-in-out;
+        }
+    </style>
+<script>
+        // Simple micro-interaction for toggles
+        document.querySelectorAll('.toggle-switch').forEach(toggle => {
+            toggle.addEventListener('change', () => {
+                const h3 = toggle.closest('div').querySelector('.font-semibold, .font-medium');
+                if(h3) {
+                    h3.style.color = toggle.checked ? 'var(--primary)' : 'inherit';
+                }
+            });
+        });
+    </script>
+
+
+</body></html>
