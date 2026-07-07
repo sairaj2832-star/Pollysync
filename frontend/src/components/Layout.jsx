@@ -1,4 +1,4 @@
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { useState } from "react";
 
@@ -6,6 +6,9 @@ const NAV_ITEMS = [
   { path: "/dashboard", label: "Dashboard", icon: "dashboard" },
   { path: "/predict", label: "New Prediction", icon: "add_circle" },
   { path: "/predictions", label: "History", icon: "history" },
+  { path: "/reports", label: "Analytics", icon: "analytics" },
+  { path: "/farms", label: "My Farms", icon: "agriculture" },
+  { path: "/crops", label: "Crop Guide", icon: "info" },
   { path: "/chat", label: "AI Assistant", icon: "smart_toy" },
   { path: "/settings", label: "Settings", icon: "settings" },
 ];
@@ -18,6 +21,10 @@ const PAGE_TITLES = {
   "/settings": "Settings",
   "/account": "Account",
   "/support": "Help & Support",
+  "/farms": "Farm Management",
+  "/notifications": "Notifications",
+  "/crops": "Crop Suitability Guide",
+  "/reports": "Analytics & Reports",
 };
 
 const BOTTOM_NAV = [
@@ -28,6 +35,7 @@ const BOTTOM_NAV = [
 export default function Layout({ children }) {
   const { user, logout } = useAuth();
   const location = useLocation();
+  const navigate = useNavigate();
   const [mobileOpen, setMobileOpen] = useState(false);
 
   function isActive(path) {
@@ -116,7 +124,11 @@ export default function Layout({ children }) {
             </div>
           </div>
           <div className="flex items-center gap-md">
-            <button className="relative text-on-surface-variant hover:text-primary transition-colors opacity-80 hover:opacity-100 p-sm rounded-full hover:bg-surface-container-highest">
+            <button 
+              onClick={() => navigate("/notifications")}
+              className="relative text-on-surface-variant hover:text-primary transition-colors opacity-80 hover:opacity-100 p-sm rounded-full hover:bg-surface-container-highest"
+              title="Notifications"
+            >
               <span className="material-symbols-outlined">notifications</span>
               <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-tertiary rounded-full animate-pulse-dot" />
             </button>

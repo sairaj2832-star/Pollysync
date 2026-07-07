@@ -73,6 +73,15 @@ export async function createFarm(payload) {
   return data;
 }
 
+export async function deleteFarm(farm_id) {
+  if (USE_MOCK) {
+    const m = await import("./mockApi");
+    return m.mockDeleteFarm(farm_id);
+  }
+  const { data } = await api.delete(`/api/farms/${farm_id}`);
+  return data;
+}
+
 export async function getWeatherCurrent(farm_id) {
   if (USE_MOCK) {
     const m = await import("./mockApi");
@@ -142,6 +151,24 @@ export async function getBeeOccurrences(farm_id, radius = 10) {
     return m.mockGetBeeOccurrences(farm_id, radius);
   }
   const { data } = await api.get("/api/maps/bees", { params: { farm_id, radius } });
+  return data;
+}
+
+export async function getNotifications() {
+  if (USE_MOCK) {
+    const m = await import("./mockApi");
+    return m.mockGetNotifications();
+  }
+  const { data } = await api.get("/api/notifications");
+  return data;
+}
+
+export async function markNotificationRead(notif_id) {
+  if (USE_MOCK) {
+    const m = await import("./mockApi");
+    return m.mockMarkNotificationRead(notif_id);
+  }
+  const { data } = await api.patch(`/api/notifications/${notif_id}/read`);
   return data;
 }
 

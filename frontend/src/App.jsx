@@ -11,6 +11,10 @@ import PredictionHistoryPage from "./pages/PredictionHistoryPage";
 import ProfilePage from "./pages/ProfilePage";
 import RegisterPage from "./pages/RegisterPage";
 import SettingsPage from "./pages/SettingsPage";
+import FarmManagementPage from "./pages/FarmManagementPage";
+import NotificationsPage from "./pages/NotificationsPage";
+import CropSuitabilityPage from "./pages/CropSuitabilityPage";
+import AnalyticsPage from "./pages/AnalyticsPage";
 
 export default function App() {
   return (
@@ -84,6 +88,46 @@ export default function App() {
           <ProtectedRoute>
             <Layout>
               <HelpDesk />
+            </Layout>
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/farms"
+        element={
+          <ProtectedRoute>
+            <Layout>
+              <FarmManagementPage />
+            </Layout>
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/notifications"
+        element={
+          <ProtectedRoute>
+            <Layout>
+              <NotificationsPage />
+            </Layout>
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/crops"
+        element={
+          <ProtectedRoute>
+            <Layout>
+              <CropSuitabilityPage />
+            </Layout>
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/reports"
+        element={
+          <ProtectedRoute>
+            <Layout>
+              <AnalyticsPage />
             </Layout>
           </ProtectedRoute>
         }
