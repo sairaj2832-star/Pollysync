@@ -1,9 +1,10 @@
 import { useState } from "react";
 import { Link, Navigate, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+import { getApiErrorMessage } from "../lib/api";
 
 export default function LoginPage() {
-  const { token, login } = useAuth();
+  const { token, login, loginWithGoogle, isFirebaseConfigured } = useAuth();
   const navigate = useNavigate();
   const [form, setForm] = useState({ email: "", password: "" });
   const [error, setError] = useState("");
@@ -19,7 +20,20 @@ export default function LoginPage() {
       await login(form.email, form.password);
       navigate("/dashboard");
     } catch (err) {
-      setError(err?.response?.data?.detail || "Login failed");
+      setError(getApiErrorMessage(err, err?.message || "Login failed"));
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  async function handleGoogleLogin() {
+    setError("");
+    setBusy(true);
+    try {
+      await loginWithGoogle();
+      navigate("/dashboard");
+    } catch (err) {
+      setError(getApiErrorMessage(err, err?.message || "Google sign-in failed"));
     } finally {
       setBusy(false);
     }
@@ -62,6 +76,12 @@ export default function LoginPage() {
           {error && (
             <div className="mb-md rounded-lg bg-error-container p-3 font-body-sm font-medium text-on-error-container">
               {error}
+            </div>
+          )}
+
+          {!isFirebaseConfigured && (
+            <div className="mb-md rounded-lg bg-secondary-container/30 p-3 font-body-sm text-on-surface-variant">
+              Set the Firebase keys in `frontend/.env` before signing in.
             </div>
           )}
 
@@ -130,6 +150,8 @@ export default function LoginPage() {
 
           <button
             type="button"
+            disabled={busy || !isFirebaseConfigured}
+            onClick={handleGoogleLogin}
             className="w-full bg-surface border border-outline-variant text-on-surface font-label-md text-label-md py-[12px] rounded-lg hover:bg-surface-container-low active:bg-surface-container transition-colors duration-150 flex items-center justify-center gap-sm"
           >
             <svg fill="none" height="18" viewBox="0 0 24 24" width="18" xmlns="http://www.w3.org/2000/svg">
@@ -138,7 +160,7 @@ export default function LoginPage() {
               <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05" />
               <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335" />
             </svg>
-            Google
+            Continue with Google
           </button>
         </div>
 

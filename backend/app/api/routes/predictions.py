@@ -4,9 +4,11 @@ from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
+from app.auth import get_current_user
 from app.database import get_db
 from app.models.farm import Farm
 from app.models.prediction import Prediction
+from app.models.user import User
 from app.schemas.prediction import DashboardSummary, PredictionCreate, PredictionRead
 from app.services.prediction_service import run_prediction
 
@@ -14,8 +16,12 @@ router = APIRouter(prefix="/predictions", tags=["predictions"])
 
 
 @router.post("", response_model=PredictionRead, status_code=201)
-async def create_prediction(payload: PredictionCreate, db: Session = Depends(get_db)) -> Prediction:
-    farm = db.get(Farm, payload.farm_id)
+async def create_prediction(
+    payload: PredictionCreate,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+) -> Prediction:
+    farm = _owned_farm_or_404(payload.farm_id, current_user.id, db)
     if not farm:
         raise HTTPException(status_code=404, detail="Farm not found")
     prediction = await run_prediction(farm, db, region=payload.region)
@@ -23,7 +29,12 @@ async def create_prediction(payload: PredictionCreate, db: Session = Depends(get
 
 
 @router.get("", response_model=list[PredictionRead])
-def list_predictions(farm_id: int = Query(...), db: Session = Depends(get_db)) -> list[Prediction]:
+def list_predictions(
+    farm_id: int = Query(...),
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+) -> list[Prediction]:
+    _owned_farm_or_404(farm_id, current_user.id, db)
     rows = (
         db.scalars(
             select(Prediction)
@@ -36,7 +47,12 @@ def list_predictions(farm_id: int = Query(...), db: Session = Depends(get_db)) -
 
 
 @router.get("/latest", response_model=PredictionRead | None)
-def latest_prediction(farm_id: int = Query(...), db: Session = Depends(get_db)) -> Prediction | None:
+def latest_prediction(
+    farm_id: int = Query(...),
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+) -> Prediction | None:
+    _owned_farm_or_404(farm_id, current_user.id, db)
     prediction = (
         db.scalars(
             select(Prediction)
@@ -52,10 +68,12 @@ def latest_prediction(farm_id: int = Query(...), db: Session = Depends(get_db)) 
 
 
 @router.get("/dashboard/summary", response_model=DashboardSummary)
-def dashboard_summary(farm_id: int = Query(...), db: Session = Depends(get_db)) -> DashboardSummary:
-    farm = db.get(Farm, farm_id)
-    if not farm:
-        raise HTTPException(status_code=404, detail="Farm not found")
+def dashboard_summary(
+    farm_id: int = Query(...),
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+) -> DashboardSummary:
+    farm = _owned_farm_or_404(farm_id, current_user.id, db)
     prediction = (
         db.scalars(
             select(Prediction)
@@ -74,6 +92,13 @@ def dashboard_summary(farm_id: int = Query(...), db: Session = Depends(get_db)) 
         latest_prediction=_prediction_to_read(prediction) if prediction else None,
         bee_species=bee_species,
     )
+
+
+def _owned_farm_or_404(farm_id: int, user_id: int, db: Session) -> Farm:
+    farm = db.scalar(select(Farm).where(Farm.id == farm_id, Farm.user_id == user_id))
+    if not farm:
+        raise HTTPException(status_code=404, detail="Farm not found")
+    return farm
 
 
 def _prediction_to_read(p: Prediction) -> PredictionRead:
