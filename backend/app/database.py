@@ -53,16 +53,36 @@ def reconcile_sqlite_schema() -> None:
         return
 
     inspector = inspect(engine)
-    if "users" not in inspector.get_table_names():
-        return
+    table_names = set(inspector.get_table_names())
 
-    existing_columns = {column["name"] for column in inspector.get_columns("users")}
-    migrations = {
-        "oauth_provider": "ALTER TABLE users ADD COLUMN oauth_provider VARCHAR(50)",
-        "oauth_subject": "ALTER TABLE users ADD COLUMN oauth_subject VARCHAR(255)",
-        "is_active": "ALTER TABLE users ADD COLUMN is_active BOOLEAN DEFAULT 1 NOT NULL",
-    }
     with engine.begin() as connection:
-        for column_name, statement in migrations.items():
-            if column_name not in existing_columns:
-                connection.execute(text(statement))
+        if "users" in table_names:
+            existing_columns = {column["name"] for column in inspector.get_columns("users")}
+            user_migrations = {
+                "oauth_provider": "ALTER TABLE users ADD COLUMN oauth_provider VARCHAR(50)",
+                "oauth_subject": "ALTER TABLE users ADD COLUMN oauth_subject VARCHAR(255)",
+                "is_active": "ALTER TABLE users ADD COLUMN is_active BOOLEAN DEFAULT 1 NOT NULL",
+            }
+            for column_name, statement in user_migrations.items():
+                if column_name not in existing_columns:
+                    connection.execute(text(statement))
+
+        if "farms" in table_names:
+            existing_columns = {column["name"] for column in inspector.get_columns("farms")}
+            farm_migrations = {
+                "location_name": "ALTER TABLE farms ADD COLUMN location_name VARCHAR(255)",
+                "area_acres": "ALTER TABLE farms ADD COLUMN area_acres FLOAT",
+                "soil_type": "ALTER TABLE farms ADD COLUMN soil_type VARCHAR(50)",
+                "user_id": "ALTER TABLE farms ADD COLUMN user_id INTEGER",
+            }
+            for column_name, statement in farm_migrations.items():
+                if column_name not in existing_columns:
+                    connection.execute(text(statement))
+
+            nullable_location_migrations = {
+                "location_lat": "UPDATE farms SET location_lat = NULL WHERE location_lat = ''",
+                "location_lng": "UPDATE farms SET location_lng = NULL WHERE location_lng = ''",
+            }
+            for column_name, statement in nullable_location_migrations.items():
+                if column_name in existing_columns:
+                    connection.execute(text(statement))

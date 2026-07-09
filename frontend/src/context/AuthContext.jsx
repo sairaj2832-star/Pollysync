@@ -1,5 +1,5 @@
 import { createContext, useContext, useEffect, useState } from "react";
-import api from "../lib/api";
+import { getMe, login as apiLogin, register as apiRegister } from "../lib/api";
 
 const AuthContext = createContext(null);
 
@@ -10,9 +10,8 @@ export function AuthProvider({ children }) {
 
   useEffect(() => {
     if (token) {
-      api
-        .get("/api/auth/me")
-        .then((res) => setUser(res.data))
+      getMe()
+        .then((data) => setUser(data))
         .catch(() => {
           localStorage.removeItem("pollisync_token");
           setToken(null);
@@ -25,22 +24,19 @@ export function AuthProvider({ children }) {
   }, [token]);
 
   async function login(email, password) {
-    const res = await api.post("/api/auth/login", { email, password });
-    localStorage.setItem("pollisync_token", res.data.access_token);
-    setToken(res.data.access_token);
-    setUser(res.data.user);
-    return res.data;
+    const data = await apiLogin(email, password);
+    localStorage.setItem("pollisync_token", data.access_token);
+    setToken(data.access_token);
+    setUser(data.user);
+    return data;
   }
 
   async function register(email, password, fullName) {
-    const res = await api.post("/api/auth/register", {
-      email,
-      password,
-      full_name: fullName,
-    });
-    localStorage.setItem("pollisync_token", res.data.access_token);
-    setToken(res.data.access_token);
-    return res.data;
+    const data = await apiRegister(email, password, fullName);
+    localStorage.setItem("pollisync_token", data.access_token);
+    setToken(data.access_token);
+    setUser(data.user);
+    return data;
   }
 
   function logout() {

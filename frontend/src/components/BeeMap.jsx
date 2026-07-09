@@ -64,7 +64,7 @@ export default function BeeMap({ center = [20, 78], occurrences = [], zoom = 8 }
   }, [occurrences]);
 
   return (
-    <div className="rounded-2xl overflow-hidden border border-slate-100 shadow-soft">
+    <div className="bg-surface border border-outline-variant rounded-xl overflow-hidden shadow-[0_1px_3px_rgba(0,0,0,0.05)]">
       <div ref={mapRef} className="h-72 w-full" />
     </div>
   );

@@ -19,6 +19,7 @@
 7. [Module A: Infrastructure & DevOps](#7-module-a-infrastructure--devops)
 8. [Module B: Frontend](#8-module-b-frontend)
 9. [Module C: Backend](#9-module-c-backend)
+9.1 [AI Agent Work Plan: Backend + ML Setup](#ai-agent-work-plan-backend--ml-setup)
 10. [Module D: ML & AI](#10-module-d-ml--ai)
 11. [Database Schema (SQLite -> PostgreSQL)](#11-database-schema-sqlite--postgresql)
 12. [API Contract (MVP Version)](#12-api-contract-mvp-version)
@@ -361,59 +362,30 @@ A working web app that:
 
 ### Task B.1: Project Setup & Design System (Day 1-2)
 **Steps:**
-1. Create React project: `npm create vite@latest polli-sync-web -- --template react`
-2. Install dependencies:
-   ```bash
-   npm install tailwindcss postcss autoprefixer
-   npx tailwindcss init -p
-   npm install axios react-router-dom chart.js react-chartjs-2 leaflet react-leaflet
-   npm install -D @types/leaflet
-   ```
-3. Configure Tailwind in `tailwind.config.js`:
-   ```js
-   content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
-   theme: {
-     extend: {
-       colors: {
-         primary: '#10B981',
-         secondary: '#F59E0B',
-         danger: '#EF4444',
-       }
-     }
-   }
-   ```
-4. Initialize shadcn/ui:
-   ```bash
-   npx shadcn-ui@latest init
-   npx shadcn-ui@latest add button card input select badge progress skeleton
-   ```
-5. Create folder structure:
-   ```
-   src/
-   ├── components/
-   │   ├── PSIgauge.jsx
-   │   ├── WeatherCard.jsx
-   │   ├── PollenBar.jsx
-   │   ├── FloweringCalendar.jsx
-   │   ├── RecommendationCard.jsx
-   │   ├── NDVIMap.jsx
-   │   ├── BeeMap.jsx
-   │   └── Layout.jsx
-   ├── pages/
-   │   ├── HomePage.jsx
-   │   ├── LoginPage.jsx
-   │   ├── RegisterPage.jsx
-   │   ├── PredictPage.jsx
-   │   └── DashboardPage.jsx
-   ├── context/
-   │   └── AuthContext.jsx
-   ├── hooks/
-   │   └── useApi.js
-   └── lib/
-       └── api.js
-   ```
+1. Confirm the existing frontend repo structure in `frontend/src`:
+   - `App.jsx`
+   - `pages/HomePage.jsx`, `pages/LoginPage.jsx`, `pages/RegisterPage.jsx`, `pages/PredictPage.jsx`, `pages/DashboardPage.jsx`
+   - `components/PSIgauge.jsx`, `components/WeatherCard.jsx`, `components/PollenBar.jsx`, `components/FloweringCalendar.jsx`, `components/RecommendationCard.jsx`, `components/NDVICard.jsx`, `components/BeeMap.jsx`, `components/Layout.jsx`, `components/ProtectedRoute.jsx`, `components/LoadingSkeleton.jsx`
+   - `context/AuthContext.jsx`
+   - `hooks/useApi.js`
+   - `lib/api.js`
+2. Keep the tech stack as decided:
+   - React + Vite
+   - Tailwind CSS
+   - Axios
+   - React Router DOM
+   - Chart.js / react-chartjs-2
+   - Leaflet + React-Leaflet
+   - Optional shadcn/ui for shared UI components
+3. Use the existing design assets in `frontend/stitch_pollisync_saas_design_system/` for landing page, login, registration, dashboard, and prediction flows.
+4. Confirm `tailwind.config.js` and `postcss.config.js` are set up for Vite and that Tailwind content paths include `./src/**/*.{js,ts,jsx,tsx}`.
+5. Validate the project with the real frontend files:
+   - `cd frontend`
+   - `npm install`
+   - `npm run dev`
+   - Open `http://localhost:5173`
 
-**Success:** `npm run dev` opens a blank page with Tailwind working and shadcn Button renders.
+**Success:** The frontend project starts using the actual repo files, the design folder is referenced, and the agreed tech stack is preserved.
 
 ---
 
@@ -1035,6 +1007,145 @@ A working web app that:
    - Add note: "Using regional average NDVI. Real-time satellite integration coming in main project."
 
 **Success:** NDVI value returned. Frontend shows "Healthy" or "Moderate" based on value.
+
+---
+
+## AI Agent Work Plan: Backend + ML Setup
+
+This section is written as a practical step-by-step agent workflow for a new teammate or AI assistant who is setting up the backend and ML model stack from the repository.
+
+### Goal
+- Get the backend running locally.
+- Confirm backend API contracts work.
+- Build or load ML models and connect them to the prediction endpoints.
+- Validate the full backend + model prediction workflow.
+
+### Step 1: Prepare the environment
+1. Clone or pull the latest repo:
+   - `git pull origin main`
+2. Open the workspace at `d:\Pollysync`.
+3. Create and activate a Python virtual environment:
+   - `python -m venv .venv`
+   - `.\.venv\Scripts\Activate.ps1`
+4. Install backend dependencies:
+   - `cd backend`
+   - `pip install -r requirements.txt`
+
+### Step 2: Verify backend file structure
+The agent should confirm these files exist:
+- `backend/app/main.py`
+- `backend/app/database.py`
+- `backend/app/models.py`
+- `backend/app/schemas.py`
+- `backend/app/routers/auth.py`
+- `backend/app/routers/weather.py`
+- `backend/app/routers/predictions.py`
+- `backend/app/routers/maps.py`
+- `backend/app/routers/recommendations.py`
+- `backend/app/services/feature_engineering.py`
+- `backend/app/services/prediction_service.py`
+- `backend/models/flowering_model.pkl`
+- `backend/models/psi_model.pkl`
+
+If any file is missing, the agent should create it from the project template or restore it from the repository.
+
+### Step 3: Confirm model artifacts or train them
+1. Check whether `backend/models/flowering_model.pkl` and `backend/models/psi_model.pkl` exist.
+2. If models are missing, run the training scripts or notebook helper scripts in `backend/ml` or `ml/src`.
+   - Example training commands:
+     - `python backend/ml/train_flowering.py`
+     - `python backend/ml/train_psi.py`
+3. Ensure the agent saves outputs to:
+   - `backend/models/flowering_model.pkl`
+   - `backend/models/psi_model.pkl`
+4. Run a quick local model test in Python:
+   ```python
+   from joblib import load
+   import pandas as pd
+
+   flowering = load('backend/models/flowering_model.pkl')
+   psi = load('backend/models/psi_model.pkl')
+   sample = pd.DataFrame([{
+       'temp_7d_mean': 28,
+       'humidity': 65,
+       'rainfall_7d': 12,
+       'ndvi': 0.72,
+       'day_of_year': 15,
+       'month': 1,
+       'crop_mustard': 1,
+       'crop_wheat': 0,
+       'crop_sunflower': 0,
+       'crop_rice': 0,
+       'crop_cotton': 0,
+       'bee_richness': 4,
+       'pollen_tree': 3,
+       'pollen_grass': 2,
+       'pollen_weed': 2,
+   }])
+   print('flowering start', flowering.predict(sample))
+   print('psi score', psi.predict(sample))
+   ```
+5. If this test works, the model setup is valid.
+
+### Step 4: Configure backend secrets and CORS
+1. Create or update a `.env` file or use environment variables:
+   - `SECRET_KEY=your-secret-key`
+   - `OPENAI_API_KEY=your-openai-api-key` (optional)
+2. Confirm `backend/app/main.py` has CORS origins for local frontend and production:
+   - `http://localhost:5173`
+   - `https://polli-sync-web.vercel.app`
+   - Add the deployed backend origin if needed.
+3. Confirm `backend/app/database.py` uses SQLite path:
+   - `sqlite:///./pollisync.db`
+   - This allows `pollisync.db` to be created automatically on first run.
+
+### Step 5: Run the backend locally and verify endpoints
+1. Start the server:
+   - `cd backend`
+   - `uvicorn app.main:app --reload`
+2. Open `http://localhost:8000/docs`.
+3. Verify the following endpoints exist and respond:
+   - `GET /health`
+   - `POST /auth/register`
+   - `POST /auth/login`
+   - `GET /weather/current?farm_id=1`
+   - `GET /weather/forecast?farm_id=1&days=7`
+   - `POST /predictions`
+   - `GET /dashboard/summary?farm_id=1`
+   - `GET /maps/bees?farm_id=1&radius=10`
+4. If the API fails, inspect the server logs and fix the import or dependency issue.
+
+### Step 6: Validate prediction flow end to end
+1. Create a user via `/auth/register`.
+2. Create a farm via `/farms` or the appropriate farm endpoint.
+3. Call `POST /predictions` with the new `farm_id`.
+4. Confirm the response contains:
+   - `flowering_start`
+   - `flowering_end`
+   - `psi_score`
+   - `risk_level`
+   - `weather_summary`
+   - `pollen_summary`
+   - `ndvi_value`
+   - `bee_species`
+   - `recommendation`
+5. If recommendation generation is disabled because of missing API keys, verify the fallback text or mock output path.
+
+### Step 7: Document exact setup commands
+Add a short setup checklist to `backend/README.md` so any teammate can follow it verbatim:
+- `cd backend`
+- `python -m venv .venv`
+- `.\.venv\Scripts\Activate.ps1`
+- `pip install -r requirements.txt`
+- `uvicorn app.main:app --reload`
+- open `http://localhost:8000/docs`
+
+### Success Criteria for AI Agent
+- Backend starts cleanly with `uvicorn`.
+- SQLite database file is created automatically.
+- ML models load from `backend/models` and return valid predictions.
+- Core backend APIs respond correctly.
+- A full prediction call returns structured forecast + recommendation.
 
 ---
 

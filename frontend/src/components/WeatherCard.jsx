@@ -1,19 +1,53 @@
-export default function WeatherCard({ label, value, unit, icon, trend }) {
+const CONFIG = {
+  temperature: { icon: "thermostat", bg: "bg-secondary-container/20", color: "text-secondary-container" },
+  humidity: { icon: "water_drop", bg: "bg-primary-container/20", color: "text-primary-container" },
+  rainfall: { icon: "rainy", bg: "bg-blue-100", color: "text-blue-600" },
+  wind: { icon: "air", bg: "bg-gray-100", color: "text-gray-600" },
+};
+
+export default function WeatherCard({ label, value, unit, icon = "temperature", trend }) {
+  const cfg = CONFIG[icon] || CONFIG.temperature;
+
+  function TrendIcon() {
+    if (trend === undefined || trend === null) return null;
+    if (trend > 0) {
+      return (
+        <span className="text-tertiary text-xs flex items-center">
+          <span className="material-symbols-outlined text-[14px]">arrow_upward</span>
+          {trend}{unit}
+        </span>
+      );
+    }
+    if (trend < 0) {
+      return (
+        <span className="text-primary text-xs flex items-center">
+          <span className="material-symbols-outlined text-[14px]">arrow_downward</span>
+          {Math.abs(trend)}{unit}
+        </span>
+      );
+    }
+    return (
+      <span className="text-on-surface-variant text-xs flex items-center">
+        <span className="material-symbols-outlined text-[14px]">horizontal_rule</span>
+        {trend}
+      </span>
+    );
+  }
+
   return (
-    <div className="rounded-2xl border border-slate-100 bg-white p-4 shadow-soft">
-      <div className="flex items-center justify-between">
-        <span className="text-2xl">{icon}</span>
-        {trend && (
-          <span className={`text-sm font-bold ${trend > 0 ? "text-emerald-500" : "text-red-500"}`}>
-            {trend > 0 ? "↑" : "↓"}
-          </span>
-        )}
+    <div className="bg-surface-container-lowest border border-outline-variant/50 rounded-lg p-sm flex items-start gap-md">
+      <div className={`${cfg.bg} ${cfg.color} p-sm rounded-md`}>
+        <span className="material-symbols-outlined">{cfg.icon}</span>
       </div>
-      <p className="mt-3 text-2xl font-black text-slate-900">
-        {value}
-        <span className="ml-1 text-sm font-medium text-slate-500">{unit}</span>
-      </p>
-      <p className="mt-1 text-sm text-slate-500">{label}</p>
+      <div>
+        <span className="font-label-sm text-label-sm text-on-surface-variant block">{label}</span>
+        <div className="flex items-baseline gap-xs">
+          <span className="font-headline-md text-headline-md text-on-surface">
+            {value}{unit}
+          </span>
+          <TrendIcon />
+        </div>
+      </div>
     </div>
   );
 }

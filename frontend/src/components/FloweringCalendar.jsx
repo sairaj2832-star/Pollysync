@@ -1,22 +1,29 @@
 export default function FloweringCalendar({ start, end, confidence = 0 }) {
   return (
-    <div className="rounded-2xl border border-slate-100 bg-white p-5 shadow-soft">
-      <h3 className="text-sm font-bold uppercase tracking-wider text-slate-500">
-        Predicted Flowering Window
-      </h3>
-      <div className="mt-4 flex items-baseline gap-2">
-        <span className="text-2xl font-black text-leaf-700">{start}</span>
-        <span className="text-slate-400">→</span>
-        <span className="text-2xl font-black text-leaf-700">{end}</span>
+    <div className="bg-surface border border-outline-variant rounded-xl p-lg shadow-[0_1px_3px_rgba(0,0,0,0.05)] h-full">
+      <h3 className="font-headline-sm text-headline-sm text-on-surface mb-md">Predicted Flowering Window</h3>
+      <div className="flex items-center gap-md">
+        <div className="flex-1 bg-surface-container-lowest border border-outline-variant/50 rounded-lg p-md text-center">
+          <span className="font-label-sm text-label-sm text-on-surface-variant block">Start</span>
+          <span className="font-headline-md text-headline-md text-primary mt-xs block">{start || "--"}</span>
+        </div>
+        <span className="material-symbols-outlined text-outline">arrow_forward</span>
+        <div className="flex-1 bg-surface-container-lowest border border-outline-variant/50 rounded-lg p-md text-center">
+          <span className="font-label-sm text-label-sm text-on-surface-variant block">End</span>
+          <span className="font-headline-md text-headline-md text-primary mt-xs block">{end || "--"}</span>
+        </div>
       </div>
-      <div className="mt-3 flex items-center gap-3">
-        <span className="rounded-full bg-emerald-100 px-3 py-1 text-xs font-bold text-emerald-800">
+      <div className="mt-md flex items-center justify-between">
+        <span className="rounded-full bg-primary-container/10 text-primary px-md py-xs font-label-sm text-label-sm">
           {Math.round(confidence * 100)}% confident
         </span>
+        <span className="font-body-sm text-body-sm text-on-surface-variant">
+          {start && end ? `${Math.ceil((new Date(end) - new Date(start)) / (1000 * 60 * 60 * 24))} day window` : ""}
+        </span>
       </div>
-      <div className="mt-3 h-2 overflow-hidden rounded-full bg-slate-100">
+      <div className="mt-md h-2 w-full bg-surface-variant rounded-full overflow-hidden">
         <div
-          className="h-full rounded-full bg-gradient-to-r from-pollen to-leaf-500"
+          className="h-full rounded-full bg-gradient-to-r from-secondary to-primary transition-all duration-700"
           style={{ width: `${confidence * 100}%` }}
         />
       </div>

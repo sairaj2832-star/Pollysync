@@ -6,6 +6,7 @@ from pydantic import BaseModel, ConfigDict
 
 class PredictionCreate(BaseModel):
     farm_id: int
+    region: str = "auto"  # "maharashtra", "auto", or other
 
 
 class PredictionRead(BaseModel):
@@ -24,6 +25,8 @@ class PredictionRead(BaseModel):
     bee_species: list[str]
     recommendation: str
     created_at: datetime
+    model_source: str | None = None
+    data_confidence: str | None = None
 
 
 class DashboardSummary(BaseModel):

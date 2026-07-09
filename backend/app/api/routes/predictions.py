@@ -18,7 +18,7 @@ async def create_prediction(payload: PredictionCreate, db: Session = Depends(get
     farm = db.get(Farm, payload.farm_id)
     if not farm:
         raise HTTPException(status_code=404, detail="Farm not found")
-    prediction = await run_prediction(farm, db)
+    prediction = await run_prediction(farm, db, region=payload.region)
     return _prediction_to_read(prediction)
 
 
@@ -95,6 +95,8 @@ def _prediction_to_read(p: Prediction) -> PredictionRead:
         bee_species=json.loads(p.bee_species) if p.bee_species else [],
         recommendation=p.recommendation,
         created_at=p.created_at,
+        model_source=p.model_source,
+        data_confidence=p.data_confidence,
     )
 
 

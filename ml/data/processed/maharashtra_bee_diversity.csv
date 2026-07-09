@@ -1,0 +1,11 @@
+district,lat,lon,observed_species_richness,observed_record_count,estimated_richness,shannon_diversity,data_source,confidence,note
+nashik,19.99,73.79,17,34,17,2.5087,gbif_observed,high,"Western Ghats foothills, high diversity"
+pune,18.52,73.86,376,1226,376,5.1714,gbif_observed,high,Urban-agriculture mosaic
+solapur,17.67,75.91,5,6,5,1.5607,gbif_partial,medium,"Semi-arid Deccan, lower diversity"
+aurangabad,19.88,75.32,38,44,38,3.5757,gbif_observed,high,"Marathwada plateau, moderate"
+nagpur,21.15,79.09,36,41,36,3.5317,gbif_observed,high,"Vidarbha, forest-agriculture mix"
+amravati,20.93,77.75,1,1,6,1.3,gbif_partial,medium,Vidarbha cotton belt
+kolhapur,16.7,74.24,12,34,12,1.8173,gbif_observed,high,"Western Ghats, high rainfall, high diversity"
+satara,17.69,73.99,28,52,28,2.7722,gbif_observed,high,Western Ghats escarpment
+jalgaon,21.01,75.56,147,528,147,4.4219,gbif_observed,high,"Khandesh plains, hot semi-arid"
+latur,18.4,76.56,3,7,4,0.7963,gbif_partial,medium,"Marathwada, rain-shadow zone"

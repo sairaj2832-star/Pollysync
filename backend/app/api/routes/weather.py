@@ -9,6 +9,7 @@ from app.services.weather_service import (
     get_cached_weather,
     parse_forecast,
     cache_weather,
+    get_fallback_weather,
 )
 
 router = APIRouter(prefix="/weather", tags=["weather"])
@@ -31,7 +32,10 @@ async def current_weather(farm_id: int = Query(...), db: Session = Depends(get_d
             wind_speed=cached.wind_speed,
             timestamp=cached.timestamp.isoformat() if cached.timestamp else None,
         )
-    raw = await fetch_weather(farm.location_lat, farm.location_lng)
+    try:
+        raw = await fetch_weather(0, 0)
+    except Exception:
+        raw = get_fallback_weather(0, 0)
     record = cache_weather(farm_id, raw, db)
     return WeatherCurrent(
         temperature=record.temperature,
@@ -52,6 +56,9 @@ async def forecast(
     farm = db.get(Farm, farm_id)
     if not farm:
         return WeatherForecast(forecast=[])
-    raw = await fetch_weather(farm.location_lat, farm.location_lng)
+    try:
+        raw = await fetch_weather(farm.location_lat, farm.location_lng)
+    except Exception:
+        raw = get_fallback_weather(farm.location_lat, farm.location_lng)
     forecast_data = parse_forecast(raw)[:days]
     return WeatherForecast(forecast=[ForecastDay(**d) for d in forecast_data])
