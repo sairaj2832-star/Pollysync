@@ -11,12 +11,13 @@ const LOCATIONS = [
 ];
 
 export default function RegisterPage() {
-  const { token, register } = useAuth();
+  const { token, register, isFirebaseConfigured } = useAuth();
   const navigate = useNavigate();
   const [form, setForm] = useState({ email: "", password: "", fullName: "", confirmPassword: "", farmName: "", location: "" });
   const [step, setStep] = useState(1);
   const [error, setError] = useState("");
   const [busy, setBusy] = useState(false);
+  const [registrationComplete, setRegistrationComplete] = useState(false);
 
   if (token) return <Navigate to="/dashboard" replace />;
 
@@ -43,10 +44,15 @@ export default function RegisterPage() {
     setBusy(true);
     try {
       await register(form.email, form.password, form.fullName);
+      setRegistrationComplete(true);
       navigate("/dashboard");
     } catch (err) {
-      if (err?.response?.status === 409) {
+      if (err?.code === "auth/email-already-in-use" || err?.response?.status === 409) {
         setError("Email already registered. Please sign in instead.");
+      } else if (err?.code === "auth/weak-password") {
+        setError("Choose a stronger password with at least 6 characters.");
+      } else if (err?.code === "auth/invalid-email") {
+        setError("Please enter a valid email address.");
       } else {
         setError(getApiErrorMessage(err, "Registration failed"));
       }
@@ -74,7 +80,7 @@ export default function RegisterPage() {
             Start Your Pollination Journey
           </h1>
           <p className="font-body-md text-body-md text-on-surface-variant">
-            Create your PolliSync account to begin.
+            Create your PolliSync account with Firebase authentication.
           </p>
         </div>
 
@@ -94,13 +100,25 @@ export default function RegisterPage() {
             }`}>
               2
             </div>
-            <span className={`font-label-sm text-label-sm ${step >= 2 ? "text-on-surface" : "text-on-surface-variant"}`}>Farm</span>
+            <span className={`font-label-sm text-label-sm ${step >= 2 ? "text-on-surface" : "text-on-surface-variant"}`}>Optional</span>
           </div>
         </div>
 
         {error && (
           <div className="mb-md rounded-lg bg-error-container p-3 font-body-sm font-medium text-on-error-container">
             {error}
+          </div>
+        )}
+
+        {!isFirebaseConfigured && (
+          <div className="mb-md rounded-lg bg-secondary-container/30 p-3 font-body-sm text-on-surface-variant">
+            Add Firebase config values to `frontend/.env` and the Firebase Admin credentials to `backend/.env` before registering users.
+          </div>
+        )}
+
+        {registrationComplete && (
+          <div className="mb-md rounded-lg bg-primary-container/20 p-3 font-body-sm text-on-surface">
+            Account created successfully. Redirecting to your dashboard.
           </div>
         )}
 
@@ -176,6 +194,9 @@ export default function RegisterPage() {
                     onChange={(e) => setForm({ ...form, farmName: e.target.value })}
                   />
                 </div>
+                <p className="font-body-sm text-body-sm text-on-surface-variant">
+                  Optional for now. You can finish adding farm details after sign-up.
+                </p>
               </div>
               <div className="flex flex-col gap-xs">
                 <label className="font-label-md text-label-md text-on-surface">Location (District)</label>
@@ -192,6 +213,9 @@ export default function RegisterPage() {
                     ))}
                   </select>
                 </div>
+                <p className="font-body-sm text-body-sm text-on-surface-variant">
+                  Optional for now. Farm onboarding continues inside the app.
+                </p>
               </div>
             </div>
           )}
@@ -208,7 +232,7 @@ export default function RegisterPage() {
             disabled={busy}
             className="w-full bg-primary-container text-white rounded-lg py-sm font-label-md text-label-md shadow-[inset_0_1px_1px_rgba(255,255,255,0.4)] transition-colors duration-200 mt-xl flex items-center justify-center gap-sm hover:bg-primary"
           >
-            {busy ? "Creating Account..." : step === 1 ? "Next Step" : "Create Account & Add Farm"}
+            {busy ? "Creating Account..." : step === 1 ? "Next Step" : "Create Account"}
             <span className="material-symbols-outlined text-[20px]">arrow_forward</span>
           </button>
         </form>

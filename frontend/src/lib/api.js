@@ -20,6 +20,41 @@ function real(apiFunc) {
 }
 
 export function getApiErrorMessage(error, fallback = "Request failed") {
+  const firebaseCode = error?.code;
+
+  if (typeof firebaseCode === "string" && firebaseCode.startsWith("auth/")) {
+    const firebaseMessages = {
+      "auth/configuration-not-found":
+        "Firebase Authentication is missing provider setup. In Firebase Console, open Authentication > Sign-in method and enable the provider you are trying to use.",
+      "auth/operation-not-allowed":
+        "This Firebase sign-in method is disabled. Enable it in Firebase Console > Authentication > Sign-in method.",
+      "auth/unauthorized-domain":
+        "This domain is not authorized for Firebase sign-in. Add localhost to Firebase Console > Authentication > Settings > Authorized domains.",
+      "auth/invalid-credential":
+        "The Firebase sign-in credentials were rejected. Check that the provider is enabled and try again.",
+      "auth/invalid-email":
+        "Please enter a valid email address.",
+      "auth/user-not-found":
+        "No account was found for that email.",
+      "auth/wrong-password":
+        "The password is incorrect.",
+      "auth/email-already-in-use":
+        "This email is already registered. Please sign in instead.",
+      "auth/popup-closed-by-user":
+        "The sign-in popup was closed before authentication finished.",
+      "auth/popup-blocked":
+        "The browser blocked the sign-in popup. Allow popups for this site and try again.",
+      "auth/network-request-failed":
+        "Firebase could not reach the network. Check your connection and try again.",
+      "auth/too-many-requests":
+        "Too many login attempts were made. Please wait a bit and try again.",
+      "auth/weak-password":
+        "Choose a stronger password with at least 6 characters.",
+    };
+
+    return firebaseMessages[firebaseCode] || error?.message || fallback;
+  }
+
   if (error?.code === "ECONNABORTED" || /timeout/i.test(error?.message || "")) {
     return "The request took too long to complete. Please try again in a moment.";
   }
@@ -136,6 +171,19 @@ export async function createPrediction(farm_id) {
     return m.mockCreatePrediction(farm_id);
   }
   const { data } = await api.post("/api/predictions", { farm_id }, { timeout: 60000 });
+  return data;
+}
+
+export async function firebaseAuth(idToken) {
+  const { data } = await api.post("/api/auth/firebase", { id_token: idToken });
+  return data;
+}
+
+export async function logout(refreshToken) {
+  if (!refreshToken) {
+    return null;
+  }
+  const { data } = await api.post("/api/auth/logout", { refresh_token: refreshToken });
   return data;
 }
 

@@ -21,8 +21,13 @@ class Settings:
     oauth_google_client_id: str = os.getenv("OAUTH_GOOGLE_CLIENT_ID", "")
     oauth_google_client_secret: str = os.getenv("OAUTH_GOOGLE_CLIENT_SECRET", "")
     oauth_google_redirect_uri: str = os.getenv("OAUTH_GOOGLE_REDIRECT_URI", "")
+    firebase_project_id: str = os.getenv("FIREBASE_PROJECT_ID", "")
+    firebase_service_account_json: str = os.getenv("FIREBASE_SERVICE_ACCOUNT_JSON", "")
+    firebase_service_account_path: str = os.getenv("FIREBASE_SERVICE_ACCOUNT_PATH", "")
     gemini_api_key: str = os.getenv("GEMINI_API_KEY", "")
     gemini_model: str = os.getenv("GEMINI_MODEL", "gemini-1.5-flash")
+    llm_api_key: str = os.getenv("LLM_API_KEY", "")
+    llm_model: str = os.getenv("LLM_MODEL", "gemini-1.5-flash")
 
     @property
     def allowed_origins(self) -> list[str]:

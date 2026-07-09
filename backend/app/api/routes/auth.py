@@ -15,9 +15,11 @@ from app.auth import (
 )
 from app.core.config import settings
 from app.database import get_db
+from app.firebase_auth import verify_firebase_token
 from app.models.user import User
 from app.schemas.user import (
     AuthResponse,
+    FirebaseAuthRequest,
     OAuthCallback,
     RefreshTokenRequest,
     Token,
@@ -42,6 +44,15 @@ def _auth_response(user: User, db: Session) -> AuthResponse:
 
 def _get_user_by_email(email: str, db: Session) -> User | None:
     return db.scalar(select(User).where(User.email == email.lower()))
+
+
+def _get_user_by_subject(subject: str, db: Session) -> User | None:
+    return db.scalar(
+        select(User).where(
+            User.oauth_provider == "firebase",
+            User.oauth_subject == subject,
+        )
+    )
 
 
 def _authenticate(email: str, password: str, db: Session) -> User:
@@ -127,6 +138,56 @@ def update_me(
     db.commit()
     db.refresh(current_user)
     return current_user
+
+
+@router.post("/firebase", response_model=AuthResponse)
+def firebase_auth(payload: FirebaseAuthRequest, db: Session = Depends(get_db)) -> AuthResponse:
+    try:
+        decoded = verify_firebase_token(payload.id_token)
+    except RuntimeError as exc:
+        raise HTTPException(
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+            detail=str(exc),
+        ) from exc
+    except Exception as exc:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Firebase token validation failed",
+        ) from exc
+
+    email = (decoded.get("email") or "").lower()
+    uid = decoded.get("uid") or decoded.get("sub")
+    if not email or not uid:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Firebase token is missing email or uid",
+        )
+
+    user = _get_user_by_subject(uid, db) or _get_user_by_email(email, db)
+    if user is None:
+        user = User(
+            email=email,
+            full_name=decoded.get("name") or email.split("@")[0],
+            oauth_provider="firebase",
+            oauth_subject=uid,
+        )
+        db.add(user)
+        db.commit()
+        db.refresh(user)
+    else:
+        if not user.is_active:
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail="Account is disabled",
+            )
+        user.email = email
+        user.full_name = decoded.get("name") or user.full_name
+        user.oauth_provider = "firebase"
+        user.oauth_subject = uid
+        db.commit()
+        db.refresh(user)
+
+    return _auth_response(user, db)
 
 
 @router.post("/oauth/google", response_model=AuthResponse)

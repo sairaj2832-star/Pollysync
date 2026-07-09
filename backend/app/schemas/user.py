@@ -68,3 +68,7 @@ class RefreshTokenRequest(BaseModel):
 class OAuthCallback(BaseModel):
     code: str = Field(min_length=1)
     state: str | None = None
+
+
+class FirebaseAuthRequest(BaseModel):
+    id_token: str = Field(min_length=1)
