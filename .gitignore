@@ -20,7 +20,9 @@ venv/
 ml/models/*.pkl
 ml/models/*.joblib
 
-
+# Firebase Admin SDK
+backend/*firebase-adminsdk*.json
+backend/*.json
 # Environment and secrets
 .env
 .env.*
@@ -28,6 +30,7 @@ ml/models/*.joblib
 frontend/.env
 backend/.env
 *.pem
+.pollysync-693a8-firebase-adminsdk-fbsvc-548a817106.json
 
 # Editors and operating systems
 .DS_Store
