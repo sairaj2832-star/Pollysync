@@ -1,33 +1,66 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { getPredictions } from "../lib/api";
+import { getFarms, getPredictions } from "../lib/api";
 
-const STATUS_STYLES = {
-  completed: "bg-primary-container/10 text-primary",
-  "in-progress": "bg-secondary/10 text-secondary",
-  pending: "bg-surface-container-high text-on-surface-variant",
+const RISK_STYLES = {
+  low: "bg-primary-container/10 text-primary",
+  medium: "bg-secondary/10 text-secondary",
+  high: "bg-tertiary/10 text-tertiary",
 };
 
 export default function PredictionHistoryPage() {
   const [predictions, setPredictions] = useState([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState("all");
+  const [error, setError] = useState("");
 
   useEffect(() => {
-    getPredictions("1")
-      .then((data) => setPredictions(Array.isArray(data) ? data : []))
-      .catch(() => {})
-      .finally(() => setLoading(false));
+    async function loadHistory() {
+      try {
+        setLoading(true);
+        setError("");
+        const farms = await getFarms();
+        const safeFarms = Array.isArray(farms) ? farms : [];
+        const predictionGroups = await Promise.all(
+          safeFarms.map(async (farm) => {
+            const rows = await getPredictions(farm.id);
+            const safeRows = Array.isArray(rows) ? rows : [];
+            return safeRows.map((prediction) => ({
+              ...prediction,
+              farm,
+            }));
+          })
+        );
+        const flattened = predictionGroups
+          .flat()
+          .sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+        setPredictions(flattened);
+      } catch (err) {
+        setError(err?.response?.data?.detail || "Failed to load prediction history");
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    loadHistory();
   }, []);
 
   const filtered = filter === "all"
     ? predictions
-    : predictions.filter((p) => p.status === filter);
+    : predictions.filter((p) => (p.risk_level || "").toLowerCase() === filter);
 
   if (loading) {
     return (
       <div className="flex min-h-[40vh] items-center justify-center">
         <div className="h-10 w-10 animate-spin rounded-full border-4 border-primary/20 border-t-primary" />
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="flex min-h-[40vh] items-center justify-center">
+        <p className="font-body-md text-tertiary">{error}</p>
       </div>
     );
   }
@@ -49,7 +82,7 @@ export default function PredictionHistoryPage() {
       </div>
 
       <div className="flex gap-sm mb-lg overflow-x-auto pb-2">
-        {["all", "completed", "in-progress", "pending"].map((f) => (
+        {["all", "low", "medium", "high"].map((f) => (
           <button
             key={f}
             onClick={() => setFilter(f)}
@@ -59,7 +92,7 @@ export default function PredictionHistoryPage() {
                 : "bg-surface-container-high text-on-surface-variant hover:bg-surface-container-highest"
             }`}
           >
-            {f === "all" ? "All" : f.charAt(0).toUpperCase() + f.slice(1).replace("-", " ")}
+            {f === "all" ? "All" : `${f.charAt(0).toUpperCase() + f.slice(1)} Risk`}
           </button>
         ))}
       </div>
@@ -94,8 +127,8 @@ export default function PredictionHistoryPage() {
                     <span className="font-headline-sm text-headline-sm text-on-surface truncate">
                       {p.farm?.name || "Farm"}
                     </span>
-                    <span className={`px-sm py-[2px] rounded-full font-label-sm text-label-sm ${STATUS_STYLES[p.status] || STATUS_STYLES.pending}`}>
-                      {p.status}
+                    <span className={`px-sm py-[2px] rounded-full font-label-sm text-label-sm ${RISK_STYLES[(p.risk_level || "high").toLowerCase()] || RISK_STYLES.high}`}>
+                      {p.risk_level || "Unknown"} Risk
                     </span>
                   </div>
                   <div className="flex flex-wrap items-center gap-md text-body-sm text-on-surface-variant">
@@ -132,7 +165,7 @@ export default function PredictionHistoryPage() {
               {p.recommendation && (
                 <div className="mt-md pt-md border-t border-outline-variant/50">
                   <p className="font-body-sm text-body-sm text-on-surface-variant line-clamp-2">
-                    {p.recommendation.replace(/[#*\n]/g, " ").slice(0, 150)}...
+                    {p.recommendation.replace(/[#*\n]/g, " ").slice(0, 150)}
                   </p>
                 </div>
               )}

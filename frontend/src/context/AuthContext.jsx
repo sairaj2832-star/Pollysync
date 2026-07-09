@@ -35,6 +35,7 @@ export function AuthProvider({ children }) {
     const data = await apiRegister(email, password, fullName);
     localStorage.setItem("pollisync_token", data.access_token);
     setToken(data.access_token);
+    setUser(data.user);
     return data;
   }
 

@@ -3,13 +3,20 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 import joblib
+import pandas as pd
 from sqlalchemy.orm import Session
 
 from app.models.farm import Farm
 from app.models.prediction import Prediction
 from app.services.bee_service import get_mock_bees
+from app.services.environment_service import get_environment_features
 from app.services.feature_engineering import build_features
-from app.services.weather_service import cache_weather, fetch_weather, get_cached_weather
+from app.services.weather_service import (
+    cache_weather,
+    fetch_weather,
+    get_cached_weather,
+    get_fallback_weather,
+)
 
 MODELS_DIR = Path(__file__).resolve().parent.parent.parent.parent / "ml" / "models"
 
@@ -33,9 +40,15 @@ def _get_models(use_mh: bool):
             model_path = MODELS_DIR / f"{name}_model{suffix}.pkl"
             scaler_path = MODELS_DIR / f"{name}_scaler{suffix}.pkl"
             if model_path.exists():
-                models[f"{name}_model"] = joblib.load(str(model_path))
+                try:
+                    models[f"{name}_model"] = joblib.load(str(model_path))
+                except Exception:
+                    models[f"{name}_model"] = None
             if scaler_path.exists():
-                models[f"{name}_scaler"] = joblib.load(str(scaler_path))
+                try:
+                    models[f"{name}_scaler"] = joblib.load(str(scaler_path))
+                except Exception:
+                    models[f"{name}_scaler"] = None
         _model_cache[cache_key] = models
     return _model_cache[cache_key]
 
@@ -152,31 +165,88 @@ def _prepare_features_for_model(features: dict, model) -> dict:
     return augmented
 
 
+def _expected_feature_names(model, scaler) -> list[str]:
+    for artifact in (model, scaler):
+        if hasattr(artifact, "feature_names_in_"):
+            try:
+                names = list(artifact.feature_names_in_)
+                if names:
+                    return names
+            except Exception:
+                continue
+    return []
+
+
+def _build_model_frame(features: dict, model, scaler) -> pd.DataFrame:
+    expected_cols = _expected_feature_names(model, scaler)
+    augmented = _prepare_features_for_model(features, model or scaler)
+
+    if not expected_cols:
+        expected_cols = sorted(augmented.keys())
+
+    row = {column: augmented.get(column, 0) for column in expected_cols}
+    return pd.DataFrame([row], columns=expected_cols)
+
+
+async def _get_live_or_fallback_features(farm: Farm, weather: dict, now: datetime) -> dict:
+    try:
+        env_features = await get_environment_features(
+            lat=farm.location_lat,
+            lon=farm.location_lng,
+            crop_type=farm.crop_type,
+            as_of=now.date(),
+        )
+    except Exception:
+        env_features = {}
+
+    live_ndvi = env_features.get("ndvi")
+    pollen_tree = env_features.get("pollen_tree")
+    pollen_grass = env_features.get("pollen_grass")
+    pollen_weed = env_features.get("pollen_weed")
+    bee_richness = env_features.get("bee_richness")
+
+    bee_species = get_mock_bees(farm.crop_type)
+    features = build_features(
+        crop_type=farm.crop_type,
+        temperature=env_features.get("temp_7d_mean", weather["temperature"]),
+        humidity=env_features.get("humidity", weather["humidity"]),
+        rainfall=env_features.get("rainfall_7d", weather["rainfall"]),
+        wind_speed=env_features.get("wind_speed", weather["wind_speed"]),
+        ndvi=live_ndvi if live_ndvi is not None else 0.65,
+        bee_count=bee_richness if bee_richness is not None else len(bee_species),
+        month=now.month,
+        day_of_year=now.timetuple().tm_yday,
+    )
+
+    if pollen_tree is not None:
+        features["pollen_tree"] = pollen_tree
+    if pollen_grass is not None:
+        features["pollen_grass"] = pollen_grass
+    if pollen_weed is not None:
+        features["pollen_weed"] = pollen_weed
+    if bee_richness is not None:
+        features["bee_richness"] = bee_richness
+
+    return features
+
+
 async def run_prediction(farm: Farm, db: Session, region: str = "auto") -> Prediction:
     cached = get_cached_weather(farm.id, db)
     if cached:
         weather = {"temperature": cached.temperature, "humidity": cached.humidity,
                    "rainfall": cached.rainfall, "wind_speed": cached.wind_speed}
     else:
-        raw = await fetch_weather(farm.location_lat, farm.location_lng)
+        try:
+            raw = await fetch_weather(farm.location_lat, farm.location_lng)
+        except Exception:
+            raw = get_fallback_weather(farm.location_lat, farm.location_lng)
         cached = cache_weather(farm.id, raw, db)
         weather = {"temperature": cached.temperature, "humidity": cached.humidity,
                    "rainfall": cached.rainfall, "wind_speed": cached.wind_speed}
 
     now = datetime.now(timezone.utc)
     bee_species = get_mock_bees(farm.crop_type)
-
-    features = build_features(
-        crop_type=farm.crop_type,
-        temperature=weather["temperature"],
-        humidity=weather["humidity"],
-        rainfall=weather["rainfall"],
-        wind_speed=weather["wind_speed"],
-        ndvi=0.65,
-        bee_count=len(bee_species),
-        month=now.month,
-        day_of_year=now.timetuple().tm_yday,
-    )
+    features = await _get_live_or_fallback_features(farm, weather, now)
 
     # Determine if we should use MH model
     use_mh = False
@@ -199,28 +269,28 @@ async def run_prediction(farm: Farm, db: Session, region: str = "auto") -> Predi
     models_loaded = all([f_model, f_scaler, p_model, p_scaler, r_model, r_scaler])
 
     if models_loaded:
-        import pandas as pd
-        from app.services.feature_engineering import CROP_ENCODER
+        try:
+            flowering_df = _build_model_frame(features, f_model, f_scaler)
+            X_scaled = f_scaler.transform(flowering_df)
+            start_doy = int(round(f_model.predict(X_scaled)[0]))
+            start_doy = max(1, min(365, start_doy))
+            confidence = 0.92 if use_mh else 0.87
 
-        # Augment features for the specific model
-        augmented = _prepare_features_for_model(features, f_model)
+            psi_df = _build_model_frame(features, p_model, p_scaler)
+            psi = int(round(p_model.predict(p_scaler.transform(psi_df))[0]))
+            psi = max(0, min(100, psi))
 
-        expected_cols = sorted(augmented.keys())
-        df = pd.DataFrame([augmented])[expected_cols]
-
-        X_scaled = f_scaler.transform(df)
-        start_doy = int(round(f_model.predict(X_scaled)[0]))
-        start_doy = max(1, min(365, start_doy))
-        confidence = 0.92 if use_mh else 0.87
-
-        psi = int(round(p_model.predict(p_scaler.transform(df))[0]))
-        psi = max(0, min(100, psi))
-
-        risk_raw = r_model.predict(r_scaler.transform(df))[0]
-        if hasattr(r_model, "_label_encoder"):
-            risk = r_model._label_encoder.inverse_transform([risk_raw])[0]
-        else:
-            risk = risk_raw
+            risk_df = _build_model_frame(features, r_model, r_scaler)
+            risk_raw = r_model.predict(r_scaler.transform(risk_df))[0]
+            if hasattr(r_model, "_label_encoder"):
+                risk = r_model._label_encoder.inverse_transform([risk_raw])[0]
+            else:
+                risk = risk_raw
+        except Exception:
+            start_doy, confidence = _predict_flowering_baseline(features)
+            psi, risk = _predict_psi_baseline(features)
+            model_source = "baseline"
+            data_confidence = "low"
     else:
         start_doy, confidence = _predict_flowering_baseline(features)
         psi, risk = _predict_psi_baseline(features)

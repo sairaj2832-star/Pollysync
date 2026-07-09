@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import { getDashboardSummary } from "../lib/api";
+import { getDashboardSummary, getFarms } from "../lib/api";
 import BeeMap from "../components/BeeMap";
 import FloweringCalendar from "../components/FloweringCalendar";
 import NDVICard from "../components/NDVICard";
@@ -15,15 +15,30 @@ import { DashboardSkeleton } from "../components/LoadingSkeleton";
 export default function DashboardPage() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const farmId = searchParams.get("farm_id") || "1";
+  const requestedFarmId = searchParams.get("farm_id");
   const [data, setData] = useState(null);
+  const [farmId, setFarmId] = useState(requestedFarmId || "");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [hasFarms, setHasFarms] = useState(true);
 
   useEffect(() => {
     async function fetchData() {
       try {
-        const result = await getDashboardSummary(farmId);
+        setLoading(true);
+        setError("");
+        const farms = await getFarms();
+        if (!Array.isArray(farms) || farms.length === 0) {
+          setHasFarms(false);
+          setData(null);
+          setFarmId("");
+          return;
+        }
+
+        setHasFarms(true);
+        const resolvedFarmId = requestedFarmId || String(farms[0].id);
+        setFarmId(resolvedFarmId);
+        const result = await getDashboardSummary(resolvedFarmId);
         setData(result);
       } catch (err) {
         setError(err?.response?.data?.detail || err.message || "Failed to load dashboard");
@@ -32,7 +47,7 @@ export default function DashboardPage() {
       }
     }
     fetchData();
-  }, [farmId]);
+  }, [requestedFarmId]);
 
   if (loading) return <DashboardSkeleton />;
 
@@ -53,7 +68,7 @@ export default function DashboardPage() {
     );
   }
 
-  if (!data) {
+  if (!data || !hasFarms) {
     return (
       <div className="flex-1 flex flex-col items-center justify-center p-gutter relative overflow-y-auto min-h-[60vh]">
         <div className="absolute inset-0 opacity-[0.03] pointer-events-none" style={{ backgroundImage: "radial-gradient(#006c49 1px, transparent 1px)", backgroundSize: "24px 24px" }} />

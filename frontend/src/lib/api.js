@@ -19,6 +19,36 @@ function real(apiFunc) {
   return (...args) => apiFunc(...args);
 }
 
+export function getApiErrorMessage(error, fallback = "Request failed") {
+  if (error?.code === "ECONNABORTED" || /timeout/i.test(error?.message || "")) {
+    return "The request took too long to complete. Please try again in a moment.";
+  }
+
+  const detail = error?.response?.data?.detail;
+
+  if (typeof detail === "string" && detail.trim()) {
+    return detail;
+  }
+
+  if (Array.isArray(detail) && detail.length > 0) {
+    return detail
+      .map((item) => {
+        if (typeof item === "string") {
+          return item;
+        }
+        if (item && typeof item === "object") {
+          const path = Array.isArray(item.loc) ? item.loc.slice(1).join(".") : "";
+          return path ? `${path}: ${item.msg}` : item.msg;
+        }
+        return null;
+      })
+      .filter(Boolean)
+      .join(". ");
+  }
+
+  return error?.message || fallback;
+}
+
 export async function getHealth() {
   if (USE_MOCK) {
     const m = await import("./mockApi");
@@ -105,7 +135,7 @@ export async function createPrediction(farm_id) {
     const m = await import("./mockApi");
     return m.mockCreatePrediction(farm_id);
   }
-  const { data } = await api.post("/api/predictions", { farm_id });
+  const { data } = await api.post("/api/predictions", { farm_id }, { timeout: 60000 });
   return data;
 }
 
@@ -141,7 +171,11 @@ export async function generateRecommendation(farm_id, prediction_id) {
     const m = await import("./mockApi");
     return m.mockGenerateRecommendation(farm_id, prediction_id);
   }
-  const { data } = await api.post("/api/recommendations/generate", { farm_id, prediction_id });
+  const { data } = await api.post(
+    "/api/recommendations/generate",
+    { farm_id, prediction_id },
+    { timeout: 60000 }
+  );
   return data;
 }
 

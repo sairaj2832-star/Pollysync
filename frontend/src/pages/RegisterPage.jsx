@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link, Navigate, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+import { getApiErrorMessage } from "../lib/api";
 
 const LOCATIONS = [
   "Nashik", "Punjab", "Haryana", "Gujarat", "Madhya Pradesh",
@@ -26,6 +27,10 @@ export default function RegisterPage() {
         setError("Please fill all fields");
         return;
       }
+      if (form.password.length < 10) {
+        setError("Password must be at least 10 characters long");
+        return;
+      }
       if (form.password !== form.confirmPassword) {
         setError("Passwords do not match");
         return;
@@ -40,7 +45,11 @@ export default function RegisterPage() {
       await register(form.email, form.password, form.fullName);
       navigate("/dashboard");
     } catch (err) {
-      setError(err?.response?.data?.detail || "Registration failed");
+      if (err?.response?.status === 409) {
+        setError("Email already registered. Please sign in instead.");
+      } else {
+        setError(getApiErrorMessage(err, "Registration failed"));
+      }
     } finally {
       setBusy(false);
     }

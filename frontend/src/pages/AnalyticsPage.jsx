@@ -2,9 +2,9 @@ import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, Tooltip, Filler } from "chart.js";
 import { Line } from "react-chartjs-2";
-import { getPredictions } from "../lib/api";
+import { getFarms, getPredictions } from "../lib/api";
 import Card from "../components/Card";
-import { MetricText, MetricTrend } from "../components/MetricDisplay";
+import { MetricText } from "../components/MetricDisplay";
 import ChartWrapper, { exportChartData } from "../components/ChartWrapper";
 import { EmptyState, DashboardSkeleton, ErrorState } from "../components/LoadingSkeleton";
 import { FarmSelector } from "../components/ParameterForm";
@@ -13,11 +13,10 @@ ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Tooltip,
 
 export default function AnalyticsPage() {
   const [searchParams, setSearchParams] = useSearchParams();
-  const farmId = searchParams.get("farm_id") || "1";
+  const farmId = searchParams.get("farm_id") || "";
   const [predictions, setPredictions] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-  const [timeRange, setTimeRange] = useState("3m");
   const [farms, setFarms] = useState([]);
 
   useEffect(() => {
@@ -27,7 +26,22 @@ export default function AnalyticsPage() {
   async function loadData() {
     try {
       setLoading(true);
-      const data = await getPredictions(farmId);
+      setError("");
+      const farmList = await getFarms();
+      const safeFarms = Array.isArray(farmList) ? farmList : [];
+      setFarms(safeFarms);
+
+      if (safeFarms.length === 0) {
+        setPredictions([]);
+        return;
+      }
+
+      const resolvedFarmId = farmId || String(safeFarms[0].id);
+      if (!farmId) {
+        setSearchParams({ farm_id: resolvedFarmId }, { replace: true });
+      }
+
+      const data = await getPredictions(resolvedFarmId);
       setPredictions(Array.isArray(data) ? data : []);
     } catch (err) {
       setError(err?.response?.data?.detail || "Failed to load predictions");
@@ -38,6 +52,8 @@ export default function AnalyticsPage() {
 
   if (loading) return <DashboardSkeleton />;
   if (error) return <ErrorState error={error} onRetry={loadData} />;
+
+  const selectedFarm = farms.find((farm) => String(farm.id) === String(farmId)) || farms[0] || null;
 
   // Calculate metrics
   const sorted = [...predictions].sort((a, b) => new Date(a.created_at) - new Date(b.created_at));
@@ -55,12 +71,13 @@ export default function AnalyticsPage() {
   // Group by crop
   const cropStats = {};
   sorted.forEach((p) => {
-    if (!cropStats[p.crop]) {
-      cropStats[p.crop] = { count: 0, totalPSI: 0, avgPSI: 0 };
+    const cropName = selectedFarm?.crop || selectedFarm?.crop_type || "Unknown Crop";
+    if (!cropStats[cropName]) {
+      cropStats[cropName] = { count: 0, totalPSI: 0, avgPSI: 0 };
     }
-    cropStats[p.crop].count += 1;
-    cropStats[p.crop].totalPSI += p.psi_score;
-    cropStats[p.crop].avgPSI = (cropStats[p.crop].totalPSI / cropStats[p.crop].count).toFixed(1);
+    cropStats[cropName].count += 1;
+    cropStats[cropName].totalPSI += p.psi_score;
+    cropStats[cropName].avgPSI = (cropStats[cropName].totalPSI / cropStats[cropName].count).toFixed(1);
   });
 
   // Chart data
@@ -125,11 +142,26 @@ export default function AnalyticsPage() {
 
   if (predictions.length === 0) {
     return (
-      <EmptyState
-        icon="analytics"
-        title="No predictions yet"
-        description="Run a prediction to start tracking your farm's pollination trends"
-      />
+      <div className="space-y-lg">
+        {farms.length > 0 ? (
+          <Card header="Select Farm">
+            <FarmSelector
+              farms={farms}
+              value={farmId}
+              onChange={(nextFarmId) => setSearchParams({ farm_id: String(nextFarmId) })}
+            />
+          </Card>
+        ) : null}
+        <EmptyState
+          icon="analytics"
+          title={farms.length === 0 ? "No farms yet" : "No predictions yet"}
+          description={
+            farms.length === 0
+              ? "Create a farm first to start generating analytics."
+              : "Run a prediction to start tracking your farm's pollination trends"
+          }
+        />
+      </div>
     );
   }
 
@@ -142,6 +174,16 @@ export default function AnalyticsPage() {
           Track PSI trends, crop performance, and pollination patterns over time
         </p>
       </div>
+
+      {farms.length > 0 ? (
+        <Card header="Farm Filter">
+          <FarmSelector
+            farms={farms}
+            value={selectedFarm ? String(selectedFarm.id) : ""}
+            onChange={(nextFarmId) => setSearchParams({ farm_id: String(nextFarmId) })}
+          />
+        </Card>
+      ) : null}
 
       {/* Key Metrics */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-lg">
@@ -269,7 +311,9 @@ export default function AnalyticsPage() {
                     <td className="py-md px-md font-body-sm text-on-surface">
                       {new Date(pred.created_at).toLocaleDateString("en-IN")}
                     </td>
-                    <td className="py-md px-md font-body-sm text-on-surface">{pred.crop}</td>
+                    <td className="py-md px-md font-body-sm text-on-surface">
+                      {selectedFarm?.crop || selectedFarm?.crop_type || "--"}
+                    </td>
                     <td className={`py-md px-md font-headline-sm ${scoreColor}`}>{pred.psi_score}</td>
                     <td className="py-md px-md">
                       <span className={`px-md py-xs rounded-full font-label-xs text-label-xs font-bold ${riskBg}`}>

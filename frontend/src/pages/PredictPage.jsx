@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { useToast } from "../context/ToastContext";
-import { createFarm, createPrediction, generateRecommendation } from "../lib/api";
+import { createFarm, createPrediction, generateRecommendation, getApiErrorMessage } from "../lib/api";
 
 const CROPS = [
   { value: "Mustard", icon: "eco", desc: "Brassica juncea. High sensitivity to temperature fluctuations during bloom.", bg: "bg-secondary-container/20", color: "text-secondary-container" },
@@ -69,6 +69,7 @@ export default function PredictPage() {
       const farm = await createFarm({
         name: farmName || `${crop} Farm`,
         crop_type: crop,
+        location: selected.name,
         location_lat: selected.lat,
         location_lng: selected.lng,
       });
@@ -76,14 +77,15 @@ export default function PredictPage() {
       setLoadMsg(LOADING_MESSAGES[1]);
       const prediction = await createPrediction(farm.id);
 
-      setLoadMsg(LOADING_MESSAGES[3]);
+      setLoadMsg(LOADING_MESSAGES[5]);
       await generateRecommendation(farm.id, prediction.id);
 
       toast.success("Prediction complete! Redirecting to dashboard...");
       navigate(`/dashboard?farm_id=${farm.id}`);
     } catch (err) {
-      toast.error(err?.response?.data?.detail || err.message || "Prediction failed");
-      setError(err?.response?.data?.detail || err.message || "Prediction failed");
+      const message = getApiErrorMessage(err, "Prediction failed");
+      toast.error(message);
+      setError(message);
       setLoading(false);
     }
   }
