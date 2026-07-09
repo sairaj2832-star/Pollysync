@@ -9,6 +9,7 @@ from app.core.config import settings
 from app.database import get_db
 from app.models.farm import Farm
 from app.models.prediction import Prediction
+from app.services.prediction_service import generate_local_recommendation
 
 router = APIRouter(prefix="/recommendations", tags=["recommendations"])
 
@@ -87,33 +88,14 @@ async def _generate_gemini_recommendation(farm: Farm, prediction: Prediction) ->
 
 
 def _generate_local_recommendation(farm: Farm, prediction: Prediction) -> str:
-    risk_advisory = ""
-    if prediction.risk_level == "High":
-        risk_advisory = (
-            f"\n\n**Warning:** The PSI of {prediction.psi_score}/100 indicates "
-            "High risk. Consider delaying sowing or using supplemental pollination methods. "
-            "Monitor weather conditions closely."
-        )
-    elif prediction.risk_level == "Medium":
-        risk_advisory = (
-            f"\n\n**Caution:** The PSI of {prediction.psi_score}/100 is moderate. "
-            "Ensure adequate irrigation and consider introducing managed pollinators."
-        )
-    else:
-        risk_advisory = (
-            f"\n\nConditions are favourable. Maintain regular crop management practices."
-        )
-
-    return (
-        f"## Assessment for {farm.crop_type}\n\n"
-        f"Based on current conditions (temp {prediction.psi_score}°C, "
-        f"rainfall in normal range) and the predicted flowering window "
-        f"({prediction.flowering_start} to {prediction.flowering_end}), "
-        f"the pollination suitability is **{prediction.risk_level.lower()} risk** "
-        f"with a score of **{prediction.psi_score}/100**."
-        f"{risk_advisory}\n\n"
-        f"**Confidence:** Moderate — predictions are based on seasonal models and "
-        f"local weather data. Real-time satellite data will improve accuracy."
+    weather = json.loads(prediction.weather_summary) if prediction.weather_summary else {}
+    return generate_local_recommendation(
+        crop_type=farm.crop_type,
+        flowering_start=prediction.flowering_start,
+        flowering_end=prediction.flowering_end,
+        psi_score=prediction.psi_score,
+        risk_level=prediction.risk_level,
+        weather=weather,
     )
 
 

@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, Query
+from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy.orm import Session
 
 from app.database import get_db
@@ -17,6 +17,12 @@ router = APIRouter(prefix="/weather", tags=["weather"])
 
 @router.get("/current", response_model=WeatherCurrent)
 async def current_weather(farm_id: int = Query(...), db: Session = Depends(get_db)) -> WeatherCurrent:
+    from app.models.farm import Farm
+
+    farm = db.get(Farm, farm_id)
+    if not farm:
+        raise HTTPException(status_code=404, detail="Farm not found")
+
     cached = get_cached_weather(farm_id, db)
     if cached:
         return WeatherCurrent(
