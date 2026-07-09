@@ -206,4 +206,66 @@ export async function markNotificationRead(notif_id) {
   return data;
 }
 
+export async function updateProfile(payload) {
+  if (USE_MOCK) {
+    const m = await import("./mockApi");
+    return m.mockUpdateProfile(payload);
+  }
+  const { data } = await api.patch("/api/auth/me", payload);
+  return data;
+}
+
+export async function updateFarm(farm_id, payload) {
+  if (USE_MOCK) {
+    const m = await import("./mockApi");
+    return m.mockUpdateFarm(farm_id, payload);
+  }
+  const { data } = await api.patch(`/api/farms/${farm_id}`, payload);
+  return data;
+}
+
+export async function getNotificationPreferences() {
+  if (USE_MOCK) {
+    const m = await import("./mockApi");
+    return m.mockGetNotificationPreferences();
+  }
+  const { data } = await api.get("/api/notifications/preferences");
+  return data;
+}
+
+export async function updateNotificationPreferences(payload) {
+  if (USE_MOCK) {
+    const m = await import("./mockApi");
+    return m.mockUpdateNotificationPreferences(payload);
+  }
+  const { data } = await api.patch("/api/notifications/preferences", payload);
+  return data;
+}
+
+export async function getTeamMembers(farm_id) {
+  if (USE_MOCK) {
+    const m = await import("./mockApi");
+    return m.mockGetTeamMembers(farm_id);
+  }
+  const { data } = await api.get(`/api/farms/${farm_id}/team`);
+  return data;
+}
+
+export async function inviteTeamMember(farm_id, payload) {
+  if (USE_MOCK) {
+    const m = await import("./mockApi");
+    return m.mockInviteTeamMember(farm_id, payload);
+  }
+  const { data } = await api.post(`/api/farms/${farm_id}/team`, payload);
+  return data;
+}
+
+export async function removeTeamMember(farm_id, member_id) {
+  if (USE_MOCK) {
+    const m = await import("./mockApi");
+    return m.mockRemoveTeamMember(farm_id, member_id);
+  }
+  await api.delete(`/api/farms/${farm_id}/team/${member_id}`);
+}
+
 export default api;

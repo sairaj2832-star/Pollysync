@@ -6,6 +6,10 @@ from pydantic import BaseModel, ConfigDict, Field, model_validator
 class FarmCreate(BaseModel):
     name: str = Field(min_length=2, max_length=120)
     crop_type: str = Field(min_length=2, max_length=80)
+    variety: str | None = Field(default=None, max_length=80)
+    irrigation_method: str | None = Field(default=None, max_length=50)
+    planting_date: str | None = Field(default=None, max_length=16)
+    harvest_date: str | None = Field(default=None, max_length=16)
     location_name: str | None = Field(default=None, max_length=255)
     location_lat: float | None = Field(default=None, ge=-90, le=90)
     location_lng: float | None = Field(default=None, ge=-180, le=180)
@@ -32,6 +36,10 @@ class FarmCreate(BaseModel):
 class FarmUpdate(BaseModel):
     name: str | None = Field(default=None, min_length=2, max_length=120)
     crop_type: str | None = Field(default=None, min_length=2, max_length=80)
+    variety: str | None = Field(default=None, max_length=80)
+    irrigation_method: str | None = Field(default=None, max_length=50)
+    planting_date: str | None = Field(default=None, max_length=16)
+    harvest_date: str | None = Field(default=None, max_length=16)
     location_name: str | None = Field(default=None, max_length=255)
     location_lat: float | None = Field(default=None, ge=-90, le=90)
     location_lng: float | None = Field(default=None, ge=-180, le=180)
@@ -62,6 +70,10 @@ class FarmRead(BaseModel):
     name: str
     crop_type: str
     crop: str
+    variety: str | None = None
+    irrigation_method: str | None = None
+    planting_date: str | None = None
+    harvest_date: str | None = None
     location_name: str | None = None
     location: str | None = None
     location_lat: float | None = None

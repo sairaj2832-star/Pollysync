@@ -24,6 +24,7 @@ from app.schemas.user import (
     UserCreate,
     UserLogin,
     UserRead,
+    UserUpdate,
 )
 
 router = APIRouter(prefix="/auth", tags=["auth"])
@@ -112,6 +113,19 @@ def logout(payload: RefreshTokenRequest, db: Session = Depends(get_db)) -> None:
 
 @router.get("/me", response_model=UserRead)
 def me(current_user: User = Depends(get_current_user)) -> User:
+    return current_user
+
+
+@router.patch("/me", response_model=UserRead)
+def update_me(
+    payload: UserUpdate,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+) -> User:
+    for field, value in payload.model_dump(exclude_unset=True).items():
+        setattr(current_user, field, value)
+    db.commit()
+    db.refresh(current_user)
     return current_user
 
 

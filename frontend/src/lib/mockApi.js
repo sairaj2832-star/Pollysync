@@ -99,6 +99,60 @@ export async function mockGetHealth() {
   return { status: "ok", service: "pollisync-api" };
 }
 
+export async function mockUpdateProfile(payload) {
+  await delay(400);
+  const user = clone(SESSION.user);
+  Object.assign(user, payload);
+  return user;
+}
+
+export async function mockUpdateFarm(farm_id, payload) {
+  await delay(400);
+  return { ...clone(MOCK_FARM), ...payload, id: farm_id };
+}
+
+export async function mockGetNotificationPreferences() {
+  await delay(300);
+  return {
+    id: 1,
+    user_id: 1,
+    push_critical: true,
+    push_daily: true,
+    push_system: false,
+    email_weekly: true,
+    email_billing: true,
+    whatsapp_urgent: false,
+    sms_alerts: true,
+    created_at: new Date().toISOString(),
+    updated_at: new Date().toISOString(),
+  };
+}
+
+export async function mockUpdateNotificationPreferences(payload) {
+  await delay(300);
+  const prefs = await mockGetNotificationPreferences();
+  Object.assign(prefs, payload);
+  return prefs;
+}
+
+export async function mockGetTeamMembers(farm_id) {
+  await delay(300);
+  return [
+    { id: 1, farm_id, email: "elena@pollisync.ag", name: "Elena Rodriguez", role: "admin", status: "active", invited_by: 1, created_at: new Date().toISOString() },
+    { id: 2, farm_id, email: "james@pollisync.ag", name: "James Carter", role: "editor", status: "active", invited_by: 1, created_at: new Date().toISOString() },
+    { id: 3, farm_id, email: "priya@pollisync.ag", name: "Priya Sharma", role: "viewer", status: "pending", invited_by: 1, created_at: new Date().toISOString() },
+  ];
+}
+
+export async function mockInviteTeamMember(farm_id, payload) {
+  await delay(400);
+  return { id: Date.now(), farm_id, ...payload, status: "pending", invited_by: 1, created_at: new Date().toISOString() };
+}
+
+export async function mockRemoveTeamMember(farm_id, member_id) {
+  await delay(300);
+}
+
 export function getMockLocations() {
   return MOCK_LOCATIONS;
 }

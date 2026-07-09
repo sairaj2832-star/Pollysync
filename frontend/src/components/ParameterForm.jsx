@@ -3,6 +3,7 @@
  * Includes: CropSelector, LocationSelector, FarmSelector
  */
 import { useState, useEffect } from "react";
+import Select from "./Select";
 
 const CROPS = [
   {
@@ -96,22 +97,14 @@ export function CropSelector({ value = "", onChange, disabled = false }) {
 export function LocationSelector({ value = "", onChange, disabled = false }) {
   return (
     <div className="space-y-sm">
-      <label className="block font-label-md text-label-md font-bold text-on-surface">
-        Location
-      </label>
-      <select
+      <Select
+        label="Location"
         value={value}
-        onChange={(e) => onChange(e.target.value)}
+        onChange={onChange}
+        options={LOCATIONS.map((l) => ({ value: l.name, label: l.name }))}
+        placeholder="Select a location"
         disabled={disabled}
-        className="w-full px-md py-sm rounded-lg border border-outline-variant bg-surface text-on-surface font-body-md disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
-      >
-        <option value="">Select a location</option>
-        {LOCATIONS.map((loc) => (
-          <option key={loc.name} value={loc.name}>
-            {loc.name}
-          </option>
-        ))}
-      </select>
+      />
       {value && (
         <p className="font-body-xs text-body-xs text-on-surface-variant">
           {LOCATIONS.find((l) => l.name === value)?.name}
@@ -128,22 +121,17 @@ export function FarmSelector({ farms = [], value = "", onChange, disabled = fals
 
   return (
     <div className="space-y-sm">
-      <label className="block font-label-md text-label-md font-bold text-on-surface">
-        Select Farm
-      </label>
-      <select
+      <Select
+        label="Select Farm"
         value={value}
-        onChange={(e) => onChange(e.target.value)}
+        onChange={onChange}
+        options={farms.map((f) => ({
+          value: f.id,
+          label: `${f.name} - ${f.crop} (${f.location})`,
+        }))}
+        placeholder="Choose a farm"
         disabled={disabled}
-        className="w-full px-md py-sm rounded-lg border border-outline-variant bg-surface text-on-surface font-body-md disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
-      >
-        <option value="">Choose a farm</option>
-        {farms.map((farm) => (
-          <option key={farm.id} value={farm.id}>
-            {farm.name} - {farm.crop} ({farm.location})
-          </option>
-        ))}
-      </select>
+      />
     </div>
   );
 }

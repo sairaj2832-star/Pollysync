@@ -159,7 +159,7 @@ export default function ChatPage() {
         <button
           type="submit"
           disabled={loading || !input.trim()}
-          className="bg-primary text-on-primary px-lg py-sm rounded-lg font-label-md text-label-md hover:bg-[#005a3c] transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-sm"
+          className="bg-primary text-on-primary px-lg py-sm rounded-lg font-label-md text-label-md hover:brightness-90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-sm"
         >
           <span className="material-symbols-outlined text-[18px]">send</span>
           Send

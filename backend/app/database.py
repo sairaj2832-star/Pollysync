@@ -62,6 +62,10 @@ def reconcile_sqlite_schema() -> None:
                 "oauth_provider": "ALTER TABLE users ADD COLUMN oauth_provider VARCHAR(50)",
                 "oauth_subject": "ALTER TABLE users ADD COLUMN oauth_subject VARCHAR(255)",
                 "is_active": "ALTER TABLE users ADD COLUMN is_active BOOLEAN DEFAULT 1 NOT NULL",
+                "phone": "ALTER TABLE users ADD COLUMN phone VARCHAR(30)",
+                "role": "ALTER TABLE users ADD COLUMN role VARCHAR(80)",
+                "organization": "ALTER TABLE users ADD COLUMN organization VARCHAR(255)",
+                "language": "ALTER TABLE users ADD COLUMN language VARCHAR(10) DEFAULT 'en'",
             }
             for column_name, statement in user_migrations.items():
                 if column_name not in existing_columns:
@@ -74,6 +78,10 @@ def reconcile_sqlite_schema() -> None:
                 "area_acres": "ALTER TABLE farms ADD COLUMN area_acres FLOAT",
                 "soil_type": "ALTER TABLE farms ADD COLUMN soil_type VARCHAR(50)",
                 "user_id": "ALTER TABLE farms ADD COLUMN user_id INTEGER",
+                "variety": "ALTER TABLE farms ADD COLUMN variety VARCHAR(80)",
+                "irrigation_method": "ALTER TABLE farms ADD COLUMN irrigation_method VARCHAR(50)",
+                "planting_date": "ALTER TABLE farms ADD COLUMN planting_date VARCHAR(16)",
+                "harvest_date": "ALTER TABLE farms ADD COLUMN harvest_date VARCHAR(16)",
             }
             for column_name, statement in farm_migrations.items():
                 if column_name not in existing_columns:

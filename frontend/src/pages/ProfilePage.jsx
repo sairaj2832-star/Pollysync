@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { useAuth } from "../context/AuthContext";
 import { useToast } from "../context/ToastContext";
+import { updateProfile } from "../lib/api";
+import Select from "../components/Select";
 
 export default function ProfilePage() {
   const { user } = useAuth();
@@ -10,10 +12,10 @@ export default function ProfilePage() {
   const [form, setForm] = useState({
     fullName: user?.full_name || "",
     email: user?.email || "",
-    phone: "+1 (555) 924-1029",
-    language: "en",
-    role: "Senior Agronomist",
-    organization: "Veridian Valley Orchards",
+    phone: user?.phone || "",
+    language: user?.language || "en",
+    role: user?.role || "",
+    organization: user?.organization || "",
     currentPassword: "",
     newPassword: "",
     confirmPassword: "",
@@ -26,10 +28,21 @@ export default function ProfilePage() {
   async function handleSave(e) {
     e.preventDefault();
     setSaving(true);
-    // TODO: connect to backend
-    await new Promise((r) => setTimeout(r, 1200));
-    setSaving(false);
-    toast.success("Profile updated successfully.");
+    try {
+      await updateProfile({
+        full_name: form.fullName,
+        phone: form.phone,
+        role: form.role,
+        organization: form.organization,
+        language: form.language,
+      });
+      toast.success("Profile updated successfully.");
+    } catch (err) {
+      const { getApiErrorMessage } = await import("../lib/api");
+      toast.error(getApiErrorMessage(err, "Failed to update profile"));
+    } finally {
+      setSaving(false);
+    }
   }
 
   function handleDiscard() {
@@ -98,19 +111,18 @@ export default function ProfilePage() {
                     onChange={(e) => update("phone", e.target.value)}
                   />
                 </div>
-                <div className="flex flex-col gap-xs">
-                  <label className="text-label-md font-label-md text-on-surface-variant">Language Preference</label>
-                  <select
-                    className="px-md py-sm border border-outline-variant rounded-lg bg-surface-container-low text-body-md focus:ring-2 focus:ring-primary-container focus:border-primary outline-none transition-all appearance-none cursor-pointer"
-                    value={form.language}
-                    onChange={(e) => update("language", e.target.value)}
-                  >
-                    <option value="en">English (US)</option>
-                    <option value="es">Español</option>
-                    <option value="fr">Français</option>
-                    <option value="pt">Português</option>
-                  </select>
-                </div>
+                <Select
+                  label="Language Preference"
+                  value={form.language}
+                  onChange={(v) => update("language", v)}
+                  options={[
+                    { value: "en", label: "English (US)" },
+                    { value: "es", label: "Español" },
+                    { value: "fr", label: "Français" },
+                    { value: "pt", label: "Português" },
+                  ]}
+                  placeholder="Select language"
+                />
               </div>
             </div>
           </div>

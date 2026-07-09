@@ -71,7 +71,7 @@ export default function DashboardPage() {
   if (!data || !hasFarms) {
     return (
       <div className="flex-1 flex flex-col items-center justify-center p-gutter relative overflow-y-auto min-h-[60vh]">
-        <div className="absolute inset-0 opacity-[0.03] pointer-events-none" style={{ backgroundImage: "radial-gradient(#006c49 1px, transparent 1px)", backgroundSize: "24px 24px" }} />
+        <div className="absolute inset-0 opacity-[0.03] pointer-events-none" style={{ backgroundImage: "radial-gradient(var(--color-primary) 1px, transparent 1px)", backgroundSize: "24px 24px" }} />
         <div className="relative z-10 max-w-lg w-full flex flex-col items-center text-center">
           <div className="w-48 h-48 mb-xl rounded-full bg-surface-container-high border border-outline-variant shadow-sm flex items-center justify-center overflow-hidden">
             <span className="material-symbols-outlined text-6xl text-on-surface-variant/40">agriculture</span>
@@ -82,7 +82,7 @@ export default function DashboardPage() {
           </p>
           <button
             onClick={() => navigate("/predict")}
-            className="group relative inline-flex items-center justify-center gap-sm px-xl py-lg bg-primary text-on-primary rounded-lg font-headline-sm text-headline-sm font-semibold shadow-[0_1px_3px_rgba(0,0,0,0.1)] hover:bg-[#005a3c] transition-all duration-200"
+            className="group relative inline-flex items-center justify-center gap-sm px-xl py-lg bg-primary text-on-primary rounded-lg font-headline-sm text-headline-sm font-semibold shadow-[0_1px_3px_rgba(0,0,0,0.1)] hover:brightness-90 transition-all duration-200"
           >
             <span className="material-symbols-outlined text-[24px]">add_circle</span>
             Create First Prediction
@@ -103,7 +103,7 @@ export default function DashboardPage() {
 
   return (
     <div className="relative">
-      <div className="absolute inset-0 opacity-[0.02] pointer-events-none" style={{ backgroundImage: "radial-gradient(#006c49 1px, transparent 1px)", backgroundSize: "24px 24px" }} />
+      <div className="absolute inset-0 opacity-[0.02] pointer-events-none" style={{ backgroundImage: "radial-gradient(var(--color-primary) 1px, transparent 1px)", backgroundSize: "24px 24px" }} />
       <div className="relative z-10 grid grid-cols-12 gap-lg">
         {/* 1. PSI GAUGE - 4 columns */}
         <div className="col-span-12 md:col-span-4 animate-fade-in-up stagger-1">
@@ -166,13 +166,6 @@ export default function DashboardPage() {
               </div>
             </div>
             <div className="flex flex-col gap-sm mt-lg">
-              <button
-                onClick={() => navigate(`/map?farm_id=${farmId}`)}
-                className="w-full bg-primary-container text-on-primary font-label-md text-label-md py-sm rounded-lg hover:bg-primary transition-colors flex justify-center items-center gap-xs"
-              >
-                <span className="material-symbols-outlined text-[18px]">map</span>
-                View Bee Map
-              </button>
               <button className="w-full bg-surface border border-outline-variant text-on-surface font-label-md text-label-md py-sm rounded-lg hover:bg-surface-container-high transition-colors flex justify-center items-center gap-xs">
                 <span className="material-symbols-outlined text-[18px]">download</span>
                 Export Report

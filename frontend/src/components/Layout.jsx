@@ -1,5 +1,6 @@
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+import { useTheme } from "../context/ThemeContext";
 import { useState } from "react";
 
 const NAV_ITEMS = [
@@ -34,6 +35,7 @@ const BOTTOM_NAV = [
 
 export default function Layout({ children }) {
   const { user, logout } = useAuth();
+  const { dark, toggle } = useTheme();
   const location = useLocation();
   const navigate = useNavigate();
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -124,6 +126,13 @@ export default function Layout({ children }) {
             </div>
           </div>
           <div className="flex items-center gap-md">
+            <button
+              onClick={toggle}
+              className="text-on-surface-variant hover:text-primary transition-colors p-sm rounded-full hover:bg-surface-container-highest"
+              title={dark ? "Switch to light mode" : "Switch to dark mode"}
+            >
+              <span className="material-symbols-outlined">{dark ? "light_mode" : "dark_mode"}</span>
+            </button>
             <button 
               onClick={() => navigate("/notifications")}
               className="relative text-on-surface-variant hover:text-primary transition-colors opacity-80 hover:opacity-100 p-sm rounded-full hover:bg-surface-container-highest"
@@ -132,12 +141,6 @@ export default function Layout({ children }) {
               <span className="material-symbols-outlined">notifications</span>
               <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-tertiary rounded-full animate-pulse-dot" />
             </button>
-            <button className="text-on-surface-variant hover:text-primary transition-colors opacity-80 hover:opacity-100 p-sm rounded-full hover:bg-surface-container-highest">
-              <span className="material-symbols-outlined">help</span>
-            </button>
-            <div className="w-8 h-8 rounded-full bg-primary-container/20 border border-primary-container flex items-center justify-center overflow-hidden cursor-pointer">
-              <span className="material-symbols-outlined text-primary text-sm">person</span>
-            </div>
           </div>
         </header>
         <div className="p-xl flex-1 max-w-[1600px] mx-auto w-full">

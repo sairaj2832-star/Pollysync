@@ -37,7 +37,7 @@ export default function RecommendationCard({ text = "", riskLevel = "Low" }) {
   }
 
   return (
-    <div className={`bg-[#F0FDF4] border border-outline-variant rounded-xl p-lg border-l-4 ${borderColor} shadow-[0_1px_3px_rgba(0,0,0,0.05)]`}>
+    <div className={`bg-primary-container/5 border border-outline-variant rounded-xl p-lg border-l-4 ${borderColor} shadow-[0_1px_3px_rgba(0,0,0,0.05)]`}>
       <div className="flex items-center gap-sm mb-md">
         <span className="material-symbols-outlined text-primary-container">psychology</span>
         <h3 className="font-headline-sm text-headline-sm text-on-surface">AI Agronomist Recommendation</h3>

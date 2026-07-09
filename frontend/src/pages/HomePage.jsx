@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+import { useTheme } from "../context/ThemeContext";
 import ShaderBackground from "../components/ShaderBackground";
 
 const FEATURES = [
@@ -32,6 +33,7 @@ const REGIONS = ["Maharashtra", "Punjab", "Rajasthan", "Gujarat", "Haryana"];
 
 export default function HomePage() {
   const { token } = useAuth();
+  const { dark, toggle } = useTheme();
 
   return (
     <div className="bg-background text-on-surface font-body overflow-x-hidden">
@@ -46,6 +48,13 @@ export default function HomePage() {
             <a className="text-on-surface-variant hover:text-primary transition-colors" href="#crops">Crops</a>
           </div>
           <div className="flex items-center gap-md">
+            <button
+              onClick={toggle}
+              className="p-sm rounded-full text-on-surface-variant hover:text-primary hover:bg-surface-container-high transition-all"
+              title={dark ? "Switch to light mode" : "Switch to dark mode"}
+            >
+              <span className="material-symbols-outlined text-xl">{dark ? "light_mode" : "dark_mode"}</span>
+            </button>
             {token ? (
               <Link
                 to="/dashboard"
@@ -123,7 +132,7 @@ export default function HomePage() {
       </section>
 
       <section className="relative py-3xl px-6 bg-surface-container-lowest overflow-hidden" id="features">
-        <div className="absolute inset-0 opacity-[0.03] pointer-events-none" style={{ backgroundImage: "radial-gradient(#006c49 1px, transparent 1px)", backgroundSize: "24px 24px" }} />
+        <div className="absolute inset-0 opacity-[0.03] pointer-events-none" style={{ backgroundImage: "radial-gradient(var(--color-primary) 1px, transparent 1px)", backgroundSize: "24px 24px" }} />
         <div className="relative z-10 max-w-container-max mx-auto">
           <div className="text-center mb-2xl animate-fade-in-up">
             <h2 className="font-headline-lg text-headline-lg text-on-surface">Precision Features</h2>

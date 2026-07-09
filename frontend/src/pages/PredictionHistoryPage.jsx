@@ -74,7 +74,7 @@ export default function PredictionHistoryPage() {
         </div>
         <Link
           to="/predict"
-          className="inline-flex items-center justify-center gap-sm bg-primary text-on-primary font-label-md text-label-md px-lg py-sm rounded-lg hover:bg-[#005a3c] transition-colors"
+          className="inline-flex items-center justify-center gap-sm bg-primary text-on-primary font-label-md text-label-md px-lg py-sm rounded-lg hover:brightness-90 transition-colors"
         >
           <span className="material-symbols-outlined text-[18px]">add</span>
           New Prediction
@@ -108,7 +108,7 @@ export default function PredictionHistoryPage() {
           </p>
           <Link
             to="/predict"
-            className="bg-primary text-on-primary font-label-md text-label-md px-lg py-sm rounded-lg hover:bg-[#005a3c] transition-colors"
+            className="bg-primary text-on-primary font-label-md text-label-md px-lg py-sm rounded-lg hover:brightness-90 transition-colors"
           >
             Create First Prediction
           </Link>
