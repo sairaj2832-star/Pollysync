@@ -1,0 +1,31 @@
+Here is the current farm data for this session:
+
+Farmer Name: {{farmer_name}}
+Location: {{location}}, Maharashtra
+Crop: {{crop_name}}
+Farm Size: {{farm_size}} acres
+
+--- WEATHER DATA ---
+Current Temperature: {{temp_current}}°C
+Forecasted Temperature (next 7 days): {{temp_forecast}}°C
+Humidity: {{humidity}}%
+Rainfall (last 7 days): {{rainfall_mm}} mm
+Wind Speed: {{wind_speed}} km/h
+Season: {{season}}
+
+--- SATELLITE DATA ---
+NDVI Value: {{ndvi_value}} ({{ndvi_interpretation}})
+Data Source: Sentinel-2 / NASA MODIS
+Observation Date: {{ndvi_date}}
+
+--- PREDICTION DATA ---
+Predicted Flowering Date: {{flowering_date}}
+Predicted Bee Arrival Date: {{bee_arrival_date}}
+Mismatch Days: {{mismatch_days}} days
+Pollination Risk Score: {{risk_score}} / 100
+Risk Level: {{risk_level}}
+
+--- HISTORICAL CONTEXT ---
+Average Flowering Date (last 5 years): {{avg_flowering_date}}
+Average Bee Arrival Date (last 5 years): {{avg_bee_arrival_date}}
+Historical Mismatch Trend: {{trend}} (Increasing / Stable / Decreasing)

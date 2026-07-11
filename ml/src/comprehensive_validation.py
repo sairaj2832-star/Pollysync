@@ -23,7 +23,7 @@ DATA_DIR = Path(__file__).resolve().parent.parent / "data"
 V1_FEATURES = [
     "temp_7d_mean", "humidity", "rainfall_7d", "wind_speed", "ndvi",
     "day_of_year", "month",
-    "crop_mustard", "crop_wheat", "crop_sunflower", "crop_rice", "crop_cotton",
+    "crop_mustard", "crop_sunflower", "crop_cotton",
     "bee_richness", "bee_count", "pollen_tree", "pollen_grass", "pollen_weed",
 ]
 
@@ -44,7 +44,7 @@ def prepare_features(df, feature_cols=None):
         feature_cols = V1_FEATURES
     df_copy = df.copy()
     if "crop" in df_copy.columns:
-        for crop in ["mustard", "wheat", "sunflower", "rice", "cotton"]:
+        for crop in ["mustard", "sunflower", "cotton"]:
             df_copy[f"crop_{crop}"] = (df_copy["crop"].str.lower() == crop).astype(int)
     for col in feature_cols:
         if col not in df_copy.columns:
@@ -181,7 +181,7 @@ def validate_psi_models():
         return
 
     df = pd.read_csv(psi_path)
-    for crop in ["mustard", "wheat", "sunflower", "rice", "cotton"]:
+    for crop in ["mustard", "sunflower", "cotton"]:
         df[f"crop_{crop}"] = (df["crop"].str.lower() == crop).astype(int)
     for col in V1_FEATURES:
         if col not in df.columns:
@@ -350,3 +350,5 @@ if __name__ == "__main__":
     print("\n" + "#" * 70)
     print("# VALIDATION COMPLETE")
     print("#" * 70)
+
+

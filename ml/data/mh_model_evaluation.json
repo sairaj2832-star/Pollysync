@@ -18,8 +18,6 @@
   "crops": [
     "sunflower",
     "mustard",
-    "wheat",
-    "rice",
     "cotton"
   ],
   "real_data_performance": {

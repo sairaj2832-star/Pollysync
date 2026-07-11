@@ -8,9 +8,7 @@ import { EmptyState, ErrorState, DashboardSkeleton } from "../components/Loading
 
 const CROP_ICONS = {
   Mustard: "eco",
-  Wheat: "grass",
   Sunflower: "local_florist",
-  Rice: "water_drop",
   Cotton: "filter_drama",
 };
 

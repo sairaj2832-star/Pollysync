@@ -43,7 +43,7 @@ MH_V2_FEATURES = [
     # Original V1 features
     "temp_7d_mean", "humidity", "rainfall_7d", "wind_speed", "ndvi",
     "day_of_year", "month",
-    "crop_mustard", "crop_wheat", "crop_sunflower", "crop_rice", "crop_cotton",
+    "crop_mustard", "crop_sunflower", "crop_cotton",
     "bee_richness", "bee_count", "pollen_tree", "pollen_grass", "pollen_weed",
     # District features
     "elevation_m",
@@ -93,7 +93,7 @@ def add_engineered_features(df: pd.DataFrame) -> pd.DataFrame:
 
 def onehot_crop(df: pd.DataFrame, crop_col: str = "crop") -> pd.DataFrame:
     df = df.copy()
-    for c in ["mustard", "wheat", "sunflower", "rice", "cotton"]:
+    for c in ["mustard", "sunflower", "cotton"]:
         col_name = f"crop_{c}"
         if col_name not in df.columns:
             df[col_name] = (df[crop_col].str.lower() == c).astype(int)
@@ -155,3 +155,5 @@ def prepare_mh_features(df: pd.DataFrame, use_v2: bool = True) -> pd.DataFrame:
             df[col] = 0
 
     return df[feature_cols]
+
+

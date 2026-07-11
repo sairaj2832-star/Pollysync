@@ -56,28 +56,43 @@ export function AuthProvider({ children }) {
     if (!isFirebaseConfigured || !firebaseAuth) {
       throw new Error("Firebase auth is not configured in the frontend environment.");
     }
-    const credential = await signInWithEmailAndPassword(firebaseAuth, email, password);
-    return exchangeFirebaseSession(credential.user);
+    try {
+      const credential = await signInWithEmailAndPassword(firebaseAuth, email, password);
+      return await exchangeFirebaseSession(credential.user);
+    } catch (err) {
+      if (err?.code?.startsWith("auth/")) throw err;
+      throw new Error(err?.message || "Login failed");
+    }
   }
 
   async function register(email, password, fullName) {
     if (!isFirebaseConfigured || !firebaseAuth) {
       throw new Error("Firebase auth is not configured in the frontend environment.");
     }
-    const credential = await createUserWithEmailAndPassword(firebaseAuth, email, password);
-    if (fullName) {
-      await updateProfile(credential.user, { displayName: fullName });
+    try {
+      const credential = await createUserWithEmailAndPassword(firebaseAuth, email, password);
+      if (fullName) {
+        await updateProfile(credential.user, { displayName: fullName });
+      }
+      return await exchangeFirebaseSession(credential.user);
+    } catch (err) {
+      if (err?.code?.startsWith("auth/")) throw err;
+      throw new Error(err?.message || "Registration failed");
     }
-    return exchangeFirebaseSession(credential.user);
   }
 
   async function loginWithGoogle() {
     if (!isFirebaseConfigured || !firebaseAuth || !googleProvider) {
       throw new Error("Firebase Google auth is not configured in the frontend environment.");
     }
-    googleProvider.setCustomParameters({ prompt: "select_account" });
-    const credential = await signInWithPopup(firebaseAuth, googleProvider);
-    return exchangeFirebaseSession(credential.user);
+    try {
+      googleProvider.setCustomParameters({ prompt: "select_account" });
+      const credential = await signInWithPopup(firebaseAuth, googleProvider);
+      return await exchangeFirebaseSession(credential.user);
+    } catch (err) {
+      if (err?.code?.startsWith("auth/")) throw err;
+      throw new Error(err?.message || "Google sign-in failed");
+    }
   }
 
   async function logout() {

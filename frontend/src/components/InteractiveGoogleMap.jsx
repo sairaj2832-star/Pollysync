@@ -1,15 +1,23 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
+import { searchLocations } from "../lib/location";
 
 export default function InteractiveGoogleMap({
   center = { lat: 19.9975, lng: 73.7898 },
   zoom = 12,
   onLocationSelect,
+  selectedAddress = "",
+  onUseCurrentLocation,
+  showSearch = true,
 }) {
   const mapRef = useRef(null);
   const leafletMapRef = useRef(null);
   const leafletMarkerRef = useRef(null);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [results, setResults] = useState([]);
+  const [searching, setSearching] = useState(false);
+  const [searchError, setSearchError] = useState("");
 
   useEffect(() => {
     if (!mapRef.current) return;
@@ -41,8 +49,7 @@ export default function InteractiveGoogleMap({
         draggable: true,
       }).addTo(map);
 
-      // Bind a popup that says "Hello!" and open it by default, matching the user's screenshot
-      marker.bindPopup("Hello!").openPopup();
+      marker.bindPopup(selectedAddress || "Selected location").openPopup();
 
       marker.on("dragend", () => {
         const pos = marker.getLatLng();
@@ -69,9 +76,41 @@ export default function InteractiveGoogleMap({
         leafletMapRef.current.panTo([center.lat, center.lng]);
       }
       leafletMarkerRef.current.setLatLng([center.lat, center.lng]);
+      leafletMarkerRef.current.bindPopup(selectedAddress || "Selected location");
       leafletMarkerRef.current.openPopup();
     }
-  }, [center, zoom, onLocationSelect]);
+  }, [center, zoom, onLocationSelect, selectedAddress]);
+
+  async function handleSearchSubmit(e) {
+    e.preventDefault();
+    if (!searchQuery.trim()) {
+      setResults([]);
+      return;
+    }
+
+    setSearching(true);
+    setSearchError("");
+    try {
+      const matches = await searchLocations(searchQuery);
+      setResults(matches);
+    } catch (error) {
+      setSearchError(error.message || "Unable to search locations");
+    } finally {
+      setSearching(false);
+    }
+  }
+
+  function selectSearchResult(result) {
+    setSearchQuery(result.name);
+    setResults([]);
+    if (onLocationSelect) {
+      onLocationSelect({
+        lat: result.lat,
+        lng: result.lng,
+        address: result.name,
+      });
+    }
+  }
 
   // Cleanup on unmount
   useEffect(() => {
@@ -85,6 +124,55 @@ export default function InteractiveGoogleMap({
 
   return (
     <div className="w-full h-full relative rounded-xl overflow-hidden border border-outline-variant bg-surface-container-higher min-h-[300px] flex-1">
+      {showSearch && (
+        <div className="absolute left-md right-md top-md z-[1000]">
+          <form
+            onSubmit={handleSearchSubmit}
+            className="rounded-xl border border-outline-variant bg-surface/95 backdrop-blur-sm shadow-md p-sm"
+          >
+            <div className="flex gap-sm">
+              <input
+                type="text"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder="Search location"
+                className="flex-1 rounded-lg border border-outline-variant bg-surface px-md py-sm text-body-sm text-on-surface outline-none focus:border-primary"
+              />
+              <button
+                type="submit"
+                className="rounded-lg bg-primary px-md py-sm text-label-sm font-semibold text-on-primary"
+              >
+                Search
+              </button>
+              {onUseCurrentLocation && (
+                <button
+                  type="button"
+                  onClick={onUseCurrentLocation}
+                  className="rounded-lg border border-outline-variant bg-surface-container-high px-md py-sm text-label-sm font-semibold text-primary"
+                >
+                  Current Location
+                </button>
+              )}
+            </div>
+            {searching && <p className="mt-xs text-body-xs text-on-surface-variant">Searching...</p>}
+            {searchError && <p className="mt-xs text-body-xs text-error">{searchError}</p>}
+            {results.length > 0 && (
+              <div className="mt-sm max-h-48 overflow-y-auto rounded-lg border border-outline-variant bg-surface">
+                {results.map((result) => (
+                  <button
+                    key={result.id}
+                    type="button"
+                    onClick={() => selectSearchResult(result)}
+                    className="block w-full border-b border-outline-variant/50 px-md py-sm text-left text-body-sm text-on-surface last:border-b-0 hover:bg-surface-container-high"
+                  >
+                    {result.name}
+                  </button>
+                ))}
+              </div>
+            )}
+          </form>
+        </div>
+      )}
       <div ref={mapRef} className="w-full h-full min-h-[300px]" />
     </div>
   );

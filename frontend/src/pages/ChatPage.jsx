@@ -1,6 +1,6 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useCallback } from "react";
 import { useAuth } from "../context/AuthContext";
-import { getMe } from "../lib/api";
+import { getFarms } from "../lib/api";
 
 const INITIAL_MESSAGES = [
   {
@@ -23,13 +23,48 @@ export default function ChatPage() {
   const [messages, setMessages] = useState(INITIAL_MESSAGES);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
+  const [farmData, setFarmData] = useState(null);
   const bottomRef = useRef(null);
+  const apiBase = import.meta.env.VITE_API_URL || "http://localhost:8000";
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
-  async function sendMessage(text) {
+  useEffect(() => {
+    getFarms()
+      .then((farms) => {
+        if (farms && farms.length > 0) {
+          const f = farms[0];
+          setFarmData({
+            farmer_name: user?.full_name || "Farmer",
+            location: f.location_name || f.location || "Unknown",
+            crop_name: f.crop_type || f.crop || "Unknown",
+            farm_size: f.area_acres?.toString() || "N/A",
+            temp_current: "28",
+            temp_forecast: "30",
+            humidity: "65",
+            rainfall_mm: "10",
+            wind_speed: "12",
+            season: "Kharif",
+            ndvi_value: "0.72",
+            ndvi_interpretation: "Healthy",
+            ndvi_date: new Date().toISOString().split("T")[0],
+            flowering_date: "2026-08-15",
+            bee_arrival_date: "2026-08-20",
+            mismatch_days: "5",
+            risk_score: "40",
+            risk_level: "MEDIUM",
+            avg_flowering_date: "2026-08-12",
+            avg_bee_arrival_date: "2026-08-18",
+            trend: "Stable",
+          });
+        }
+      })
+      .catch(() => {});
+  }, [user]);
+
+  const sendMessage = useCallback(async (text) => {
     if (!text.trim() || loading) return;
     const userMsg = {
       id: Date.now(),
@@ -42,40 +77,53 @@ export default function ChatPage() {
     setLoading(true);
 
     try {
-      await getMe();
+      const conversation = [...messages, userMsg].map((m) => ({
+        role: m.role === "assistant" ? "model" : "user",
+        content: m.content,
+      }));
 
-      await new Promise((r) => setTimeout(r, 800 + Math.random() * 1200));
+      const payload = { messages: conversation };
+      if (farmData) {
+        payload.farm_data = farmData;
+      }
 
-      const responses = [
-        "Based on current conditions, pollination suitability is high. Temperature (28C) and humidity (65%) are within optimal ranges for most crops. I recommend maintaining current irrigation schedules.",
-        "Your NDVI index of 0.72 indicates healthy crop growth. The vegetation is well-established. Continue monitoring for any signs of stress, especially during the flowering window.",
-        "Soil moisture is at a good level (65%). With current humidity at 72%, additional watering is not immediately necessary. Light irrigation in early morning would be beneficial if temperatures rise above 32C.",
-        "The predicted flowering window is July 18-25. Current weather models show favorable conditions. I recommend preparing hive placements and ensuring adequate pollinator activity during this period.",
-        "Wind speeds are moderate at 12 km/h. This is acceptable for most crops but may slightly reduce bee activity. Consider positioning hives in sheltered areas if wind increases.",
-        "Risk assessment shows low concern. However, monitor for sudden weather changes. The 7-day forecast indicates stable conditions with intermittent rainfall, which is beneficial for crop health.",
-      ];
+      const res = await fetch(`${apiBase}/api/agent/chat`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${window.localStorage.getItem("pollisync_token")}`,
+        },
+        body: JSON.stringify(payload),
+      });
 
+      if (!res.ok) {
+        throw new Error(`API error: ${res.status}`);
+      }
+
+      const data = await res.json();
       const aiMsg = {
         id: Date.now() + 1,
         role: "assistant",
-        content: responses[Math.floor(Math.random() * responses.length)],
+        content: data.reply || "I'm sorry, I couldn't generate a response.",
         timestamp: new Date().toISOString(),
       };
       setMessages((prev) => [...prev, aiMsg]);
-    } catch {
+    } catch (err) {
       setMessages((prev) => [
         ...prev,
         {
           id: Date.now() + 1,
           role: "assistant",
-          content: "Sorry, I encountered an error processing your request. Please try again.",
+          content: err.message === "Failed to fetch"
+            ? "Could not reach the AI server. Make sure the backend is running (`py -3.12 -m uvicorn app.main:app --reload`)."
+            : `Sorry, I encountered an error: ${err.message}`,
           timestamp: new Date().toISOString(),
         },
       ]);
     } finally {
       setLoading(false);
     }
-  }
+  }, [messages, loading, farmData, apiBase]);
 
   function handleSubmit(e) {
     e.preventDefault();
@@ -90,7 +138,11 @@ export default function ChatPage() {
     <div className="flex flex-col h-[calc(100vh-8rem)] max-w-[800px] mx-auto">
       <div className="mb-lg">
         <h1 className="font-headline-lg text-headline-lg text-on-surface">AI Assistant</h1>
-        <p className="font-body-md text-body-md text-on-surface-variant">Ask questions about your farm and crops.</p>
+        <p className="font-body-md text-body-md text-on-surface-variant">
+          {farmData
+            ? `Ask about ${farmData.crop_name} at ${farmData.location}`
+            : "Ask questions about your farm and crops."}
+        </p>
       </div>
 
       <div className="flex-1 overflow-y-auto bg-surface border border-outline-variant rounded-xl p-lg space-y-lg mb-md">

@@ -32,7 +32,7 @@ MAHARASHTRA_DISTRICTS = [
 ]
 
 # Crops we model + additional important Maharashtra crops
-CROPS = ["sunflower", "mustard", "wheat", "rice", "cotton"]
+CROPS = ["sunflower", "mustard", "cotton"]
 
 # ---------------------------------------------------------------------------
 # FALLBACK: Maharashtra-specific crop calendar data
@@ -61,22 +61,7 @@ CROP_CALENDAR_FALLBACK = {
         "harvest_window": (2, 1, 3, 15),
         "notes": "Limited area in Maharashtra; more common in Vidarbha",
     },
-    "wheat": {
-        "season": "Rabi",
-        "sowing_window": (10, 15, 12, 15),      # Oct-Dec
-        "flowering_days_min": 60,
-        "flowering_days_max": 90,
-        "harvest_window": (3, 1, 4, 30),
-        "notes": "Timing varies: timely (Oct-Nov) vs late (Dec) sowing",
-    },
-    "rice": {
-        "season": "Kharif",
-        "sowing_window": (6, 1, 7, 31),         # Jun-Jul
-        "flowering_days_min": 60,
-        "flowering_days_max": 90,
-        "harvest_window": (10, 1, 12, 15),
-        "notes": "Kharif rice in Konkan and eastern Maharashtra",
-    },
+
     "cotton": {
         "season": "Kharif",
         "sowing_window": (5, 15, 7, 15),        # May-Jul
@@ -89,16 +74,16 @@ CROP_CALENDAR_FALLBACK = {
 
 # District-level adjustments to sowing windows (days offset from base)
 DISTRICT_ADJUSTMENTS = {
-    "nashik":     {"sunflower": -7, "mustard": 0,  "wheat": +5,  "rice": -5,  "cotton": -10},
-    "pune":       {"sunflower": 0,  "mustard": +5, "wheat": 0,   "rice": 0,   "cotton": 0},
-    "solapur":    {"sunflower": +7, "mustard": +10,"wheat": +7,  "rice": +10, "cotton": +5},
-    "aurangabad": {"sunflower": 0,  "mustard": +5, "wheat": 0,   "rice": +5,  "cotton": 0},
-    "nagpur":     {"sunflower": -5, "mustard": -5, "wheat": -7,  "rice": -5,  "cotton": -5},
-    "amravati":   {"sunflower": -5, "mustard": -5, "wheat": -5,  "rice": -5,  "cotton": -5},
-    "kolhapur":   {"sunflower": -10,"mustard": 0,  "wheat": +5,  "rice": -10, "cotton": -10},
-    "satara":     {"sunflower": -5, "mustard": 0,  "wheat": 0,   "rice": -5,  "cotton": -5},
-    "jalgaon":    {"sunflower": +5, "mustard": +5, "wheat": +5,  "rice": +7,  "cotton": +5},
-    "latur":      {"sunflower": +5, "mustard": +7, "wheat": +7,  "rice": +10, "cotton": +5},
+    "nashik":     {"sunflower": -7, "mustard": 0,  "cotton": -10},
+    "pune":       {"sunflower": 0,  "mustard": +5, "cotton": 0},
+    "solapur":    {"sunflower": +7, "mustard": +10, "cotton": +5},
+    "aurangabad": {"sunflower": 0,  "mustard": +5, "cotton": 0},
+    "nagpur":     {"sunflower": -5, "mustard": -5, "cotton": -5},
+    "amravati":   {"sunflower": -5, "mustard": -5, "cotton": -5},
+    "kolhapur":   {"sunflower": -10,"mustard": 0,  "cotton": -10},
+    "satara":     {"sunflower": -5, "mustard": 0,  "cotton": -5},
+    "jalgaon":    {"sunflower": +5, "mustard": +5, "cotton": +5},
+    "latur":      {"sunflower": +5, "mustard": +7, "cotton": +5},
 }
 
 

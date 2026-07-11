@@ -32,7 +32,7 @@ MODELS_DIR = Path(__file__).resolve().parent.parent / "models"
 V1_FEATURES = [
     "temp_7d_mean", "humidity", "rainfall_7d", "wind_speed", "ndvi",
     "day_of_year", "month",
-    "crop_mustard", "crop_wheat", "crop_sunflower", "crop_rice", "crop_cotton",
+    "crop_mustard", "crop_sunflower", "crop_cotton",
     "bee_richness", "bee_count", "pollen_tree", "pollen_grass", "pollen_weed",
 ]
 
@@ -58,7 +58,7 @@ def build_dataset_with_gdd_features():
     from gdd_model import CROP_PARAMS, build_gdd_series
 
     df = pd.read_csv(DATA_DIR / "flowering_data_large.csv")
-    for crop in ["mustard", "wheat", "sunflower", "rice", "cotton"]:
+    for crop in ["mustard", "sunflower", "cotton"]:
         df[f"crop_{crop}"] = (df["crop"].str.lower() == crop).astype(int)
     for col in V1_FEATURES:
         if col not in df.columns:
@@ -192,3 +192,5 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+

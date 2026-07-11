@@ -14,25 +14,11 @@ const CROPS = [
     color: "text-secondary-container",
   },
   {
-    value: "Wheat",
-    icon: "grass",
-    desc: "Triticum aestivum. Wind-pollinated.",
-    bg: "bg-surface-container-high",
-    color: "text-secondary",
-  },
-  {
     value: "Sunflower",
     icon: "local_florist",
     desc: "Helianthus annuus. Bee-dependent.",
     bg: "bg-surface-container-high",
     color: "text-secondary",
-  },
-  {
-    value: "Rice",
-    icon: "water_drop",
-    desc: "Oryza sativa. High humidity needs.",
-    bg: "bg-surface-container-high",
-    color: "text-on-surface-variant",
   },
   {
     value: "Cotton",

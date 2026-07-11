@@ -23,10 +23,7 @@ SPECIES_MAP = {
     "sunflower": "sunflower",
     "brassica juncea": "mustard",
     "mustard": "mustard",
-    "triticum aestivum": "wheat",
-    "wheat": "wheat",
-    "oryza sativa": "rice",
-    "rice": "rice",
+
     "gossypium hirsutum": "cotton",
     "cotton": "cotton",
 }
@@ -140,8 +137,7 @@ def main():
         "rainfall_7d": rainfall, "wind_speed": wind,
         "ndvi": 0.55, "month": sowing.month,
         "day_of_year": sowing.timetuple().tm_yday,
-        "crop_mustard": 0, "crop_wheat": 0,
-        "crop_sunflower": 0, "crop_rice": 0, "crop_cotton": 0,
+        "crop_mustard": 0, "crop_sunflower": 0, "crop_cotton": 0,
         "crop": crop,
         "bee_richness": 5, "bee_count": 25,
         "pollen_tree": 3, "pollen_grass": 3, "pollen_weed": 3,
@@ -194,3 +190,5 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+

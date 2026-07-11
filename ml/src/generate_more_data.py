@@ -191,9 +191,7 @@ def generate_improved_psi_data(n_per_crop=2000, seed=42):
                 "month": np.random.randint(*cfg["sowing_month_range"]),
                 "day_of_year": np.random.randint(120, 340),
                 "crop_mustard": 1 if crop == "mustard" else 0,
-                "crop_wheat": 0,
                 "crop_sunflower": 1 if crop == "sunflower" else 0,
-                "crop_rice": 0,
                 "crop_cotton": 0,
                 "bee_richness": bee_richness,
                 "bee_count": bee_abundance,
@@ -224,3 +222,5 @@ if __name__ == "__main__":
     print(f"Generated {len(df_p)} PSI rows -> {out_p}")
     print(f"  psi_score range: {df_p['psi_score'].min()} - {df_p['psi_score'].max()}")
     print(f"  risk levels: {df_p['risk_level'].value_counts().to_dict()}")
+
+

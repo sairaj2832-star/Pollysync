@@ -1,5 +1,6 @@
 from fastapi import APIRouter
 
+from app.agent.router import router as agent_router
 from app.api.routes import (
     auth,
     farms,
@@ -24,3 +25,4 @@ api_router.include_router(predictions.router)
 api_router.include_router(recommendations.router)
 api_router.include_router(maps.router)
 api_router.include_router(team.router)
+api_router.include_router(agent_router)

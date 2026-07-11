@@ -1,10 +1,11 @@
 import os
+from pathlib import Path
 from dataclasses import dataclass
 
 from dotenv import load_dotenv
 
-
-load_dotenv()
+_env_path = Path(__file__).resolve().parents[2] / ".env"
+load_dotenv(_env_path, override=True)
 
 
 @dataclass(frozen=True)
@@ -25,9 +26,11 @@ class Settings:
     firebase_service_account_json: str = os.getenv("FIREBASE_SERVICE_ACCOUNT_JSON", "")
     firebase_service_account_path: str = os.getenv("FIREBASE_SERVICE_ACCOUNT_PATH", "")
     gemini_api_key: str = os.getenv("GEMINI_API_KEY", "")
-    gemini_model: str = os.getenv("GEMINI_MODEL", "gemini-1.5-flash")
+    gemini_model: str = os.getenv("GEMINI_MODEL", "gemini-2.5-flash")
     llm_api_key: str = os.getenv("LLM_API_KEY", "")
-    llm_model: str = os.getenv("LLM_MODEL", "gemini-1.5-flash")
+    llm_model: str = os.getenv("LLM_MODEL", "gemini-2.5-flash")
+    supabase_url: str = os.getenv("SUPABASE_URL", "")
+    supabase_service_key: str = os.getenv("SUPABASE_SERVICE_KEY", "")
 
     @property
     def allowed_origins(self) -> list[str]:

@@ -13,7 +13,7 @@ SEASONAL_POLLEN = {
     12: {"tree": 2, "grass": 1, "weed": 2},
 }
 
-CROP_ENCODER = ["crop_mustard", "crop_wheat", "crop_sunflower", "crop_rice", "crop_cotton"]
+CROP_ENCODER = ["crop_mustard", "crop_sunflower", "crop_cotton"]
 
 
 def get_pollen_for_month(month: int) -> dict:
@@ -43,9 +43,7 @@ def build_features(
         "day_of_year": day_of_year,
         "month": month,
         "crop_mustard": 1 if crop == "mustard" else 0,
-        "crop_wheat": 1 if crop == "wheat" else 0,
         "crop_sunflower": 1 if crop == "sunflower" else 0,
-        "crop_rice": 1 if crop == "rice" else 0,
         "crop_cotton": 1 if crop == "cotton" else 0,
         "bee_richness": bee_count,
         "bee_count": bee_abundance,
@@ -54,3 +52,6 @@ def build_features(
         "pollen_weed": pollen["weed"],
     }
     return features
+
+
+

@@ -33,11 +33,11 @@ PROCESSED_DIR = DATA_DIR / "processed"
 V1_FEATURES = [
     "temp_7d_mean", "humidity", "rainfall_7d", "wind_speed", "ndvi",
     "day_of_year", "month",
-    "crop_mustard", "crop_wheat", "crop_sunflower", "crop_rice", "crop_cotton",
+    "crop_mustard", "crop_sunflower", "crop_cotton",
     "bee_richness", "bee_count", "pollen_tree", "pollen_grass", "pollen_weed",
 ]
 
-CROPS = ["sunflower", "mustard", "wheat", "rice", "cotton"]
+CROPS = ["sunflower", "mustard", "cotton"]
 
 # Seasonal pollen table (copied from feature_engineering.py)
 SEASONAL_POLLEN = {
@@ -174,7 +174,7 @@ def build_rows() -> pd.DataFrame:
 
             sowing_this_year = date(year, sowing.month, sowing.day)
 
-            season_end_month = 12 if crop in ("mustard", "wheat") else 10
+            season_end_month = 12 if crop == "mustard" else 10
             season_end = date(year if season_end_month >= sowing.month else year + 1,
                               season_end_month, 31)
 
@@ -295,3 +295,5 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+

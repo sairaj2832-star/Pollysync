@@ -110,10 +110,15 @@ export default function HomePage() {
                 <span className="material-symbols-outlined">arrow_forward</span>
               </Link>
             )}
-            <button className="px-3xl py-md border-2 border-outline/30 text-on-surface font-label-md text-lg rounded-xl hover:bg-surface-container-high transition-all flex items-center gap-2">
+            <a
+              href="https://youtu.be/Ozf2ERxudPU?si=MjpSfMYQyzzSXG6v"
+              target="_blank"
+              rel="noreferrer"
+              className="px-3xl py-md border-2 border-outline/30 text-on-surface font-label-md text-lg rounded-xl hover:bg-surface-container-high transition-all flex items-center gap-2"
+            >
               <span className="material-symbols-outlined">play_circle</span>
               Watch Demo
-            </button>
+            </a>
           </div>
         </div>
 

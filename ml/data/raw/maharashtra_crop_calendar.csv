@@ -1,51 +1,31 @@
-crop,district,season,sowing_start_month,sowing_start_day,sowing_end_month,sowing_end_day,sowing_start_date,sowing_end_date,representative_sowing_date,flowering_days_min,flowering_days_max,harvest_start,harvest_end,notes,data_source,confidence
-sunflower,nashik,Kharif,4,24,7,24,2024-04-24,2024-07-24,2024-06-08,55,75,09-01,10-31,Kharif sunflower in rainfed areas; Rabi in irrigated (Oct-Nov),fallback_literature,medium
-sunflower,pune,Kharif,5,1,7,31,2024-05-01,2024-07-31,2024-06-15,55,75,09-01,10-31,Kharif sunflower in rainfed areas; Rabi in irrigated (Oct-Nov),fallback_literature,medium
-sunflower,solapur,Kharif,5,8,8,7,2024-05-08,2024-08-07,2024-06-22,55,75,09-01,10-31,Kharif sunflower in rainfed areas; Rabi in irrigated (Oct-Nov),fallback_literature,medium
-sunflower,aurangabad,Kharif,5,1,7,31,2024-05-01,2024-07-31,2024-06-15,55,75,09-01,10-31,Kharif sunflower in rainfed areas; Rabi in irrigated (Oct-Nov),fallback_literature,medium
-sunflower,nagpur,Kharif,4,26,7,26,2024-04-26,2024-07-26,2024-06-10,55,75,09-01,10-31,Kharif sunflower in rainfed areas; Rabi in irrigated (Oct-Nov),fallback_literature,medium
-sunflower,amravati,Kharif,4,26,7,26,2024-04-26,2024-07-26,2024-06-10,55,75,09-01,10-31,Kharif sunflower in rainfed areas; Rabi in irrigated (Oct-Nov),fallback_literature,medium
-sunflower,kolhapur,Kharif,4,21,7,21,2024-04-21,2024-07-21,2024-06-05,55,75,09-01,10-31,Kharif sunflower in rainfed areas; Rabi in irrigated (Oct-Nov),fallback_literature,medium
-sunflower,satara,Kharif,4,26,7,26,2024-04-26,2024-07-26,2024-06-10,55,75,09-01,10-31,Kharif sunflower in rainfed areas; Rabi in irrigated (Oct-Nov),fallback_literature,medium
-sunflower,jalgaon,Kharif,5,6,8,5,2024-05-06,2024-08-05,2024-06-20,55,75,09-01,10-31,Kharif sunflower in rainfed areas; Rabi in irrigated (Oct-Nov),fallback_literature,medium
-sunflower,latur,Kharif,5,6,8,5,2024-05-06,2024-08-05,2024-06-20,55,75,09-01,10-31,Kharif sunflower in rainfed areas; Rabi in irrigated (Oct-Nov),fallback_literature,medium
-mustard,nashik,Rabi,10,1,11,30,2024-10-01,2024-11-30,2024-10-31,40,50,02-01,03-15,Limited area in Maharashtra; more common in Vidarbha,fallback_literature,medium
-mustard,pune,Rabi,10,6,12,5,2024-10-06,2024-12-05,2024-11-05,40,50,02-01,03-15,Limited area in Maharashtra; more common in Vidarbha,fallback_literature,medium
-mustard,solapur,Rabi,10,11,12,10,2024-10-11,2024-12-10,2024-11-10,40,50,02-01,03-15,Limited area in Maharashtra; more common in Vidarbha,fallback_literature,medium
-mustard,aurangabad,Rabi,10,6,12,5,2024-10-06,2024-12-05,2024-11-05,40,50,02-01,03-15,Limited area in Maharashtra; more common in Vidarbha,fallback_literature,medium
-mustard,nagpur,Rabi,9,26,11,25,2024-09-26,2024-11-25,2024-10-26,40,50,02-01,03-15,Limited area in Maharashtra; more common in Vidarbha,fallback_literature,medium
-mustard,amravati,Rabi,9,26,11,25,2024-09-26,2024-11-25,2024-10-26,40,50,02-01,03-15,Limited area in Maharashtra; more common in Vidarbha,fallback_literature,medium
-mustard,kolhapur,Rabi,10,1,11,30,2024-10-01,2024-11-30,2024-10-31,40,50,02-01,03-15,Limited area in Maharashtra; more common in Vidarbha,fallback_literature,medium
-mustard,satara,Rabi,10,1,11,30,2024-10-01,2024-11-30,2024-10-31,40,50,02-01,03-15,Limited area in Maharashtra; more common in Vidarbha,fallback_literature,medium
-mustard,jalgaon,Rabi,10,6,12,5,2024-10-06,2024-12-05,2024-11-05,40,50,02-01,03-15,Limited area in Maharashtra; more common in Vidarbha,fallback_literature,medium
-mustard,latur,Rabi,10,8,12,7,2024-10-08,2024-12-07,2024-11-07,40,50,02-01,03-15,Limited area in Maharashtra; more common in Vidarbha,fallback_literature,medium
-wheat,nashik,Rabi,10,20,12,20,2024-10-20,2024-12-20,2024-11-19,60,90,03-01,04-30,Timing varies: timely (Oct-Nov) vs late (Dec) sowing,fallback_literature,medium
-wheat,pune,Rabi,10,15,12,15,2024-10-15,2024-12-15,2024-11-14,60,90,03-01,04-30,Timing varies: timely (Oct-Nov) vs late (Dec) sowing,fallback_literature,medium
-wheat,solapur,Rabi,10,22,12,22,2024-10-22,2024-12-22,2024-11-21,60,90,03-01,04-30,Timing varies: timely (Oct-Nov) vs late (Dec) sowing,fallback_literature,medium
-wheat,aurangabad,Rabi,10,15,12,15,2024-10-15,2024-12-15,2024-11-14,60,90,03-01,04-30,Timing varies: timely (Oct-Nov) vs late (Dec) sowing,fallback_literature,medium
-wheat,nagpur,Rabi,10,8,12,8,2024-10-08,2024-12-08,2024-11-07,60,90,03-01,04-30,Timing varies: timely (Oct-Nov) vs late (Dec) sowing,fallback_literature,medium
-wheat,amravati,Rabi,10,10,12,10,2024-10-10,2024-12-10,2024-11-09,60,90,03-01,04-30,Timing varies: timely (Oct-Nov) vs late (Dec) sowing,fallback_literature,medium
-wheat,kolhapur,Rabi,10,20,12,20,2024-10-20,2024-12-20,2024-11-19,60,90,03-01,04-30,Timing varies: timely (Oct-Nov) vs late (Dec) sowing,fallback_literature,medium
-wheat,satara,Rabi,10,15,12,15,2024-10-15,2024-12-15,2024-11-14,60,90,03-01,04-30,Timing varies: timely (Oct-Nov) vs late (Dec) sowing,fallback_literature,medium
-wheat,jalgaon,Rabi,10,20,12,20,2024-10-20,2024-12-20,2024-11-19,60,90,03-01,04-30,Timing varies: timely (Oct-Nov) vs late (Dec) sowing,fallback_literature,medium
-wheat,latur,Rabi,10,22,12,22,2024-10-22,2024-12-22,2024-11-21,60,90,03-01,04-30,Timing varies: timely (Oct-Nov) vs late (Dec) sowing,fallback_literature,medium
-rice,nashik,Kharif,5,27,7,26,2024-05-27,2024-07-26,2024-06-26,60,90,10-01,12-15,Kharif rice in Konkan and eastern Maharashtra,fallback_literature,medium
-rice,pune,Kharif,6,1,7,31,2024-06-01,2024-07-31,2024-07-01,60,90,10-01,12-15,Kharif rice in Konkan and eastern Maharashtra,fallback_literature,medium
-rice,solapur,Kharif,6,11,8,10,2024-06-11,2024-08-10,2024-07-11,60,90,10-01,12-15,Kharif rice in Konkan and eastern Maharashtra,fallback_literature,medium
-rice,aurangabad,Kharif,6,6,8,5,2024-06-06,2024-08-05,2024-07-06,60,90,10-01,12-15,Kharif rice in Konkan and eastern Maharashtra,fallback_literature,medium
-rice,nagpur,Kharif,5,27,7,26,2024-05-27,2024-07-26,2024-06-26,60,90,10-01,12-15,Kharif rice in Konkan and eastern Maharashtra,fallback_literature,medium
-rice,amravati,Kharif,5,27,7,26,2024-05-27,2024-07-26,2024-06-26,60,90,10-01,12-15,Kharif rice in Konkan and eastern Maharashtra,fallback_literature,medium
-rice,kolhapur,Kharif,5,22,7,21,2024-05-22,2024-07-21,2024-06-21,60,90,10-01,12-15,Kharif rice in Konkan and eastern Maharashtra,fallback_literature,medium
-rice,satara,Kharif,5,27,7,26,2024-05-27,2024-07-26,2024-06-26,60,90,10-01,12-15,Kharif rice in Konkan and eastern Maharashtra,fallback_literature,medium
-rice,jalgaon,Kharif,6,8,8,7,2024-06-08,2024-08-07,2024-07-08,60,90,10-01,12-15,Kharif rice in Konkan and eastern Maharashtra,fallback_literature,medium
-rice,latur,Kharif,6,11,8,10,2024-06-11,2024-08-10,2024-07-11,60,90,10-01,12-15,Kharif rice in Konkan and eastern Maharashtra,fallback_literature,medium
-cotton,nashik,Kharif,5,5,7,5,2024-05-05,2024-07-05,2024-06-04,60,80,11-01,02-28,"Hybrid cotton: sow after last frost, peak flowering ~70 DAS",fallback_literature,medium
-cotton,pune,Kharif,5,15,7,15,2024-05-15,2024-07-15,2024-06-14,60,80,11-01,02-28,"Hybrid cotton: sow after last frost, peak flowering ~70 DAS",fallback_literature,medium
-cotton,solapur,Kharif,5,20,7,20,2024-05-20,2024-07-20,2024-06-19,60,80,11-01,02-28,"Hybrid cotton: sow after last frost, peak flowering ~70 DAS",fallback_literature,medium
-cotton,aurangabad,Kharif,5,15,7,15,2024-05-15,2024-07-15,2024-06-14,60,80,11-01,02-28,"Hybrid cotton: sow after last frost, peak flowering ~70 DAS",fallback_literature,medium
-cotton,nagpur,Kharif,5,10,7,10,2024-05-10,2024-07-10,2024-06-09,60,80,11-01,02-28,"Hybrid cotton: sow after last frost, peak flowering ~70 DAS",fallback_literature,medium
-cotton,amravati,Kharif,5,10,7,10,2024-05-10,2024-07-10,2024-06-09,60,80,11-01,02-28,"Hybrid cotton: sow after last frost, peak flowering ~70 DAS",fallback_literature,medium
-cotton,kolhapur,Kharif,5,5,7,5,2024-05-05,2024-07-05,2024-06-04,60,80,11-01,02-28,"Hybrid cotton: sow after last frost, peak flowering ~70 DAS",fallback_literature,medium
-cotton,satara,Kharif,5,10,7,10,2024-05-10,2024-07-10,2024-06-09,60,80,11-01,02-28,"Hybrid cotton: sow after last frost, peak flowering ~70 DAS",fallback_literature,medium
-cotton,jalgaon,Kharif,5,20,7,20,2024-05-20,2024-07-20,2024-06-19,60,80,11-01,02-28,"Hybrid cotton: sow after last frost, peak flowering ~70 DAS",fallback_literature,medium
-cotton,latur,Kharif,5,20,7,20,2024-05-20,2024-07-20,2024-06-19,60,80,11-01,02-28,"Hybrid cotton: sow after last frost, peak flowering ~70 DAS",fallback_literature,medium
+"crop","district","season","sowing_start_month","sowing_start_day","sowing_end_month","sowing_end_day","sowing_start_date","sowing_end_date","representative_sowing_date","flowering_days_min","flowering_days_max","harvest_start","harvest_end","notes","data_source","confidence"
+"sunflower","nashik","Kharif","4","24","7","24","2024-04-24","2024-07-24","2024-06-08","55","75","09-01","10-31","Kharif sunflower in rainfed areas; Rabi in irrigated (Oct-Nov)","fallback_literature","medium"
+"sunflower","pune","Kharif","5","1","7","31","2024-05-01","2024-07-31","2024-06-15","55","75","09-01","10-31","Kharif sunflower in rainfed areas; Rabi in irrigated (Oct-Nov)","fallback_literature","medium"
+"sunflower","solapur","Kharif","5","8","8","7","2024-05-08","2024-08-07","2024-06-22","55","75","09-01","10-31","Kharif sunflower in rainfed areas; Rabi in irrigated (Oct-Nov)","fallback_literature","medium"
+"sunflower","aurangabad","Kharif","5","1","7","31","2024-05-01","2024-07-31","2024-06-15","55","75","09-01","10-31","Kharif sunflower in rainfed areas; Rabi in irrigated (Oct-Nov)","fallback_literature","medium"
+"sunflower","nagpur","Kharif","4","26","7","26","2024-04-26","2024-07-26","2024-06-10","55","75","09-01","10-31","Kharif sunflower in rainfed areas; Rabi in irrigated (Oct-Nov)","fallback_literature","medium"
+"sunflower","amravati","Kharif","4","26","7","26","2024-04-26","2024-07-26","2024-06-10","55","75","09-01","10-31","Kharif sunflower in rainfed areas; Rabi in irrigated (Oct-Nov)","fallback_literature","medium"
+"sunflower","kolhapur","Kharif","4","21","7","21","2024-04-21","2024-07-21","2024-06-05","55","75","09-01","10-31","Kharif sunflower in rainfed areas; Rabi in irrigated (Oct-Nov)","fallback_literature","medium"
+"sunflower","satara","Kharif","4","26","7","26","2024-04-26","2024-07-26","2024-06-10","55","75","09-01","10-31","Kharif sunflower in rainfed areas; Rabi in irrigated (Oct-Nov)","fallback_literature","medium"
+"sunflower","jalgaon","Kharif","5","6","8","5","2024-05-06","2024-08-05","2024-06-20","55","75","09-01","10-31","Kharif sunflower in rainfed areas; Rabi in irrigated (Oct-Nov)","fallback_literature","medium"
+"sunflower","latur","Kharif","5","6","8","5","2024-05-06","2024-08-05","2024-06-20","55","75","09-01","10-31","Kharif sunflower in rainfed areas; Rabi in irrigated (Oct-Nov)","fallback_literature","medium"
+"mustard","nashik","Rabi","10","1","11","30","2024-10-01","2024-11-30","2024-10-31","40","50","02-01","03-15","Limited area in Maharashtra; more common in Vidarbha","fallback_literature","medium"
+"mustard","pune","Rabi","10","6","12","5","2024-10-06","2024-12-05","2024-11-05","40","50","02-01","03-15","Limited area in Maharashtra; more common in Vidarbha","fallback_literature","medium"
+"mustard","solapur","Rabi","10","11","12","10","2024-10-11","2024-12-10","2024-11-10","40","50","02-01","03-15","Limited area in Maharashtra; more common in Vidarbha","fallback_literature","medium"
+"mustard","aurangabad","Rabi","10","6","12","5","2024-10-06","2024-12-05","2024-11-05","40","50","02-01","03-15","Limited area in Maharashtra; more common in Vidarbha","fallback_literature","medium"
+"mustard","nagpur","Rabi","9","26","11","25","2024-09-26","2024-11-25","2024-10-26","40","50","02-01","03-15","Limited area in Maharashtra; more common in Vidarbha","fallback_literature","medium"
+"mustard","amravati","Rabi","9","26","11","25","2024-09-26","2024-11-25","2024-10-26","40","50","02-01","03-15","Limited area in Maharashtra; more common in Vidarbha","fallback_literature","medium"
+"mustard","kolhapur","Rabi","10","1","11","30","2024-10-01","2024-11-30","2024-10-31","40","50","02-01","03-15","Limited area in Maharashtra; more common in Vidarbha","fallback_literature","medium"
+"mustard","satara","Rabi","10","1","11","30","2024-10-01","2024-11-30","2024-10-31","40","50","02-01","03-15","Limited area in Maharashtra; more common in Vidarbha","fallback_literature","medium"
+"mustard","jalgaon","Rabi","10","6","12","5","2024-10-06","2024-12-05","2024-11-05","40","50","02-01","03-15","Limited area in Maharashtra; more common in Vidarbha","fallback_literature","medium"
+"mustard","latur","Rabi","10","8","12","7","2024-10-08","2024-12-07","2024-11-07","40","50","02-01","03-15","Limited area in Maharashtra; more common in Vidarbha","fallback_literature","medium"
+"cotton","nashik","Kharif","5","5","7","5","2024-05-05","2024-07-05","2024-06-04","60","80","11-01","02-28","Hybrid cotton: sow after last frost, peak flowering ~70 DAS","fallback_literature","medium"
+"cotton","pune","Kharif","5","15","7","15","2024-05-15","2024-07-15","2024-06-14","60","80","11-01","02-28","Hybrid cotton: sow after last frost, peak flowering ~70 DAS","fallback_literature","medium"
+"cotton","solapur","Kharif","5","20","7","20","2024-05-20","2024-07-20","2024-06-19","60","80","11-01","02-28","Hybrid cotton: sow after last frost, peak flowering ~70 DAS","fallback_literature","medium"
+"cotton","aurangabad","Kharif","5","15","7","15","2024-05-15","2024-07-15","2024-06-14","60","80","11-01","02-28","Hybrid cotton: sow after last frost, peak flowering ~70 DAS","fallback_literature","medium"
+"cotton","nagpur","Kharif","5","10","7","10","2024-05-10","2024-07-10","2024-06-09","60","80","11-01","02-28","Hybrid cotton: sow after last frost, peak flowering ~70 DAS","fallback_literature","medium"
+"cotton","amravati","Kharif","5","10","7","10","2024-05-10","2024-07-10","2024-06-09","60","80","11-01","02-28","Hybrid cotton: sow after last frost, peak flowering ~70 DAS","fallback_literature","medium"
+"cotton","kolhapur","Kharif","5","5","7","5","2024-05-05","2024-07-05","2024-06-04","60","80","11-01","02-28","Hybrid cotton: sow after last frost, peak flowering ~70 DAS","fallback_literature","medium"
+"cotton","satara","Kharif","5","10","7","10","2024-05-10","2024-07-10","2024-06-09","60","80","11-01","02-28","Hybrid cotton: sow after last frost, peak flowering ~70 DAS","fallback_literature","medium"
+"cotton","jalgaon","Kharif","5","20","7","20","2024-05-20","2024-07-20","2024-06-19","60","80","11-01","02-28","Hybrid cotton: sow after last frost, peak flowering ~70 DAS","fallback_literature","medium"
+"cotton","latur","Kharif","5","20","7","20","2024-05-20","2024-07-20","2024-06-19","60","80","11-01","02-28","Hybrid cotton: sow after last frost, peak flowering ~70 DAS","fallback_literature","medium"

@@ -62,7 +62,7 @@ def _is_in_maharashtra(lat: float, lon: float) -> bool:
 
 def _predict_flowering_baseline(features: dict) -> tuple[int, float]:
     base = {
-        "mustard": 15, "wheat": 45, "sunflower": 60, "rice": 90, "cotton": 120,
+        "mustard": 15, "sunflower": 60, "cotton": 120,
     }
     crop = "mustard"
     for key in base:
@@ -321,3 +321,4 @@ async def run_prediction(farm: Farm, db: Session, region: str = "auto") -> Predi
     db.commit()
     db.refresh(prediction)
     return prediction
+
