@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { useToast } from "../context/ToastContext";
 import { createFarm, createPrediction, generateRecommendation, getApiErrorMessage } from "../lib/api";
+import InteractiveGoogleMap from "../components/InteractiveGoogleMap";
 
 const CROPS = [
   { value: "Mustard", icon: "eco", desc: "Brassica juncea. High sensitivity to temperature fluctuations during bloom.", bg: "bg-secondary-container/20", color: "text-secondary-container" },
@@ -52,6 +53,7 @@ export default function PredictPage() {
   const [step, setStep] = useState(1);
   const [crop, setCrop] = useState("");
   const [location, setLocation] = useState("");
+  const [customCoords, setCustomCoords] = useState(null);
   const [farmName, setFarmName] = useState("");
   const [locationSearch, setLocationSearch] = useState("");
   const [loading, setLoading] = useState(false);
@@ -59,6 +61,65 @@ export default function PredictPage() {
   const [error, setError] = useState("");
 
   const msgInterval = useRef(null);
+
+  function getClosestLocation(lat, lng) {
+    let closest = LOCATIONS[0];
+    let minDist = Infinity;
+    for (const loc of LOCATIONS) {
+      const dist = Math.hypot(loc.lat - lat, loc.lng - lng);
+      if (dist < minDist) {
+        minDist = dist;
+        closest = loc;
+      }
+    }
+    return closest;
+  }
+
+  const handleMapLocationSelect = (coords) => {
+    setCustomCoords(coords);
+    const closest = getClosestLocation(coords.lat, coords.lng);
+    setLocation(closest.name);
+    setFarmName(`${closest.name} ${crop} Farm`);
+  };
+
+  const handleDetectLocation = () => {
+    if (!navigator.geolocation) {
+      toast.error("Geolocation is not supported by your browser");
+      return;
+    }
+
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        const coords = {
+          lat: position.coords.latitude,
+          lng: position.coords.longitude,
+        };
+        handleMapLocationSelect(coords);
+        toast.success("Location detected successfully!");
+      },
+      (err) => {
+        console.error("Geolocation error:", err);
+        let msg = "Failed to detect location.";
+        if (err.code === 1) {
+          msg = "Location access denied. Please click the site settings icon (lock/sliders) in your browser address bar next to the URL, change Location to 'Allow', and try again.";
+        } else if (err.code === 2) {
+          msg = "Position unavailable. Please ensure your device location services are enabled.";
+        } else if (err.code === 3) {
+          msg = "Location request timed out. Please try again.";
+        } else {
+          msg = `Error: ${err.message}`;
+        }
+        toast.error(msg);
+      },
+      { enableHighAccuracy: true, timeout: 5000, maximumAge: 0 }
+    );
+  };
+
+  useEffect(() => {
+    if (step === 2 && !location) {
+      handleDetectLocation();
+    }
+  }, [step, location]);
 
   useEffect(() => {
     if (loading) {
@@ -96,8 +157,8 @@ export default function PredictPage() {
         name: farmName || `${crop} Farm`,
         crop_type: crop,
         location: selected.name,
-        location_lat: selected.lat,
-        location_lng: selected.lng,
+        location_lat: customCoords ? customCoords.lat : selected.lat,
+        location_lng: customCoords ? customCoords.lng : selected.lng,
       });
 
       setLoadMsgIndex(2);
@@ -284,18 +345,29 @@ export default function PredictPage() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-lg">
             <div className="space-y-lg">
-              <div>
-                <label className="block font-label-md text-label-md text-on-surface-variant mb-sm">Search District</label>
-                <div className="relative">
-                  <span className="absolute left-md top-1/2 -translate-y-1/2 material-symbols-outlined text-on-surface-variant text-[18px]">search</span>
-                  <input
-                    type="text"
-                    placeholder="Search districts..."
-                    className="w-full pl-xl pr-md py-sm rounded-lg border border-outline-variant bg-surface text-body-md text-on-surface outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all"
-                    value={locationSearch}
-                    onChange={(e) => setLocationSearch(e.target.value)}
-                  />
+              <div className="space-y-md">
+                <div>
+                  <label className="block font-label-md text-label-md text-on-surface-variant mb-sm">Search District</label>
+                  <div className="relative">
+                    <span className="absolute left-md top-1/2 -translate-x-1/2 material-symbols-outlined text-on-surface-variant text-[18px]">search</span>
+                    <input
+                      type="text"
+                      placeholder="Search districts..."
+                      className="w-full pl-xl pr-md py-sm rounded-lg border border-outline-variant bg-surface text-body-md text-on-surface outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all"
+                      value={locationSearch}
+                      onChange={(e) => setLocationSearch(e.target.value)}
+                    />
+                  </div>
                 </div>
+
+                <button
+                  type="button"
+                  onClick={handleDetectLocation}
+                  className="w-full flex items-center justify-center gap-sm bg-surface-container-high hover:bg-surface-container-highest text-primary border border-outline-variant rounded-lg py-sm px-md transition-colors text-label-md font-label-md font-semibold active:scale-[0.98]"
+                >
+                  <span className="material-symbols-outlined text-[20px]">my_location</span>
+                  Detect My Location (GPS)
+                </button>
               </div>
 
               <div className="max-h-60 overflow-y-auto space-y-xs rounded-xl border border-outline-variant bg-surface p-xs">
@@ -308,7 +380,11 @@ export default function PredictPage() {
                       <button
                         key={loc.name}
                         type="button"
-                        onClick={() => { setLocation(loc.name); setFarmName(`${loc.name} ${crop} Farm`); }}
+                        onClick={() => {
+                          setLocation(loc.name);
+                          setCustomCoords({ lat: loc.lat, lng: loc.lng });
+                          setFarmName(`${loc.name} ${crop} Farm`);
+                        }}
                         className={`w-full text-left px-md py-sm rounded-lg flex items-center gap-md transition-colors ${
                           selected
                             ? "bg-primary-container/10 text-primary font-bold"
@@ -334,6 +410,8 @@ export default function PredictPage() {
               {location && (() => {
                 const sel = LOCATIONS.find((l) => l.name === location);
                 if (!sel) return null;
+                const displayLat = customCoords ? customCoords.lat : sel.lat;
+                const displayLng = customCoords ? customCoords.lng : sel.lng;
                 return (
                   <div className="bg-surface border border-outline-variant rounded-xl p-md space-y-sm">
                     <div className="flex items-center gap-sm text-primary">
@@ -343,25 +421,31 @@ export default function PredictPage() {
                     <p className="font-headline-sm text-headline-sm text-on-surface">{sel.district} District</p>
                     <p className="text-body-sm text-on-surface-variant">{sel.state}, India</p>
                     <div className="border-t border-outline-variant/50 pt-sm mt-sm flex gap-lg text-body-sm">
-                      <span className="font-mono text-on-surface-variant">{sel.lat.toFixed(4)} N</span>
-                      <span className="font-mono text-on-surface-variant">{sel.lng.toFixed(4)} E</span>
+                      <span className="font-mono text-on-surface-variant">{displayLat.toFixed(4)} N</span>
+                      <span className="font-mono text-on-surface-variant">{displayLng.toFixed(4)} E</span>
                     </div>
                   </div>
                 );
               })()}
             </div>
 
-            <div className="relative rounded-xl overflow-hidden border border-outline-variant bg-surface-container-higher min-h-[300px] flex flex-col items-center justify-center">
-              <div className="flex flex-col items-center text-on-surface-variant/60">
-                <span className="material-symbols-outlined text-5xl">map</span>
-                <span className="font-body-sm text-body-sm mt-sm">Map view</span>
-                <p className="font-body-xs text-body-xs text-on-surface-variant/40 mt-xs">Interactive map coming soon</p>
-              </div>
+            <div className="relative w-full h-[400px] rounded-xl overflow-hidden border border-outline-variant bg-surface-container-higher flex flex-col">
+              {(() => {
+                const sel = LOCATIONS.find((l) => l.name === location) || LOCATIONS[0];
+                const mapCenter = customCoords || { lat: sel.lat, lng: sel.lng };
+                return (
+                  <InteractiveGoogleMap
+                    center={mapCenter}
+                    zoom={10}
+                    onLocationSelect={handleMapLocationSelect}
+                  />
+                );
+              })()}
               {location && (() => {
                 const sel = LOCATIONS.find((l) => l.name === location);
                 if (!sel) return null;
                 return (
-                  <div className="absolute bottom-md left-1/2 -translate-x-1/2 bg-surface/90 backdrop-blur-sm border border-outline-variant rounded-full px-md py-sm flex items-center gap-sm shadow-sm">
+                  <div className="absolute bottom-md left-1/2 -translate-x-1/2 bg-surface/90 backdrop-blur-sm border border-outline-variant rounded-full px-md py-xs flex items-center gap-sm shadow-md z-[1000] pointer-events-none">
                     <span className="material-symbols-outlined text-primary text-[18px]">my_location</span>
                     <span className="font-label-sm text-label-sm text-on-surface">{sel.district}, {sel.state}</span>
                   </div>

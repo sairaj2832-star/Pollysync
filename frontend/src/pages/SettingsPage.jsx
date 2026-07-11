@@ -1,5 +1,7 @@
 import { useState, useEffect } from "react";
 import { useToast } from "../context/ToastContext";
+import InteractiveGoogleMap from "../components/InteractiveGoogleMap";
+import { LOCATION_LIST } from "../components/ParameterForm";
 import {
   updateFarm,
   getNotificationPreferences,
@@ -59,6 +61,8 @@ export default function SettingsPage() {
   const [form, setForm] = useState({
     farmName: "Nashik Mustard Farm",
     location: "Nashik, Maharashtra",
+    lat: 19.9975,
+    lng: 73.7898,
     acreage: "125.5",
     soilType: "alluvial",
     elevation: "600m ASL",
@@ -68,6 +72,60 @@ export default function SettingsPage() {
     plantingDate: "2023-11-15",
     harvestDate: "2024-03-20",
   });
+
+  const handleMapLocationSelect = (coords) => {
+    update("lat", coords.lat);
+    update("lng", coords.lng);
+  };
+
+  function getClosestLocation(lat, lng) {
+    let closest = LOCATION_LIST[0];
+    let minDist = Infinity;
+    for (const loc of LOCATION_LIST) {
+      const dist = Math.hypot(loc.lat - lat, loc.lng - lng);
+      if (dist < minDist) {
+        minDist = dist;
+        closest = loc;
+      }
+    }
+    return closest;
+  }
+
+  const handleDetectLocation = () => {
+    if (!navigator.geolocation) {
+      toast.error("Geolocation is not supported by your browser");
+      return;
+    }
+
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        const coords = {
+          lat: position.coords.latitude,
+          lng: position.coords.longitude,
+        };
+        update("lat", coords.lat);
+        update("lng", coords.lng);
+        const closest = getClosestLocation(coords.lat, coords.lng);
+        update("location", `${closest.district}, ${closest.state}`);
+        toast.success("Location updated successfully!");
+      },
+      (err) => {
+        console.error("Geolocation error:", err);
+        let msg = "Failed to detect location.";
+        if (err.code === 1) {
+          msg = "Location access denied. Please click the site settings icon (lock/sliders) in your browser address bar next to the URL, change Location to 'Allow', and try again.";
+        } else if (err.code === 2) {
+          msg = "Position unavailable. Please ensure your device location services are enabled.";
+        } else if (err.code === 3) {
+          msg = "Location request timed out. Please try again.";
+        } else {
+          msg = `Error: ${err.message}`;
+        }
+        toast.error(msg);
+      },
+      { enableHighAccuracy: true, timeout: 5000, maximumAge: 0 }
+    );
+  };
 
   const [notifications, setNotifications] = useState({
     pushCritical: true,
@@ -80,6 +138,10 @@ export default function SettingsPage() {
   });
 
   const [teamMembers, setTeamMembers] = useState([]);
+
+  useEffect(() => {
+    handleDetectLocation();
+  }, []);
 
   useEffect(() => {
     async function fetchPrefs() {
@@ -189,6 +251,8 @@ export default function SettingsPage() {
           planting_date: form.plantingDate || undefined,
           harvest_date: form.harvestDate || undefined,
           location_name: form.location,
+          location_lat: form.lat,
+          location_lng: form.lng,
           area_acres: form.acreage ? parseFloat(form.acreage) : undefined,
           soil_type: form.soilType,
         });
@@ -206,6 +270,8 @@ export default function SettingsPage() {
     setForm({
       farmName: "Nashik Mustard Farm",
       location: "Nashik, Maharashtra",
+      lat: 19.9975,
+      lng: 73.7898,
       acreage: "125.5",
       soilType: "alluvial",
       elevation: "600m ASL",
@@ -242,11 +308,10 @@ export default function SettingsPage() {
             <button
               key={t.key}
               onClick={() => setTab(t.key)}
-              className={`px-sm py-md font-label-md whitespace-nowrap flex items-center gap-sm border-b-2 transition-colors ${
-                active
+              className={`px-sm py-md font-label-md whitespace-nowrap flex items-center gap-sm border-b-2 transition-colors ${active
                   ? "text-primary border-primary"
                   : "text-on-surface-variant hover:text-on-surface border-transparent"
-              }`}
+                }`}
             >
               <span className="material-symbols-outlined text-[20px]">{t.icon}</span>
               {t.label}
@@ -274,28 +339,42 @@ export default function SettingsPage() {
                       onChange={(e) => update("farmName", e.target.value)}
                     />
                   </div>
-                  <div className="col-span-2 md:col-span-1">
+                  <div className="col-span-2 md:col-span-1 space-y-sm">
                     <label className="block font-label-md text-on-surface-variant mb-sm">Location/District</label>
-                    <input
-                      className="w-full bg-surface-container-lowest border border-outline-variant rounded-lg px-md py-sm font-body-md focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all"
-                      type="text"
-                      value={form.location}
-                      onChange={(e) => update("location", e.target.value)}
-                    />
+                    <div className="flex gap-sm">
+                      <input
+                        className="flex-1 bg-surface-container-lowest border border-outline-variant rounded-lg px-md py-sm font-body-md focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all"
+                        type="text"
+                        value={form.location}
+                        onChange={(e) => update("location", e.target.value)}
+                      />
+                      <button
+                        type="button"
+                        onClick={handleDetectLocation}
+                        className="flex items-center gap-xs bg-surface-container-high hover:bg-surface-container-highest text-primary border border-outline-variant rounded-lg px-md py-sm transition-colors text-label-sm font-label-sm font-bold active:scale-[0.98]"
+                        title="Detect GPS from browser"
+                      >
+                        <span className="material-symbols-outlined text-[20px]">my_location</span>
+                        GPS
+                      </button>
+                    </div>
                   </div>
                 </div>
-                <div className="relative w-full h-48 rounded-xl overflow-hidden border border-outline-variant mb-md bg-surface-container-highest flex items-center justify-center">
-                  <div className="flex flex-col items-center text-on-surface-variant/60">
-                    <span className="material-symbols-outlined text-4xl">map</span>
-                    <span className="font-body-sm text-body-sm mt-xs">Map view</span>
-                  </div>
+                <div className="relative w-full h-48 rounded-xl overflow-hidden border border-outline-variant mb-md bg-surface-container-highest flex">
+                  <InteractiveGoogleMap
+                    center={{ lat: form.lat || 19.9975, lng: form.lng || 73.7898 }}
+                    zoom={10}
+                    onLocationSelect={handleMapLocationSelect}
+                  />
                 </div>
                 <div className="flex items-center justify-between p-md bg-surface-container-low rounded-lg border border-outline-variant/50">
                   <div className="flex items-center gap-sm">
                     <span className="material-symbols-outlined text-on-surface-variant text-[20px]">explore</span>
                     <span className="font-label-md text-on-surface-variant uppercase">Coordinates</span>
                   </div>
-                  <div className="font-body-sm font-mono text-on-surface">20.0050° N, 73.7900° E</div>
+                  <div className="font-body-sm font-mono text-on-surface">
+                    {form.lat ? `${form.lat.toFixed(4)}° N` : "19.9975° N"}, {form.lng ? `${form.lng.toFixed(4)}° E` : "73.7898° E"}
+                  </div>
                 </div>
               </section>
 
@@ -457,7 +536,7 @@ export default function SettingsPage() {
                 <label className="block font-label-md text-on-surface-variant mb-sm">Irrigation Method</label>
                 <Select
                   value=""
-                  onChange={() => {}}
+                  onChange={() => { }}
                   options={[
                     { value: "drip", label: "Drip Irrigation" },
                     { value: "sprinkler", label: "Sprinkler" },
@@ -658,13 +737,12 @@ export default function SettingsPage() {
                         <p className="text-body-sm text-on-surface-variant truncate">{member.email}</p>
                       </div>
                       <div className="flex items-center gap-sm">
-                        <span className={`px-sm py-xs rounded-full font-label-sm text-label-sm ${
-                          member.role === "admin"
+                        <span className={`px-sm py-xs rounded-full font-label-sm text-label-sm ${member.role === "admin"
                             ? "bg-primary-container/10 text-primary"
                             : member.role === "editor"
-                            ? "bg-secondary/10 text-secondary"
-                            : "bg-surface-container-highest text-on-surface-variant"
-                        }`}>
+                              ? "bg-secondary/10 text-secondary"
+                              : "bg-surface-container-highest text-on-surface-variant"
+                          }`}>
                           {member.role.charAt(0).toUpperCase() + member.role.slice(1)}
                         </span>
                         <span className={`w-2 h-2 rounded-full ${member.status === "active" ? "bg-primary" : "bg-secondary"}`} />

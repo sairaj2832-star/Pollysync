@@ -64,7 +64,7 @@ export default function Layout({ children }) {
 
   return (
     <div className="text-on-surface bg-background flex h-screen overflow-hidden">
-      <aside className={`bg-surface/90 backdrop-blur-md border-r border-outline-variant h-screen w-64 fixed left-0 top-0 flex flex-col p-md z-20 transition-transform lg:translate-x-0 ${mobileOpen ? "translate-x-0" : "-translate-x-full"}`}>
+      <aside className={`bg-surface/90 backdrop-blur-md border-r border-outline-variant h-screen w-64 fixed left-0 top-0 flex flex-col overflow-hidden p-md z-20 transition-transform lg:translate-x-0 ${mobileOpen ? "translate-x-0" : "-translate-x-full"}`}>
         <div className="flex items-center gap-sm px-sm mb-lg">
           <span className="material-symbols-outlined text-primary text-3xl filled">eco</span>
           <div className="flex flex-col">
@@ -73,32 +73,25 @@ export default function Layout({ children }) {
           </div>
         </div>
 
-        <Link
-          to="/predict"
-          className="bg-primary-container text-on-primary font-label-md text-label-md py-sm px-md rounded-lg flex items-center justify-center gap-sm mb-lg hover:bg-primary transition-colors"
-          onClick={() => setMobileOpen(false)}
-        >
-          <span className="material-symbols-outlined">add</span>
-          New Analysis
-        </Link>
+        <div className="hide-scrollbar min-h-0 flex-1 overflow-y-auto pr-1">
+          <div className="flex flex-col gap-sm">
+            {NAV_ITEMS.map((item) => (
+              <NavLink key={item.path} {...item} />
+            ))}
+          </div>
 
-        <div className="flex flex-col gap-sm flex-1">
-          {NAV_ITEMS.map((item) => (
-            <NavLink key={item.path} {...item} />
-          ))}
-        </div>
-
-        <div className="flex flex-col gap-sm border-t border-outline-variant pt-md mt-auto">
-          {BOTTOM_NAV.map((item) => (
-            <NavLink key={item.path} {...item} isBottom />
-          ))}
-          <button
-            onClick={logout}
-            className="flex items-center gap-md text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high rounded-lg px-md py-sm transition-colors duration-200 w-full text-left"
-          >
-            <span className="material-symbols-outlined text-xl">logout</span>
-            <span className="font-label-md text-label-md">Logout</span>
-          </button>
+          <div className="mt-md border-t border-outline-variant pt-md">
+            {BOTTOM_NAV.map((item) => (
+              <NavLink key={item.path} {...item} isBottom />
+            ))}
+            <button
+              onClick={logout}
+              className="mt-md flex w-full items-center gap-md rounded-lg px-md py-sm text-left text-on-surface-variant transition-colors duration-200 hover:bg-surface-container-high hover:text-on-surface"
+            >
+              <span className="material-symbols-outlined text-xl">logout</span>
+              <span className="font-label-md text-label-md">Logout</span>
+            </button>
+          </div>
         </div>
 
         <button className="lg:hidden absolute top-4 right-4 p-1 rounded-lg hover:bg-surface-container" onClick={() => setMobileOpen(false)}>
