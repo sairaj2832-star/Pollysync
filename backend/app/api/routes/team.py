@@ -12,7 +12,7 @@ from app.schemas.team_member import TeamMemberCreate, TeamMemberRead, TeamMember
 router = APIRouter(prefix="/farms/{farm_id}/team", tags=["team"])
 
 
-def _owned_farm_or_404(farm_id: int, user_id: int, db: Session) -> Farm:
+def _owned_farm_or_404(farm_id: str, user_id: str, db: Session) -> Farm:
     farm = db.scalar(select(Farm).where(Farm.id == farm_id, Farm.user_id == user_id))
     if not farm:
         raise HTTPException(status_code=404, detail="Farm not found")
@@ -21,7 +21,7 @@ def _owned_farm_or_404(farm_id: int, user_id: int, db: Session) -> Farm:
 
 @router.get("", response_model=list[TeamMemberRead])
 def list_team(
-    farm_id: int,
+    farm_id: str,
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ) -> list[TeamMember]:
@@ -37,7 +37,7 @@ def list_team(
 
 @router.post("", response_model=TeamMemberRead, status_code=status.HTTP_201_CREATED)
 def invite_member(
-    farm_id: int,
+    farm_id: str,
     payload: TeamMemberCreate,
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
@@ -68,8 +68,8 @@ def invite_member(
 
 @router.patch("/{member_id}", response_model=TeamMemberRead)
 def update_member(
-    farm_id: int,
-    member_id: int,
+    farm_id: str,
+    member_id: str,
     payload: TeamMemberUpdate,
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
@@ -91,8 +91,8 @@ def update_member(
 
 @router.delete("/{member_id}", status_code=status.HTTP_204_NO_CONTENT)
 def remove_member(
-    farm_id: int,
-    member_id: int,
+    farm_id: str,
+    member_id: str,
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ) -> Response:

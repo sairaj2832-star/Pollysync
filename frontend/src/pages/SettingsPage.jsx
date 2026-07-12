@@ -4,6 +4,7 @@ import InteractiveGoogleMap from "../components/InteractiveGoogleMap";
 import { LOCATION_LIST } from "../components/ParameterForm";
 import {
   updateFarm,
+  getFarms,
   getNotificationPreferences,
   updateNotificationPreferences,
 } from "../lib/api";
@@ -44,19 +45,20 @@ export default function SettingsPage() {
   const [saving, setSaving] = useState(false);
   const [loadingPrefs, setLoadingPrefs] = useState(false);
   const [form, setForm] = useState({
-    farmName: "Nashik Mustard Farm",
-    location: "Nashik, Maharashtra",
-    lat: 19.9975,
-    lng: 73.7898,
-    acreage: "125.5",
-    soilType: "alluvial",
-    elevation: "600m ASL",
-    crop: "mustard",
-    variety: "variety1",
+    farmName: "",
+    location: "",
+    lat: null,
+    lng: null,
+    acreage: "",
+    soilType: "",
+    elevation: "",
+    crop: "",
+    variety: "",
     irrigationMethod: "",
-    plantingDate: "2023-11-15",
-    harvestDate: "2024-03-20",
+    plantingDate: "",
+    harvestDate: "",
   });
+  const [selectedFarmId, setSelectedFarmId] = useState(null);
 
   const handleMapLocationSelect = (coords) => {
     update("lat", coords.lat);
@@ -123,7 +125,33 @@ export default function SettingsPage() {
   });
 
   useEffect(() => {
-    handleDetectLocation();
+    async function loadFarm() {
+      try {
+        const farmId = localStorage.getItem("selectedFarmId");
+        const farms = await getFarms();
+        const farm = farms.find((f) => f.id === farmId) || farms[0];
+        if (farm) {
+          setSelectedFarmId(farm.id);
+          setForm({
+            farmName: farm.name || "",
+            location: farm.location_name || "",
+            lat: farm.location_lat,
+            lng: farm.location_lng,
+            acreage: farm.area_acres != null ? String(farm.area_acres) : "",
+            soilType: farm.soil_type || "",
+            elevation: "",
+            crop: farm.crop_type || "",
+            variety: farm.variety || "",
+            irrigationMethod: farm.irrigation_method || "",
+            plantingDate: farm.planting_date || "",
+            harvestDate: farm.harvest_date || "",
+          });
+        }
+      } catch {
+        // ignore
+      }
+    }
+    loadFarm();
   }, []);
 
   useEffect(() => {
@@ -173,7 +201,7 @@ export default function SettingsPage() {
           sms_alerts: notifications.smsAlerts,
         });
       } else {
-        await updateFarm(1, {
+        await updateFarm(selectedFarmId, {
           name: form.farmName,
           crop_type: form.crop,
           variety: form.variety || undefined,
@@ -198,18 +226,18 @@ export default function SettingsPage() {
 
   function handleDiscard() {
     setForm({
-      farmName: "Nashik Mustard Farm",
-      location: "Nashik, Maharashtra",
-      lat: 19.9975,
-      lng: 73.7898,
-      acreage: "125.5",
-      soilType: "alluvial",
-      elevation: "600m ASL",
-      crop: "mustard",
-      variety: "variety1",
+      farmName: "",
+      location: "",
+      lat: null,
+      lng: null,
+      acreage: "",
+      soilType: "",
+      elevation: "",
+      crop: "",
+      variety: "",
       irrigationMethod: "",
-      plantingDate: "2023-11-15",
-      harvestDate: "2024-03-20",
+      plantingDate: "",
+      harvestDate: "",
     });
     setNotifications({
       pushCritical: true,
@@ -227,7 +255,7 @@ export default function SettingsPage() {
       <div className="mb-xl">
         <h1 className="font-headline-lg text-headline-lg font-bold text-on-surface">Farm Settings</h1>
         <p className="text-on-surface-variant font-body-md mt-xs">
-          Manage parameters for <span className="font-semibold text-primary">Nashik Mustard Farm</span>
+          Manage parameters for <span className="font-semibold text-primary">{form.farmName || "Your Farm"}</span>
         </p>
       </div>
 
@@ -294,9 +322,9 @@ export default function SettingsPage() {
                   </div>
                 </div>
 
-                <div className="relative w-full h-48 rounded-xl overflow-hidden border border-outline-variant mb-md bg-surface-container-highest flex">
+                <div className="relative w-full h-64 rounded-xl overflow-hidden border border-outline-variant mb-md bg-surface-container-highest">
                   <InteractiveGoogleMap
-                    center={{ lat: form.lat || 19.9975, lng: form.lng || 73.7898 }}
+                    center={form.lat && form.lng ? { lat: form.lat, lng: form.lng } : null}
                     zoom={10}
                     onLocationSelect={handleMapLocationSelect}
                   />
@@ -309,17 +337,17 @@ export default function SettingsPage() {
                       <span className="font-label-md text-on-surface-variant uppercase">Coordinates</span>
                     </div>
                     <div className="font-body-sm font-mono text-on-surface">
-                      {form.lat ? `${form.lat.toFixed(4)}° N` : "19.9975° N"}, {form.lng ? `${form.lng.toFixed(4)}° E` : "73.7898° E"}
+                      {form.lat ? `${form.lat.toFixed(4)}° N` : "—"}, {form.lng ? `${form.lng.toFixed(4)}° E` : "—"}
                     </div>
                   </div>
                   <div className="grid grid-cols-2 gap-lg">
                     <div>
                       <p className="font-label-sm text-label-sm text-on-surface-variant">Coordinates</p>
-                      <p className="font-body-sm text-body-sm text-on-surface mt-xs">Lat: {form.lat.toFixed(4)}, Lng: {form.lng.toFixed(4)}</p>
+                      <p className="font-body-sm text-body-sm text-on-surface mt-xs">Lat: {form.lat != null ? form.lat.toFixed(4) : "—"}, Lng: {form.lng != null ? form.lng.toFixed(4) : "—"}</p>
                     </div>
                     <div>
                       <p className="font-label-sm text-label-sm text-on-surface-variant">Detected region</p>
-                      <p className="font-body-sm text-body-sm text-on-surface mt-xs">{form.location}</p>
+                      <p className="font-body-sm text-body-sm text-on-surface mt-xs">{form.location || "—"}</p>
                     </div>
                   </div>
                 </div>

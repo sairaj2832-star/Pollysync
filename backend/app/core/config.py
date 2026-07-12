@@ -30,6 +30,7 @@ class Settings:
     llm_api_key: str = os.getenv("LLM_API_KEY", "")
     llm_model: str = os.getenv("LLM_MODEL", "gemini-2.5-flash")
     supabase_url: str = os.getenv("SUPABASE_URL", "")
+    supabase_anon_key: str = os.getenv("SUPABASE_ANON_KEY", "")
     supabase_service_key: str = os.getenv("SUPABASE_SERVICE_KEY", "")
 
     @property
@@ -42,6 +43,11 @@ class Settings:
     @property
     def is_production(self) -> bool:
         return self.app_env.lower() in {"prod", "production"}
+    
+    @property
+    def is_supabase_configured(self) -> bool:
+        """Check if Supabase is properly configured."""
+        return bool(self.supabase_url and self.supabase_anon_key)
 
     def validate_security(self) -> None:
         if self.is_production and self.secret_key == "change-me-in-production":

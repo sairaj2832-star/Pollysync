@@ -1,6 +1,7 @@
 from datetime import datetime
+import uuid
 
-from sqlalchemy import Boolean, DateTime, ForeignKey, Integer, func
+from sqlalchemy import Boolean, DateTime, ForeignKey, String, func
 from sqlalchemy.orm import Mapped, mapped_column
 
 from app.database import Base
@@ -9,8 +10,8 @@ from app.database import Base
 class NotificationPreference(Base):
     __tablename__ = "notification_preferences"
 
-    id: Mapped[int] = mapped_column(primary_key=True)
-    user_id: Mapped[int] = mapped_column(ForeignKey("users.id", ondelete="CASCADE"), index=True, unique=True)
+    id: Mapped[str] = mapped_column(String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
+    user_id: Mapped[str] = mapped_column(String(36), ForeignKey("users.id", ondelete="CASCADE"), index=True, unique=True)
     push_critical: Mapped[bool] = mapped_column(Boolean, default=True)
     push_daily: Mapped[bool] = mapped_column(Boolean, default=True)
     push_system: Mapped[bool] = mapped_column(Boolean, default=False)

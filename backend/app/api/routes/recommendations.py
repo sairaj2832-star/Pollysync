@@ -17,8 +17,8 @@ router = APIRouter(prefix="/recommendations", tags=["recommendations"])
 
 
 class GenerateRequest(BaseModel):
-    farm_id: int
-    prediction_id: int
+    farm_id: str
+    prediction_id: str
 
 
 def _build_prompt(farm: Farm, prediction: Prediction) -> str:

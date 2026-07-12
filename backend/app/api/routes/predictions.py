@@ -30,7 +30,7 @@ async def create_prediction(
 
 @router.get("", response_model=list[PredictionRead])
 def list_predictions(
-    farm_id: int = Query(...),
+    farm_id: str = Query(...),
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ) -> list[Prediction]:
@@ -48,7 +48,7 @@ def list_predictions(
 
 @router.get("/latest", response_model=PredictionRead | None)
 def latest_prediction(
-    farm_id: int = Query(...),
+    farm_id: str = Query(...),
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ) -> Prediction | None:
@@ -69,7 +69,7 @@ def latest_prediction(
 
 @router.get("/dashboard/summary", response_model=DashboardSummary)
 def dashboard_summary(
-    farm_id: int = Query(...),
+    farm_id: str = Query(...),
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ) -> DashboardSummary:
@@ -77,7 +77,7 @@ def dashboard_summary(
     prediction = (
         db.scalars(
             select(Prediction)
-            .where(Prediction.farm_id == farm_id)
+            .where(Prediction.farm_id == farm.id)
             .order_by(Prediction.created_at.desc())
             .limit(1)
         )
@@ -94,7 +94,7 @@ def dashboard_summary(
     )
 
 
-def _owned_farm_or_404(farm_id: int, user_id: int, db: Session) -> Farm:
+def _owned_farm_or_404(farm_id: str, user_id: str, db: Session) -> Farm:
     farm = db.scalar(select(Farm).where(Farm.id == farm_id, Farm.user_id == user_id))
     if not farm:
         raise HTTPException(status_code=404, detail="Farm not found")
@@ -118,10 +118,11 @@ def _prediction_to_read(p: Prediction) -> PredictionRead:
         created_at=p.created_at,
         model_source=p.model_source,
         data_confidence=p.data_confidence,
+        prediction_inputs=json.loads(p.prediction_inputs) if p.prediction_inputs else {},
     )
 
 
-def _get_weather_summary(farm_id: int, db: Session) -> dict | None:
+def _get_weather_summary(farm_id: str, db: Session) -> dict | None:
     from app.models.weather_cache import WeatherCache
     wc = (
         db.query(WeatherCache)

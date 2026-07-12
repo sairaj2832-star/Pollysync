@@ -3,6 +3,7 @@ from fastapi import APIRouter
 from app.agent.router import router as agent_router
 from app.api.routes import (
     auth,
+    districts,
     farms,
     health,
     maps,
@@ -17,6 +18,7 @@ from app.api.routes import (
 api_router = APIRouter()
 api_router.include_router(health.router)
 api_router.include_router(auth.router)
+api_router.include_router(districts.router)
 api_router.include_router(farms.router)
 api_router.include_router(notifications.router)
 api_router.include_router(notification_preferences.router)

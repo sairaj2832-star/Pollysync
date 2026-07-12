@@ -95,6 +95,20 @@ export function AuthProvider({ children }) {
     }
   }
 
+  async function refreshUser() {
+    try {
+      const data = await getMe();
+      setUser(data);
+      return data;
+    } catch {
+      return null;
+    }
+  }
+
+  function setOnboarded() {
+    setUser((prev) => (prev ? { ...prev, has_onboarded: true } : prev));
+  }
+
   async function logout() {
     const refreshToken = localStorage.getItem(REFRESH_TOKEN_KEY);
     if (refreshToken) {
@@ -124,6 +138,8 @@ export function AuthProvider({ children }) {
         register,
         loginWithGoogle,
         logout,
+        refreshUser,
+        setOnboarded,
         isFirebaseConfigured,
       }}
     >

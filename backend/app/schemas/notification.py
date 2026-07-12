@@ -10,16 +10,16 @@ NotificationType = Literal["weather", "bloom", "pollinator", "alert", "info"]
 class NotificationRead(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
-    id: int
+    id: str
     type: NotificationType
     title: str
     message: str
     created_at: datetime
     read: bool
-    farm_id: int | None = None
+    farm_id: str | None = None
 
 
 class NotificationStatus(BaseModel):
     success: bool = True
-    id: int
+    id: str
     read: bool

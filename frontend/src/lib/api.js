@@ -236,6 +236,24 @@ export async function getBeeOccurrences(farm_id, radius = 10) {
   return data;
 }
 
+export async function getDistricts() {
+  if (USE_MOCK) {
+    const m = await import("./mockApi");
+    return m.mockGetDistricts();
+  }
+  const { data } = await api.get("/api/districts");
+  return data;
+}
+
+export async function getDistrict(slug) {
+  if (USE_MOCK) {
+    const m = await import("./mockApi");
+    return m.mockGetDistrict(slug);
+  }
+  const { data } = await api.get(`/api/districts/${slug}`);
+  return data;
+}
+
 export async function getNotifications() {
   if (USE_MOCK) {
     const m = await import("./mockApi");

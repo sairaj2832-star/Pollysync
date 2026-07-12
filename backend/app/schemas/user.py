@@ -35,18 +35,20 @@ class UserUpdate(BaseModel):
     role: str | None = Field(default=None, max_length=80)
     organization: str | None = Field(default=None, max_length=255)
     language: str | None = Field(default=None, max_length=10)
+    has_onboarded: bool | None = None
 
 
 class UserRead(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
-    id: int
+    id: str
     email: str
     full_name: str
     phone: str | None = None
     role: str | None = None
     organization: str | None = None
     language: str | None = "en"
+    has_onboarded: bool = False
     created_at: datetime
 
 

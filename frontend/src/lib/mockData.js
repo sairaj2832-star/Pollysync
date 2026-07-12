@@ -2,21 +2,23 @@ export const SESSION = {
   access_token: "mock_access_token_pollisync_" + Date.now(),
   refresh_token: "mock_refresh_token_" + Date.now(),
   expires_in: 1800,
-  user: { id: 1, email: "farmer@example.com", full_name: "Demo Farmer", created_at: "2026-01-01T00:00:00Z" },
+  user: { id: "mock-user-id-001", email: "farmer@example.com", full_name: "Demo Farmer", has_onboarded: false, created_at: "2026-01-01T00:00:00Z" },
 };
 
 export const MOCK_FARM = {
-  id: 1,
+  id: "mock-farm-id-001",
   name: "North Field",
   crop_type: "Mustard",
-  location_lat: 20.011,
-  location_lng: 73.79,
+  district_slug: "nashik",
+  location_lat: 19.9975,
+  location_lng: 73.7898,
+  is_default: true,
   created_at: "2026-06-01T00:00:00Z",
 };
 
 export const MOCK_PREDICTION = {
-  id: 42,
-  farm_id: 1,
+  id: "mock-prediction-id-001",
+  farm_id: "mock-farm-id-001",
   flowering_start: "2026-07-18",
   flowering_end: "2026-07-25",
   flowering_confidence: 0.87,
@@ -37,6 +39,32 @@ export const MOCK_PREDICTION = {
   model_source: "general_v1",
   data_confidence: "standard",
 };
+
+export const MOCK_DISTRICTS = [
+  { slug: "amaravati", name: "Amaravati", state: "Maharashtra", centroid_lat: 16.2348, centroid_lng: 79.7433, radius_km: 5.0, created_at: "2026-01-01T00:00:00Z" },
+  { slug: "aurangabad", name: "Aurangabad", state: "Maharashtra", centroid_lat: 19.8762, centroid_lng: 75.3433, radius_km: 5.0, created_at: "2026-01-01T00:00:00Z" },
+  { slug: "jalgaon", name: "Jalgaon", state: "Maharashtra", centroid_lat: 21.0078, centroid_lng: 75.9928, radius_km: 5.0, created_at: "2026-01-01T00:00:00Z" },
+  { slug: "kolhapur", name: "Kolhapur", state: "Maharashtra", centroid_lat: 16.7050, centroid_lng: 74.2433, radius_km: 5.0, created_at: "2026-01-01T00:00:00Z" },
+  { slug: "latur", name: "Latur", state: "Maharashtra", centroid_lat: 18.4088, centroid_lng: 76.5602, radius_km: 5.0, created_at: "2026-01-01T00:00:00Z" },
+  { slug: "nagpur", name: "Nagpur", state: "Maharashtra", centroid_lat: 21.1458, centroid_lng: 79.0882, radius_km: 5.0, created_at: "2026-01-01T00:00:00Z" },
+  { slug: "nashik", name: "Nashik", state: "Maharashtra", centroid_lat: 19.9975, centroid_lng: 73.7898, radius_km: 5.0, created_at: "2026-01-01T00:00:00Z" },
+  { slug: "pune", name: "Pune", state: "Maharashtra", centroid_lat: 18.5204, centroid_lng: 73.8567, radius_km: 5.0, created_at: "2026-01-01T00:00:00Z" },
+  { slug: "satara", name: "Satara", state: "Maharashtra", centroid_lat: 17.6868, centroid_lng: 73.9997, radius_km: 5.0, created_at: "2026-01-01T00:00:00Z" },
+  { slug: "solapur", name: "Solapur", state: "Maharashtra", centroid_lat: 17.6599, centroid_lng: 75.9064, radius_km: 5.0, created_at: "2026-01-01T00:00:00Z" },
+  { slug: "mumbai", name: "Mumbai", state: "Maharashtra", centroid_lat: 19.0760, centroid_lng: 72.8777, radius_km: 5.0, created_at: "2026-01-01T00:00:00Z" },
+  { slug: "ahmednagar", name: "Ahmednagar", state: "Maharashtra", centroid_lat: 19.0952, centroid_lng: 74.7496, radius_km: 5.0, created_at: "2026-01-01T00:00:00Z" },
+  { slug: "amravati", name: "Amravati", state: "Maharashtra", centroid_lat: 20.9374, centroid_lng: 77.7796, radius_km: 5.0, created_at: "2026-01-01T00:00:00Z" },
+  { slug: "chandrapur", name: "Chandrapur", state: "Maharashtra", centroid_lat: 19.9615, centroid_lng: 79.3032, radius_km: 5.0, created_at: "2026-01-01T00:00:00Z" },
+  { slug: "dhule", name: "Dhule", state: "Maharashtra", centroid_lat: 20.9040, centroid_lng: 74.7748, radius_km: 5.0, created_at: "2026-01-01T00:00:00Z" },
+  { slug: "gadchiroli", name: "Gadchiroli", state: "Maharashtra", centroid_lat: 20.1809, centroid_lng: 80.0883, radius_km: 5.0, created_at: "2026-01-01T00:00:00Z" },
+  { slug: "gondia", name: "Gondia", state: "Maharashtra", centroid_lat: 21.4602, centroid_lng: 80.1883, radius_km: 5.0, created_at: "2026-01-01T00:00:00Z" },
+  { slug: "hingoli", name: "Hingoli", state: "Maharashtra", centroid_lat: 19.7150, centroid_lng: 77.1310, radius_km: 5.0, created_at: "2026-01-01T00:00:00Z" },
+  { slug: "nanded", name: "Nanded", state: "Maharashtra", centroid_lat: 19.1388, centroid_lng: 77.3218, radius_km: 5.0, created_at: "2026-01-01T00:00:00Z" },
+  { slug: "parbhani", name: "Parbhani", state: "Maharashtra", centroid_lat: 19.2686, centroid_lng: 76.7708, radius_km: 5.0, created_at: "2026-01-01T00:00:00Z" },
+  { slug: "wardha", name: "Wardha", state: "Maharashtra", centroid_lat: 20.7453, centroid_lng: 78.6023, radius_km: 5.0, created_at: "2026-01-01T00:00:00Z" },
+  { slug: "washim", name: "Washim", state: "Maharashtra", centroid_lat: 20.1117, centroid_lng: 77.1330, radius_km: 5.0, created_at: "2026-01-01T00:00:00Z" },
+  { slug: "yavatmal", name: "Yavatmal", state: "Maharashtra", centroid_lat: 20.3897, centroid_lng: 78.1308, radius_km: 5.0, created_at: "2026-01-01T00:00:00Z" },
+];
 
 export const MOCK_LOCATIONS = [
   { name: "Nashik", lat: 19.9975, lng: 73.7898 },
@@ -82,31 +110,32 @@ export const MOCK_WEATHER_FORECAST = {
 };
 
 export const MOCK_PREDICTIONS_HISTORY = [
-  { ...MOCK_PREDICTION, id: 42, created_at: "2026-06-30T10:30:00Z" },
-  { ...MOCK_PREDICTION, id: 41, psi_score: 55, risk_level: "Medium", flowering_confidence: 0.72, created_at: "2026-06-15T08:00:00Z" },
-  { ...MOCK_PREDICTION, id: 40, psi_score: 32, risk_level: "High", flowering_confidence: 0.65, ndvi_value: 0.38, created_at: "2026-06-01T06:00:00Z" },
+  { ...MOCK_PREDICTION, id: "mock-prediction-id-001", created_at: "2026-06-30T10:30:00Z" },
+  { ...MOCK_PREDICTION, id: "mock-prediction-id-002", psi_score: 55, risk_level: "Medium", flowering_confidence: 0.72, created_at: "2026-06-15T08:00:00Z" },
+  { ...MOCK_PREDICTION, id: "mock-prediction-id-003", psi_score: 32, risk_level: "High", flowering_confidence: 0.65, ndvi_value: 0.38, created_at: "2026-06-01T06:00:00Z" },
 ];
 
 export const MOCK_RESPONSES = {
   GET: {
     "/api/health": { status: "ok", service: "pollisync-api" },
-    "/api/auth/me": { id: 1, email: "farmer@example.com", full_name: "Demo Farmer", created_at: "2026-01-01T00:00:00Z" },
-    "/api/farms": [MOCK_FARM, { ...MOCK_FARM, id: 2, name: "South Orchard", crop_type: "Sunflower" }],
+    "/api/auth/me": { id: "mock-user-id-001", email: "farmer@example.com", full_name: "Demo Farmer", has_onboarded: false, created_at: "2026-01-01T00:00:00Z" },
+    "/api/farms": [MOCK_FARM, { ...MOCK_FARM, id: "mock-farm-id-002", name: "South Orchard", crop_type: "Sunflower", is_default: false }],
+    "/api/districts": MOCK_DISTRICTS,
     "/api/weather/current": MOCK_WEATHER_CURRENT,
     "/api/weather/forecast": MOCK_WEATHER_FORECAST,
     "/api/predictions/latest": MOCK_PREDICTION,
     "/api/predictions/dashboard/summary": {
-      farm: { id: 1, name: "North Field", crop_type: "Mustard", location_lat: 20.011, location_lng: 73.79 },
+      farm: { id: "mock-farm-id-001", name: "North Field", crop_type: "Mustard", location_lat: 19.9975, location_lng: 73.7898 },
       current_weather: MOCK_WEATHER_CURRENT,
       latest_prediction: MOCK_PREDICTION,
       bee_species: ["Apis cerana", "Apis dorsata", "Apis florea"],
     },
     "/api/maps/bees": {
-      center: { lat: 20.011, lng: 73.79 },
+      center: { lat: 19.9975, lng: 73.7898 },
       occurrences: [
-        { species: "Apis cerana", lat: 20.015, lng: 73.792, date: "2026-06-28" },
-        { species: "Apis dorsata", lat: 20.008, lng: 73.785, date: "2026-06-27" },
-        { species: "Apis florea", lat: 20.012, lng: 73.795, date: "2026-06-29" },
+        { species: "Apis cerana", lat: 20.0, lng: 73.792, date: "2026-06-28" },
+        { species: "Apis dorsata", lat: 19.995, lng: 73.785, date: "2026-06-27" },
+        { species: "Apis florea", lat: 19.998, lng: 73.795, date: "2026-06-29" },
       ],
       species_summary: ["Apis cerana", "Apis dorsata", "Apis florea"],
     },
