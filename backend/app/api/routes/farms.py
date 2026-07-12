@@ -36,6 +36,15 @@ def create_farm(
     current_user: User = Depends(get_current_user),
 ) -> FarmRead:
     farm = Farm(**payload.model_dump(), user_id=current_user.id)
+    
+    # If this is the user's first farm, make it the default
+    from sqlalchemy import func
+    existing_farms_count = db.scalar(
+        select(func.count()).select_from(Farm).where(Farm.user_id == current_user.id)
+    ) or 0
+    if existing_farms_count == 0:
+        farm.is_default = True
+    
     db.add(farm)
     db.flush()
     db.add(
@@ -52,16 +61,46 @@ def create_farm(
     return _to_farm_read(farm)
 
 
+@router.get("/{farm_id}", response_model=FarmRead)
+def get_farm(
+    farm_id: str,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+) -> FarmRead:
+    farm = _owned_farm_or_404(farm_id, current_user.id, db)
+    latest_prediction = (
+        db.scalars(
+            select(Prediction)
+            .where(Prediction.farm_id == farm.id)
+            .order_by(Prediction.created_at.desc())
+            .limit(1)
+        )
+        .first()
+    )
+    return _to_farm_read(farm, latest_prediction.psi_score if latest_prediction else None)
+
+
 @router.patch("/{farm_id}", response_model=FarmRead)
 def update_farm(
-    farm_id: int,
+    farm_id: str,
     payload: FarmUpdate,
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ) -> FarmRead:
     farm = _owned_farm_or_404(farm_id, current_user.id, db)
-    for field, value in payload.model_dump(exclude_unset=True).items():
+    
+    update_data = payload.model_dump(exclude_unset=True)
+    
+    # If setting this farm as default, unset other defaults
+    if update_data.get("is_default") is True:
+        db.query(Farm).filter(
+            Farm.user_id == current_user.id,
+            Farm.id != farm_id
+        ).update({"is_default": False})
+    
+    for field, value in update_data.items():
         setattr(farm, field, value)
+    
     db.commit()
     db.refresh(farm)
     latest_prediction = (
@@ -78,7 +117,7 @@ def update_farm(
 
 @router.delete("/{farm_id}", status_code=status.HTTP_204_NO_CONTENT)
 def delete_farm(
-    farm_id: int,
+    farm_id: str,
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ) -> Response:
@@ -90,14 +129,14 @@ def delete_farm(
     return Response(status_code=status.HTTP_204_NO_CONTENT)
 
 
-def _owned_farm_or_404(farm_id: int, user_id: int, db: Session) -> Farm:
+def _owned_farm_or_404(farm_id: str, user_id: str, db: Session) -> Farm:
     farm = db.scalar(select(Farm).where(Farm.id == farm_id, Farm.user_id == user_id))
     if not farm:
         raise HTTPException(status_code=404, detail="Farm not found")
     return farm
 
 
-def _latest_prediction_scores(farm_ids: list[int], db: Session) -> dict[int, int]:
+def _latest_prediction_scores(farm_ids: list[str], db: Session) -> dict[str, int]:
     if not farm_ids:
         return {}
     predictions = list(
@@ -107,7 +146,7 @@ def _latest_prediction_scores(farm_ids: list[int], db: Session) -> dict[int, int
             .order_by(Prediction.farm_id, Prediction.created_at.desc())
         )
     )
-    latest_by_farm: dict[int, int] = {}
+    latest_by_farm: dict[str, int] = {}
     for prediction in predictions:
         latest_by_farm.setdefault(prediction.farm_id, prediction.psi_score)
     return latest_by_farm
@@ -120,6 +159,7 @@ def _to_farm_read(farm: Farm, latest_psi: int | None = None) -> FarmRead:
         name=farm.name,
         crop_type=farm.crop_type,
         crop=farm.crop_type,
+        district_slug=farm.district_slug,
         variety=farm.variety,
         irrigation_method=farm.irrigation_method,
         planting_date=farm.planting_date,
@@ -130,6 +170,7 @@ def _to_farm_read(farm: Farm, latest_psi: int | None = None) -> FarmRead:
         location_lng=farm.location_lng,
         area_acres=farm.area_acres,
         soil_type=farm.soil_type,
+        is_default=farm.is_default,
         latest_psi=latest_psi,
         created_at=farm.created_at,
     )

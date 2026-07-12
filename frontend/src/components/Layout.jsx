@@ -1,7 +1,9 @@
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { useTheme } from "../context/ThemeContext";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { getFarms } from "../lib/api";
+import FarmSelector from "./FarmSelector";
 
 const NAV_ITEMS = [
   { path: "/dashboard", label: "Dashboard", icon: "dashboard" },
@@ -39,6 +41,43 @@ export default function Layout({ children }) {
   const location = useLocation();
   const navigate = useNavigate();
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [farms, setFarms] = useState([]);
+  const [selectedFarmId, setSelectedFarmId] = useState(null);
+  const [loadingFarms, setLoadingFarms] = useState(true);
+
+  useEffect(() => {
+    if (user) {
+      fetchFarms();
+    }
+  }, [user]);
+
+  useEffect(() => {
+    if (user && !user.has_onboarded && location.pathname !== "/onboarding") {
+      navigate("/onboarding");
+    }
+  }, [user, location.pathname, navigate]);
+
+  async function fetchFarms() {
+    try {
+      setLoadingFarms(true);
+      const data = await getFarms();
+      setFarms(data);
+      if (data.length > 0 && !selectedFarmId) {
+        const defaultFarm = data.find((f) => f.is_default) || data[0];
+        setSelectedFarmId(defaultFarm.id);
+        localStorage.setItem("selectedFarmId", defaultFarm.id);
+      }
+    } catch (err) {
+      console.error("Failed to fetch farms:", err);
+    } finally {
+      setLoadingFarms(false);
+    }
+  }
+
+  function handleSelectFarm(farmId) {
+    setSelectedFarmId(farmId);
+    localStorage.setItem("selectedFarmId", farmId);
+  }
 
   function isActive(path) {
     return location.pathname.startsWith(path);
@@ -60,6 +99,10 @@ export default function Layout({ children }) {
         <span className="font-label-md text-label-md">{label}</span>
       </Link>
     );
+  }
+
+  if (user && !user.has_onboarded && location.pathname !== "/onboarding") {
+    return null;
   }
 
   return (
@@ -104,7 +147,7 @@ export default function Layout({ children }) {
       )}
 
       <main className="ml-0 lg:ml-64 flex-1 flex flex-col h-screen overflow-y-auto bg-background">
-        <header className="bg-surface/80 backdrop-blur-md border-b border-outline-variant flex justify-between items-center h-16 px-xl w-full sticky top-0 z-10">
+        <header className="bg-surface/80 backdrop-blur-md border-b border-outline-variant flex justify-between items-center h-16 px-xl w-full sticky top-0 z-30">
           <div className="flex items-center gap-sm">
             <button className="lg:hidden p-2 rounded-lg hover:bg-surface-container mr-2" onClick={() => setMobileOpen(true)}>
               <span className="material-symbols-outlined text-on-surface">menu</span>
@@ -113,10 +156,13 @@ export default function Layout({ children }) {
               {PAGE_TITLES[location.pathname] || "Dashboard"}
             </span>
             <span className="material-symbols-outlined text-outline text-sm hidden sm:block">chevron_right</span>
-            <div className="flex items-center gap-xs hover:bg-surface-container-highest px-sm py-xs rounded-md transition-colors cursor-pointer">
-              <span className="font-headline-sm text-headline-sm text-on-surface">{user?.full_name || "Farm"}</span>
-              <span className="material-symbols-outlined text-outline">expand_more</span>
-            </div>
+            {!loadingFarms && (
+              <FarmSelector
+                farms={farms}
+                selectedFarmId={selectedFarmId}
+                onSelectFarm={handleSelectFarm}
+              />
+            )}
           </div>
           <div className="flex items-center gap-md">
             <button

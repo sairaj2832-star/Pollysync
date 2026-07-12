@@ -342,7 +342,7 @@ def main():
     psi_path = DATA_DIR / "psi_data.csv"
     if psi_path.exists():
         df_psi = pd.read_csv(psi_path)
-        for c in ["mustard", "wheat", "sunflower", "rice", "cotton"]:
+        for c in ["mustard", "sunflower", "cotton"]:
             df_psi[f"crop_{c}"] = (df_psi["crop"].str.lower() == c).astype(int)
 
     sw_psi = compute_sample_weights(df_psi, real_weight=5.0) if df_psi is not None else None
@@ -362,3 +362,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+

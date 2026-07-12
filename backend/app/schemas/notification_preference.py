@@ -16,8 +16,8 @@ class NotificationPreferenceUpdate(BaseModel):
 class NotificationPreferenceRead(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
-    id: int
-    user_id: int
+    id: str
+    user_id: str
     push_critical: bool = True
     push_daily: bool = True
     push_system: bool = False

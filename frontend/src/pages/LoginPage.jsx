@@ -4,17 +4,30 @@ import { useAuth } from "../context/AuthContext";
 import { getApiErrorMessage } from "../lib/api";
 
 export default function LoginPage() {
-  const { token, login, loginWithGoogle, isFirebaseConfigured } = useAuth();
+  const { token, loading: authLoading, login, loginWithGoogle, isFirebaseConfigured } = useAuth();
   const navigate = useNavigate();
   const [form, setForm] = useState({ email: "", password: "" });
+  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
   const [busy, setBusy] = useState(false);
+
+  if (authLoading) {
+    return (
+      <div className="bg-background min-h-screen flex items-center justify-center">
+        <div className="animate-spin w-8 h-8 border-2 border-primary border-t-transparent rounded-full" />
+      </div>
+    );
+  }
 
   if (token) return <Navigate to="/dashboard" replace />;
 
   async function handleSubmit(e) {
     e.preventDefault();
     setError("");
+    if (!form.email || !form.password) {
+      setError("Please enter your email and password.");
+      return;
+    }
     setBusy(true);
     try {
       await login(form.email, form.password);
@@ -40,39 +53,20 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="subtle-gradient-bg min-h-screen flex flex-col justify-center items-center p-md sm:p-gutter relative overflow-hidden"
-      style={{
-        background: "linear-gradient(135deg, rgba(16, 185, 129, 0.05) 0%, rgba(254, 166, 25, 0.05) 100%), #fff8f5"
-      }}
-    >
-      <div className="fixed inset-0 overflow-hidden pointer-events-none z-0">
-        <div className="absolute -top-40 -left-40 w-96 h-96 rounded-full bg-primary-container/20 blur-3xl opacity-50" />
-        <div className="absolute top-1/2 -right-40 w-[30rem] h-[30rem] rounded-full bg-secondary-container/20 blur-3xl opacity-30" />
-      </div>
+    <div className="bg-background min-h-screen flex flex-col justify-center items-center p-lg relative overflow-hidden">
+      <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-primary-container/10 rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-secondary-container/10 rounded-full blur-3xl pointer-events-none" />
 
       <div className="w-full max-w-[420px] z-10">
         <div className="text-center mb-xl">
-          <h1 className="font-display text-display text-primary flex items-center justify-center gap-sm">
-            <span className="material-symbols-outlined text-4xl filled">eco</span>
-            PolliSync
-          </h1>
+          <div className="inline-flex items-center justify-center w-12 h-12 rounded-lg bg-primary-container/20 text-primary mb-md">
+            <span className="material-symbols-outlined text-[28px] filled">eco</span>
+          </div>
+          <h1 className="font-headline-lg text-headline-lg text-on-surface mb-xs">Welcome back</h1>
+          <p className="font-body-md text-body-md text-on-surface-variant">Sign in to your farm dashboard</p>
         </div>
 
-        <div
-          className="rounded-xl p-lg sm:p-xl w-full"
-          style={{
-            background: "rgba(255, 248, 245, 0.9)",
-            backdropFilter: "blur(12px)",
-            WebkitBackdropFilter: "blur(12px)",
-            border: "1px solid rgba(226, 232, 240, 0.5)",
-            boxShadow: "0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03)"
-          }}
-        >
-          <div className="mb-xl text-center">
-            <h2 className="font-headline-lg text-headline-lg text-on-surface mb-sm">Welcome back</h2>
-            <p className="font-body-md text-body-md text-on-surface-variant">Sign in to your farm dashboard</p>
-          </div>
-
+        <div className="bg-surface-container-lowest rounded-xl border border-outline-variant/30 shadow-[0_1px_3px_rgba(0,0,0,0.05)] p-xl">
           {error && (
             <div className="mb-md rounded-lg bg-error-container p-3 font-body-sm font-medium text-on-error-container">
               {error}
@@ -81,17 +75,17 @@ export default function LoginPage() {
 
           {!isFirebaseConfigured && (
             <div className="mb-md rounded-lg bg-secondary-container/30 p-3 font-body-sm text-on-surface-variant">
-              Set the Firebase keys in `frontend/.env` before signing in.
+              Firebase is not configured. Set <code className="font-mono text-xs bg-surface-container-high px-1 rounded">VITE_FIREBASE_*</code> keys in <code className="font-mono text-xs bg-surface-container-high px-1 rounded">frontend/.env</code>.
             </div>
           )}
 
-          <form onSubmit={handleSubmit} className="space-y-md">
-            <div>
-              <label className="block font-label-md text-label-md text-on-surface mb-xs">Email Address</label>
-              <div className="relative flex items-center rounded-lg border border-outline-variant bg-surface transition-shadow duration-200 focus-within:border-primary focus-within:shadow-[0_0_0_2px_rgba(16,185,129,0.2)]">
-                <span className="material-symbols-outlined absolute left-md text-on-surface-variant text-[20px]">mail</span>
+          <form onSubmit={handleSubmit} className="space-y-lg">
+            <div className="flex flex-col gap-xs">
+              <label className="font-label-md text-label-md text-on-surface">Email Address</label>
+              <div className="relative">
+                <span className="material-symbols-outlined absolute left-md top-1/2 -translate-y-1/2 text-on-surface-variant pointer-events-none">mail</span>
                 <input
-                  className="w-full pl-[48px] pr-md py-sm bg-transparent border-none focus:ring-0 font-body-md text-body-md text-on-surface rounded-lg placeholder:text-on-surface-variant/50"
+                  className="w-full bg-surface-container-lowest border border-outline-variant rounded-lg pl-2xl pr-md py-sm font-body-md text-body-md text-on-surface focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all placeholder:text-on-surface-variant/50"
                   placeholder="grower@farm.com"
                   required
                   type="email"
@@ -101,58 +95,64 @@ export default function LoginPage() {
               </div>
             </div>
 
-            <div>
-              <div className="flex justify-between items-center mb-xs">
-                <label className="block font-label-md text-label-md text-on-surface">Password</label>
+            <div className="flex flex-col gap-xs">
+              <div className="flex justify-between items-center">
+                <label className="font-label-md text-label-md text-on-surface">Password</label>
                 <span className="font-label-sm text-label-sm text-primary hover:text-primary-fixed-dim transition-colors cursor-pointer">
                   Forgot?
                 </span>
               </div>
-              <div className="relative flex items-center rounded-lg border border-outline-variant bg-surface transition-shadow duration-200 focus-within:border-primary focus-within:shadow-[0_0_0_2px_rgba(16,185,129,0.2)]">
-                <span className="material-symbols-outlined absolute left-md text-on-surface-variant text-[20px]">lock</span>
+              <div className="relative">
+                <span className="material-symbols-outlined absolute left-md top-1/2 -translate-y-1/2 text-on-surface-variant pointer-events-none">lock</span>
                 <input
-                  className="w-full pl-[48px] pr-[48px] py-sm bg-transparent border-none focus:ring-0 font-body-md text-body-md text-on-surface rounded-lg placeholder:text-on-surface-variant/50"
+                  className="w-full bg-surface-container-lowest border border-outline-variant rounded-lg pl-2xl pr-2xl py-sm font-body-md text-body-md text-on-surface focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all placeholder:text-on-surface-variant/50"
                   placeholder="••••••••"
                   required
-                  type="password"
+                  type={showPassword ? "text" : "password"}
                   value={form.password}
                   onChange={(e) => setForm({ ...form, password: e.target.value })}
                 />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-md top-1/2 -translate-y-1/2 text-on-surface-variant hover:text-on-surface transition-colors"
+                  tabIndex={-1}
+                >
+                  <span className="material-symbols-outlined text-[20px]">{showPassword ? "visibility_off" : "visibility"}</span>
+                </button>
               </div>
-            </div>
-
-            <div className="flex items-center mt-md mb-lg">
-              <input
-                className="rounded border-outline-variant text-primary focus:ring-primary bg-surface w-4 h-4 cursor-pointer"
-                id="remember"
-                type="checkbox"
-              />
-              <label className="ml-sm font-body-sm text-body-sm text-on-surface-variant cursor-pointer" htmlFor="remember">
-                Remember me for 30 days
-              </label>
             </div>
 
             <button
               type="submit"
               disabled={busy}
-              className="w-full bg-primary-container text-on-primary-container font-label-md text-label-md py-[12px] rounded-lg shadow-sm hover:opacity-90 active:scale-[0.98] transition-all duration-150 flex items-center justify-center gap-sm"
+              className="w-full bg-primary hover:brightness-90 text-on-primary font-label-md text-label-md py-[12px] rounded-lg shadow-[inset_0_1px_0_rgba(255,255,255,0.2),0_1px_2px_rgba(0,0,0,0.1)] transition-all active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-sm"
             >
-              {busy ? "Signing in..." : "Sign In"}
-              <span className="material-symbols-outlined text-[18px]">arrow_forward</span>
+              {busy ? (
+                <span className="flex items-center gap-sm">
+                  <span className="w-4 h-4 border-2 border-on-primary/30 border-t-on-primary rounded-full animate-spin" />
+                  Signing in...
+                </span>
+              ) : (
+                <>
+                  Sign In
+                  <span className="material-symbols-outlined text-[18px]">arrow_forward</span>
+                </>
+              )}
             </button>
           </form>
 
           <div className="relative my-lg flex items-center">
-            <div className="flex-grow border-t border-outline-variant/50" />
+            <div className="flex-grow border-t border-outline-variant/30" />
             <span className="flex-shrink-0 mx-md font-label-sm text-label-sm text-on-surface-variant">Or continue with</span>
-            <div className="flex-grow border-t border-outline-variant/50" />
+            <div className="flex-grow border-t border-outline-variant/30" />
           </div>
 
           <button
             type="button"
             disabled={busy || !isFirebaseConfigured}
             onClick={handleGoogleLogin}
-            className="w-full bg-surface border border-outline-variant text-on-surface font-label-md text-label-md py-[12px] rounded-lg hover:bg-surface-container-low active:bg-surface-container transition-colors duration-150 flex items-center justify-center gap-sm"
+            className="w-full bg-surface border border-outline-variant text-on-surface font-label-md text-label-md py-[12px] rounded-lg hover:bg-surface-container-low active:bg-surface-container transition-colors duration-150 flex items-center justify-center gap-sm disabled:opacity-50 disabled:cursor-not-allowed"
           >
             <svg fill="none" height="18" viewBox="0 0 24 24" width="18" xmlns="http://www.w3.org/2000/svg">
               <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4" />

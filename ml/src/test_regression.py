@@ -51,8 +51,7 @@ def test_feature_alignment(models):
     print("\n[Test] Feature Alignment")
     expected_cols = [
         "temp_7d_mean", "humidity", "rainfall_7d", "wind_speed", "ndvi",
-        "day_of_year", "month", "crop_mustard", "crop_wheat",
-        "crop_sunflower", "crop_rice", "crop_cotton", "bee_richness",
+        "day_of_year", "month", "crop_mustard", "crop_sunflower", "crop_cotton", "bee_richness",
         "bee_count", "pollen_tree", "pollen_grass", "pollen_weed",
     ]
     check("has 17 features", len(expected_cols) == 17, f"got {len(expected_cols)}")
@@ -231,3 +230,4 @@ if __name__ == "__main__":
     print(f"{'=' * 60}")
 
     sys.exit(0 if failed == 0 else 1)
+

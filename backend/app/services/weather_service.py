@@ -42,7 +42,7 @@ def get_fallback_weather(lat: float, lng: float) -> dict:
     }
 
 
-def get_cached_weather(farm_id: int, db: Session) -> WeatherCache | None:
+def get_cached_weather(farm_id: str, db: Session) -> WeatherCache | None:
     cutoff = datetime.now(timezone.utc) - timedelta(hours=1)
     return (
         db.query(WeatherCache)
@@ -55,7 +55,7 @@ def get_cached_weather(farm_id: int, db: Session) -> WeatherCache | None:
     )
 
 
-def cache_weather(farm_id: int, data: dict, db: Session) -> WeatherCache:
+def cache_weather(farm_id: str, data: dict, db: Session) -> WeatherCache:
     current = data.get("current", {})
     record = WeatherCache(
         farm_id=farm_id,

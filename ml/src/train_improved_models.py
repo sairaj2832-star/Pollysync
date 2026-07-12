@@ -21,7 +21,7 @@ MODELS_DIR.mkdir(parents=True, exist_ok=True)
 V1_FEATURES = [
     "temp_7d_mean", "humidity", "rainfall_7d", "wind_speed", "ndvi",
     "day_of_year", "month",
-    "crop_mustard", "crop_wheat", "crop_sunflower", "crop_rice", "crop_cotton",
+    "crop_mustard", "crop_sunflower", "crop_cotton",
     "bee_richness", "bee_count", "pollen_tree", "pollen_grass", "pollen_weed",
 ]
 
@@ -33,7 +33,7 @@ V2_FEATURES = V1_FEATURES + [
 
 def _onehot_crop(df, crop_col="crop"):
     df = df.copy()
-    for c in ["mustard", "wheat", "sunflower", "rice", "cotton"]:
+    for c in ["mustard", "sunflower", "cotton"]:
         df[f"crop_{c}"] = (df[crop_col].str.lower() == c).astype(int)
     return df
 
@@ -254,3 +254,5 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+

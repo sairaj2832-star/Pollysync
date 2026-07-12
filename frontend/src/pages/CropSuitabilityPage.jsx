@@ -182,6 +182,7 @@ export default function CropSuitabilityPage() {
               className={isRecommended ? "ring-2 ring-primary" : ""}
             >
               <button
+                type="button"
                 onClick={() => setExpandedCrop(isExpanded ? null : crop.value)}
                 className="w-full text-left"
               >

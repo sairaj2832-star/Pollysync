@@ -5,15 +5,15 @@ from pydantic import BaseModel, ConfigDict
 
 
 class PredictionCreate(BaseModel):
-    farm_id: int
+    farm_id: str
     region: str = "auto"  # "maharashtra", "auto", or other
 
 
 class PredictionRead(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
-    id: int
-    farm_id: int
+    id: str
+    farm_id: str
     flowering_start: str
     flowering_end: str
     flowering_confidence: float
@@ -27,6 +27,7 @@ class PredictionRead(BaseModel):
     created_at: datetime
     model_source: str | None = None
     data_confidence: str | None = None
+    prediction_inputs: Any = None
 
 
 class DashboardSummary(BaseModel):

@@ -123,9 +123,7 @@ def validate_physical_sanity():
             "wind_speed": wind, "ndvi": ndvi,
             "day_of_year": doy, "month": month,
             "crop_mustard": 1 if crop == "mustard" else 0,
-            "crop_wheat": 1 if crop == "wheat" else 0,
             "crop_sunflower": 1 if crop == "sunflower" else 0,
-            "crop_rice": 1 if crop == "rice" else 0,
             "crop_cotton": 1 if crop == "cotton" else 0,
             "bee_richness": bee_richness, "bee_count": bee_count,
             "pollen_tree": pollen, "pollen_grass": pollen, "pollen_weed": pollen,
@@ -141,7 +139,7 @@ def validate_physical_sanity():
             expected_cols = list(f_scaler.feature_names_in_) if hasattr(f_scaler, 'feature_names_in_') else [
                 "temp_7d_mean", "humidity", "rainfall_7d", "wind_speed", "ndvi",
                 "day_of_year", "month",
-                "crop_mustard", "crop_wheat", "crop_sunflower", "crop_rice", "crop_cotton",
+                "crop_mustard", "crop_sunflower", "crop_cotton",
                 "bee_richness", "bee_count", "pollen_tree", "pollen_grass", "pollen_weed",
                 "elevation_m",
                 "zone_western_ghats", "zone_scarce_rainfall", "zone_marathwada",
@@ -183,15 +181,7 @@ def validate_physical_sanity():
     checks_passed += passed
     checks.append(f"  {'PASS' if passed else 'FAIL'}: Sunflower DOY in range: {sunf_doy}")
 
-    # 4. Wheat (Rabi, winter) flowers at higher DOY (later calendar) than Rice (Kharif, summer)
-    checks_total += 1
-    rice_doy = _predict_doy(28, crop="rice", month=7, doy=190)
-    wheat_doy = _predict_doy(18, crop="wheat", month=11, doy=320)
-    passed = wheat_doy > rice_doy
-    checks_passed += passed
-    checks.append(f"  {'PASS' if passed else 'FAIL'}: Wheat DOY ({wheat_doy}) > Rice DOY ({rice_doy}) (Rabi later than Kharif)")
-
-    # 5. Higher NDVI = slightly later (better veg = more growth)
+    # 4. Higher NDVI = slightly later (better veg = more growth)
     checks_total += 1
     low_ndvi = _predict_doy(25, ndvi=0.3, crop="sunflower", month=6, doy=166)
     high_ndvi = _predict_doy(25, ndvi=0.8, crop="sunflower", month=6, doy=166)
@@ -365,3 +355,5 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+

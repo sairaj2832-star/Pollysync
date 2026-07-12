@@ -1,0 +1,26 @@
+I have reviewed your farm data for {{crop_name}} at {{location}}.
+
+Here is my analysis:
+
+🌸 FLOWERING STATUS
+Your {{crop_name}} is expected to flower on {{flowering_date}}. Based on current NDVI of {{ndvi_value}} and temperature trends of {{temp_forecast}}°C, this prediction has high confidence.
+
+🐝 POLLINATOR STATUS
+Bee activity is predicted to peak around {{bee_arrival_date}}. Current weather conditions (humidity: {{humidity}}%, wind: {{wind_speed}} km/h) are {{bee_condition}} for pollinator activity.
+
+⚠️ MISMATCH ANALYSIS
+There is a {{mismatch_days}}-day gap between flowering and peak bee arrival. This means your crop will be in full bloom before pollinators are sufficiently active, resulting in reduced natural pollination.
+
+📊 RISK ASSESSMENT
+Risk Score: {{risk_score}}/100
+Risk Level: {{risk_level}}
+{% if risk_level == "CRITICAL" %}
+🚨 URGENT: Immediate action is required. Natural pollination will be severely compromised.
+{% endif %}
+
+💡 RECOMMENDATIONS
+1. {{recommendation_1}}
+2. {{recommendation_2}}
+3. {{recommendation_3}}
+
+Ask me anything about your crop, the risk, or what steps to take next.

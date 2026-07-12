@@ -1,0 +1,320 @@
+=== POLLISYNC KNOWLEDGE BASE ===
+=== Last updated: July 2026 ===
+=== Source: Aggregated from agronomic literature, GBIF, NASA POWER, IMD, ICRISAT, FAO, and PolliSync ML model outputs ===
+=== CROP FLOWERING WINDOWS ===
+Crop-specific flowering windows for Indian conditions (peak in parentheses):
+Mango: January – March (peak: February)
+Grapes: October – December, February – April
+Onion: November – January
+Tomato: Year-round, peak March – May and September – November
+Cotton: June – September
+Wheat: November – January
+Sunflower: January – March, June – August
+Pomegranate: February – April, August – October
+Citrus (Mosambi/Orange): January – February (peak)
+Capsicum: March – May, September – November
+Soybean: July – August
+Sugarcane: Low pollination dependency, wind-pollinated
+Mustard: December – February (peak: January)
+Rice: September – November (kharif), February – April (rabi)
+Regional variation: In Maharashtra, flowering windows shift 7–14 days later in Vidarbha and Marathwada compared to Konkan due to temperature differences.
+=== BEE AND POLLINATOR SPECIES ===
+Species relevant to Indian agriculture, particularly Maharashtra:
+Apis mellifera (European Honey Bee):
+Active above 15°C, peak activity 20–30°C
+Best for managed hive deployment
+Most widely available from commercial beekeepers
+Optimal foraging: 18–32°C, humidity 40–70%, wind <20 km/h
+Apis cerana (Indian Honey Bee):
+Active above 12°C
+Tolerates high humidity better than Apis mellifera
+Native species, good for local ecosystem restoration
+Subspecies Apis cerana indica is predominant in Maharashtra
+Can forage in cooler conditions (12–15°C) where Apis mellifera cannot
+Apis dorsata (Rock Bee / Giant Honey Bee):
+Active February – May, migrates seasonally
+Cannot be managed in hives — wild species only
+Builds single large combs on tree branches and buildings
+Highly defensive, dangerous to approach without protection
+Important for forest-adjacent farms
+Apis florea (Dwarf Honey Bee):
+Active year-round in tropical India
+Small colonies, builds single small comb in bushes
+Less honey but effective local pollinator for small farms
+Tolerates urban and disturbed environments
+Trigona / Tetragonula (Stingless Bees):
+Active year-round in tropical zones above 18°C
+Effective for small farms and enclosed crops (polyhouse/ greenhouse)
+Produce medicinal honey (small quantity)
+Can be kept in boxes/log hives
+Bombus (Bumblebees):
+Present in higher altitudes of Maharashtra (Western Ghats)
+Effective buzz pollinators — especially important for tomato and capsicum
+Active in cooler conditions than honey bees
+Xylocopa (Carpenter Bees):
+Large solitary bees, important for pigeon pea and other deep-flowered crops
+Active year-round, nest in dead wood/bamboo
+=== BEE ACTIVITY CONDITIONS ===
+Optimal foraging conditions:
+Temperature: 18°C – 32°C
+Humidity: 40% – 70%
+Wind speed: below 20 km/h
+No active rainfall
+Sunny or partly cloudy conditions preferred
+Reduced or no activity conditions:
+Temperature below 10°C: Bees inactive, remain in hive
+Temperature 10°C – 18°C: Reduced activity, partial foraging on warm afternoons
+Temperature above 38°C: Bees avoid foraging, heat stress, fanning at hive entrance
+Active rainfall: Bees stay in hive, pollen washed off flowers
+Wind above 25 km/h: Bees cannot fly or forage safely
+High humidity above 80%: Pollen clumps, reduced viability, sticky pollen
+Frost: Kills open flowers, destroys pollen, no recovery for affected blooms
+Heavy dew: Delays morning foraging start by 1–2 hours
+Seasonal patterns in Maharashtra:
+Pre-monsoon (March–May): Highest bee activity but risk of heat waves
+Monsoon (June–September): Reduced activity due to rain, but stingless bees remain active
+Post-monsoon (October–December): Second peak season for bees
+Winter (January–February): Good activity in daytime if >18°C
+=== NDVI INTERPRETATION ===
+NDVI (Normalized Difference Vegetation Index) measures crop health via satellite.
+Formula: (NIR - Red) / (NIR + Red)
+Data sources:
+Sentinel-2: 10m resolution, 5-day revisit, cloud-filtered (<20% cloud cover)
+NASA MODIS: 250m resolution, 16-day composites
+Landsat 8/9: 30m resolution, 16-day revisit
+Interpretation:
+0.0 – 0.2: Bare soil, severely stressed, or failed crop
+0.2 – 0.4: Sparse vegetation, early growth stage, or poor crop health
+0.4 – 0.6: Moderate vegetation, active growing phase, adequate health
+0.6 – 0.8: Healthy dense vegetation, approaching flowering
+0.8 – 1.0: Peak vegetation health, flowering imminent or ongoing
+Note: NDVI > 0.6 confirms flowering prediction reliability. NDVI < 0.4 reduces confidence — crop may be stressed or not yet at flowering stage.
+=== MISMATCH RISK SCALE ===
+Mismatch = Days between predicted flowering date and predicted peak bee arrival date
+Mismatch Days	Risk Level	Score Range
+0 – 3	LOW	0 – 25
+4 – 7	MEDIUM	26 – 50
+8 – 14	HIGH	51 – 75
+15+	CRITICAL	76 – 100
+Primary driver: mismatch_days (0–60 base points based on scale above).
+Weather penalty: +5 to +20 points if forecast shows rain, wind (>25 km/h), or extreme temp (<10°C or >38°C) during flowering.
+NDVI confidence: NDVI 0.6+ confirms prediction, NDVI < 0.4 reduces confidence by one level.
+Crop dependency penalty: High-dependency crops add +10 points.
+Final score capped at 100.
+=== RISK SCORE CALCULATION DETAIL ===
+The system uses a two-stage approach:
+ML model (XGBoost): Predicts raw PSI score from 15+ features including temp_7d_mean, humidity, rainfall_7d, wind_speed, ndvi, bee_richness, pollen indices, and crop one-hot encodings.
+Rule-based baseline (fallback): Used when ML models are unavailable.
+Rule-based scoring (for reference):
+Temperature 20–32°C → +25 points; 15–35°C → +15 points; otherwise → 0
+Humidity 50–80% → +20 points; 30–90% → +10 points; otherwise → 0
+NDVI > 0.6 → +20 points; > 0.4 → +10 points; otherwise → 0
+Bee richness ≥ 3 species → +15 points; ≥ 1 species → +8 points; otherwise → 0
+Wind speed > 25 km/h → −15 point penalty
+Rainfall > 20mm → −10 point penalty
+Score clamped to [0, 100]
+PSI to Risk mapping:
+PSI ≥ 70 → Low risk
+PSI 40–69 → Medium risk
+PSI < 40 → High risk
+=== RECOMMENDATIONS BY RISK LEVEL ===
+LOW (Score 0–25 | Mismatch 0–3 days):
+Monitor crop and weather weekly. Maintain field edges with wildflower habitat for native pollinators.
+No immediate intervention required. Continue regular NDVI monitoring.
+Scout for early pest issues before flowering begins.
+Ensure irrigation is adequate heading into flowering window.
+MEDIUM (Score 26–50 | Mismatch 4–7 days):
+Place 2–3 managed Apis mellifera hives per acre. Introduce hives 5–7 days before expected flowering start.
+Avoid all pesticide application during the flowering window. Monitor temperature and humidity forecasts daily.
+Alert local beekeeper to keep hives on standby.
+Maintain flowering-stage nutrition (avoid nitrogen excess which reduces nectar quality).
+For high-dependency crops, prepare hand pollination tools in advance.
+HIGH (Score 51–75 | Mismatch 8–14 days):
+Immediately introduce 4–6 managed Apis mellifera hives per acre. Begin supplemental hand pollination for high-value crops (mango, pomegranate, citrus).
+Apply crop-appropriate flowering stimulants if needed. Contact local beekeepers minimum 3 weeks before flowering.
+Strict pesticide ban: 10 days before flowering to 10 days after petal fall.
+Notify agricultural extension officer for support.
+Consider foliar spray of 2% sugar solution to attract local bees during lean periods.
+Set up water sources near hives (shallow dishes with pebbles for bee landing).
+CRITICAL (Score 76–100 | Mismatch 15+ days):
+Emergency deployment: 6–8 managed hives per acre immediately. Hand pollination is mandatory for all high-value crops.
+Notify agricultural extension officer immediately. Trigger district-level pollinator emergency support.
+Assess crop insurance eligibility if yield loss projected above 40%.
+Daily monitoring of flowering progress and bee activity required.
+Deploy multiple bee species if available (Apis cerana for humid conditions, Apis mellifera for open fields).
+Hand pollination technique: Collect pollen 6–9 AM, apply 7–11 AM, repeat every 2 days throughout flowering.
+For all crops: reduce irrigation during flowering to prevent excess vegetative growth at the expense of flowers.
+=== WEATHER IMPACT ON POLLINATION ===
+Temperature below 10°C: Bees remain inactive in hive. Flowers may fail to open properly. Frost kills open flowers.
+Temperature 10°C – 18°C: Reduced bee activity. Partial pollination possible on warm afternoons. Apis cerana can forage at lower end of this range.
+Temperature 18°C – 32°C: Optimal pollination window. Peak bee foraging activity. Best conditions for pollen germination on stigma.
+Temperature above 35°C: Pollen viability decreases. Stigma receptivity reduces.
+Temperature above 38°C: Flowers abort or dry out prematurely. Bees avoid outdoor foraging. Heat stress on both crop and pollinators.
+Active Rainfall (any amount during flowering hours): Washes pollen off flowers. Bees remain inside hive. Significantly reduces pollination success.
+High Humidity (above 80%): Pollen clumps together and loses viability. Reduces pollen transfer efficiency. Fungal pressure on flowers increases.
+Wind 20–25 km/h: Reduced bee activity, bees fly lower to ground.
+Wind above 25 km/h: Bees cannot fly or forage safely. Pollen dispersal disrupted. Physical damage to flowers.
+Frost: Kills open flowers immediately. Destroys pollen, no recovery for affected blooms.
+Heat wave (3+ consecutive days above 38°C): Irreversible flower damage. Complete pollination failure.
+=== POLLINATION DEPENDENCY BY CROP ===
+HIGH dependency (bee pollination critical for >75% yield):
+Mango: Self-incompatible, needs cross-pollination by bees. Yield drops 80%+ without bees.
+Grapes: Partial self-fertile but bee visitation improves berry set and size by 30–50%.
+Pomegranate: Needs bee pollination for fruit set. Without bees, fruit set below 20%.
+Sunflower: Self-incompatible varieties (hybrids) need bees. Seed yield increases 40–60% with bees.
+Onion (seed production): Requires insect pollination. Seed yield near zero without bees.
+Citrus (Mosambi/Orange): Partial parthenocarpy but bee pollination increases fruit set and quality.
+MEDIUM dependency (bee pollination improves yield 25–50%):
+Tomato: Self-fertile but buzz pollination by bumblebees improves fruit set, size, and shape.
+Capsicum: Self-fertile, bee visitation improves fruit weight and seed count.
+Cotton: Self-fertile but bee cross-pollination increases boll weight and lint quality.
+Soybean: Self-fertile, bees reduce flower drop and increase pod set.
+Mustard: Partially cross-pollinated, bees increase pod count and seed weight.
+LOW dependency (self-pollinating or wind-pollinated, <10% dependence):
+Wheat: Wind-pollinated. No bee requirement.
+Sugarcane: Vegetatively propagated. Flowering not harvested.
+Rice: Self-pollinating. No bee requirement.
+=== CLIMATE TREND CONTEXT ===
+Based on IMD (India Meteorological Department) data and agronomic research:
+Average temperatures in Maharashtra have risen approximately 0.5°C per decade since 1980. (IMD gridded data)
+The number of heat wave days (temp >40°C) in Vidarbha has increased from 5 days/year (1980s) to 18 days/year (2020s).
+Bee and pollinator populations have declined 15–30% in intensive agriculture zones due to habitat loss and pesticide use.
+Erratic monsoon onset is shifting crop flowering dates by 7–14 days annually, increasing mismatch risk.
+Early heat waves (March) are the primary driver of increasing mismatch events in Maharashtra.
+Climate projections suggest mismatch days will increase by 5–8 days by 2040 under moderate warming scenarios.
+Habitat loss and pesticide use are compounding natural pollinator decline — flower-rich field margins can offset 10–20% of the loss.
+Regions most affected: Marathwada (highest mismatch), Vidarbha (increasing heat stress), Western Maharashtra (erratic rainfall).
+=== HAND POLLINATION TECHNIQUE ===
+When to use: HIGH or CRITICAL risk levels, or when bee activity is confirmed absent.
+Step 1: Collect pollen from fully open flowers in early morning (6:00 – 9:00 AM).
+Step 2: Store collected pollen in a clean, dry container. Use within 24 hours for maximum viability. Refrigerate (not freeze) if storing >4 hours.
+Step 3: Apply pollen to the stigma (tip of flower's female part) using a soft brush or clean cotton swab. Ensure visible pollen transfer.
+Step 4: Best done between 7:00 – 11:00 AM when flowers are fully receptive (stigma is sticky and moist).
+Step 5: Repeat every 2 days throughout the flowering window. Each flower needs 2–3 visits for optimal fruit set.
+Step 6: Mark pollinated flowers with a string or tag to track progress.
+Best suited crops and specific techniques:
+Mango: Panicle dip method — dip entire flower cluster in pollen solution. 40–50% fruit set achievable vs 1–2% natural.
+Pomegranate: Use soft brush to transfer pollen from male to hermaphrodite flowers. Target 300–500 flowers per tree.
+Tomato: Use electric toothbrush or buzzing device to vibrate flowers (buzz pollination mimic). Works for greenhouse.
+Capsicum: Same as tomato. Vibrate each flower cluster.
+Sunflower: Rub two flowering heads together. Do this for 10% of plants to improve overall field set.
+Pumpkin/Squash: Hand pollinate early morning (flowers close by noon). Male flowers (thin stem) to female (swollen base).
+Pollen viability tips: Pollen loses 50% viability every hour in direct sunlight. Keep collected pollen in shade. Use same-day pollen for best results. Pollen from different plants of same variety improves genetic diversity.
+=== MANAGED HIVE PLACEMENT GUIDE ===
+Placement: Position hives at the field edge, entrance facing into the crop. Place hives in shade (under tree or shade net) to prevent overheating. Orient hive entrance facing east (morning sun activates bees early). Elevate hives 30–45 cm off ground to avoid ants, dampness, and predators.
+Density by crop dependency:
+High-dependency crops (Mango, Grapes): 1 hive per 0.5–1 acre
+Medium-dependency crops (Onion, Tomato, Mustard): 1 hive per 1–2 acres
+Low-dependency crops: Hives optional, 1 per 3–5 acres if available
+Sunflower (hybrid): 1 hive per 0.5 acre (hybrids need maximum bee activity)
+Timing:
+Introduce hives 5–7 days before expected flowering start date (allows bees to orient to location)
+Remove hives immediately after petal fall to protect bees from post-bloom pesticide use
+For crops with extended flowering (tomato, capsicum), keep hives throughout and rotate nectar sources
+Care during deployment:
+Ensure clean water source available within 50 metres of hives (shallow dish with floating cork/marbles for bee landing)
+Do not apply any pesticides while hives are on site
+Check hive strength (minimum 6 frames of bees, 2 frames of brood) before deployment — weak hives are ineffective
+Morning inspection: if no bees leaving hive by 9 AM in good weather, hive may be queenless or diseased
+Maintain 200m distance from other apiaries to reduce competition and disease spread
+In high-temperature regions (Vidarbha, Marathwada), use insulated hive covers and ensure afternoon shade
+Beekeeper sourcing:
+Maharashtra has ~300 registered beekeepers (MAHABEES, state apiculture board)
+Major beekeeping districts: Nashik, Pune, Satara, Kolhapur, Jalgaon
+Contact through: State Horticulture Department, local KVK (Krishi Vigyan Kendra), or MAHABEES cooperative
+Lead time: 3 weeks minimum for large hive orders (4+ hives)
+=== WEATHER DATA SOURCES ===
+The system uses two weather data sources:
+Open-Meteo API (current conditions + 7-day forecast): Free, no API key, updates hourly.
+NASA POWER API (historical 7-day mean): Used for ML model features (temp_7d_mean, humidity, rainfall_7d, wind_speed). Free, no API key, daily temporal resolution, 0.5° spatial resolution (~50km).
+Parameters pulled from NASA POWER:
+T2M_MAX, T2M_MIN: Daily max/min temperature at 2m (°C)
+RH2M: Relative humidity at 2m (%)
+PRECTOTCORR: Precipitation corrected (mm/day)
+WS2M: Wind speed at 2m (m/s, converted to km/h)
+=== MAHARASHTRA DISTRICT COVERAGE ===
+The PolliSync Maharashtra model (maharashtra_v2) is trained on data from these districts:
+Zone 1 — Western Maharashtra: Pune, Satara, Kolhapur, Sangli, Solapur
+Zone 2 — Nashik Region: Nashik, Dhule, Nandurbar, Jalgaon
+Zone 3 — Marathwada: Aurangabad, Jalna, Beed, Latur, Osmanabad, Parbhani, Hingoli, Nanded
+Zone 4 — Vidarbha: Nagpur, Amravati, Akola, Washim, Buldhana, Wardha, Yavatmal
+Zone 5 — Konkan: Mumbai, Thane, Raigad, Ratnagiri, Sindhudurg
+Maharashtra bounding box used by the system: lat 15.5–22.0, lon 72.5–80.5.
+Farms within this box automatically receive the Maharashtra-tuned model.
+=== MODEL FEATURE ENGINEERING ===
+The ML pipeline uses these 15+ features for prediction:
+temp_7d_mean (°C) — 7-day mean temperature
+humidity (%) — 7-day mean relative humidity
+rainfall_7d (mm) — 7-day total precipitation
+wind_speed (km/h) — 7-day mean wind speed
+ndvi (0–1) — most recent NDVI from Sentinel-2
+day_of_year (1–365) — current day
+month (1–12) — current month
+8–10. crop_onehots — binary indicators for crop type (mustard, sunflower, cotton)
+bee_richness — count of distinct bee species in area (from GBIF)
+pollen_tree (1–5) — seasonal tree pollen index
+pollen_grass (1–5) — seasonal grass pollen index
+pollen_weed (1–5) — seasonal weed pollen index
+Engineered interaction terms (for V2 models):
+temp_humidity = temp × humidity / 100 (heat index proxy)
+temp_ndvi = temp × ndvi (vegetation health under heat)
+humidity_rainfall = humidity × rainfall / 100 (muggy conditions)
+temp_sq = temp² (optimal temp non-linearity)
+ndvi_sq = ndvi² (diminishing returns on greenness)
+bee_total = richness × count (total pollinator population)
+temp_wind = temp × wind_speed (wind chill effect)
+Maharashtra-specific features (for maharashtra_v2 model):
+zone_western_ghats, zone_scarce_rainfall, zone_marathwada, zone_vidarbha, zone_konkan, zone_khandesh
+elevation_m (from SRTM data, ~500m default)
+=== SEASONAL POLLEN TABLE ===
+Pollen levels by month (1–5 scale, 5 = highest):
+Month	Tree	Grass	Weed
+January	3	1	2
+February	4	2	3
+March	5	3	4
+April	4	4	5
+May	3	4	5
+June	2	3	4
+July	1	2	3
+August	1	3	3
+September	2	3	4
+October	3	2	3
+November	3	1	2
+December	2	1	2
+Peak pollen season: March–May (tree + weed), September–October (weed).
+Low pollen season: July–August (monsoon, pollen washed out).
+=== GDD (GROWING DEGREE DAY) THRESHOLDS ===
+Used internally by ML models to predict flowering dates from temperature:
+Crop	Base Temp (°C)	GDD to Flowering	Days from Sowing
+Mustard	5.0	~450	40–50
+Wheat	0.0	~900	45–55
+Sunflower	6.7	~958	55–65
+Rice	10.0	~800	80–100
+Cotton	12.0	~850	100–130
+Daily GDD = max( (T_max + T_min) / 2 - T_base, 0 )
+Formula: Cumulative GDD from sowing date to flowering = sum of daily GDD values.
+Higher temperatures → faster GDD accumulation → earlier flowering.
+This is the physical relationship the ML model learns.
+=== API REFERENCE (for AI assistant understanding) ===
+The backend provides these endpoints that populate your farm data:
+GET /api/weather/current?farm_id=X → Current temperature, humidity, rainfall, wind speed
+GET /api/weather/forecast?farm_id=X&days=7 → 7-day weather forecast
+POST /api/predictions {farm_id} → Triggers full prediction pipeline
+GET /api/predictions/latest?farm_id=X → Latest prediction with PSI, risk, flowering dates
+GET /api/maps/bees?farm_id=X&radius=10 → Bee species near farm
+POST /api/recommendations/generate {farm_id, prediction_id} → AI-generated recommendation
+=== SYSTEM CAPABILITIES & LIMITATIONS ===
+The system uses:
+XGBoost models for flowering date and PSI prediction
+GDD-based physics for temperature-flowering relationship
+Real satellite NDVI from Sentinel-2 (when available)
+Real weather data from Open-Meteo & NASA POWER
+Real bee occurrence data from GBIF
+The system does NOT have:
+Real-time local pollen counts (uses seasonal estimates)
+Soil moisture sensor data
+On-ground pest/disease scouting data
+Crop yield history for the specific farm
+Irrigation schedule data
+Fertilizer application records
+When answering, be honest about these limitations. The system is a decision-support tool, not a replacement for local agricultural expertise.

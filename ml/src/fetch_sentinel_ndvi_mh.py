@@ -37,8 +37,7 @@ YEARS = list(range(2018, 2026))
 CROP_SEASONS = {
     "sunflower": {"start_month": 5, "end_month": 10},
     "mustard":   {"start_month": 10, "end_month": 3},
-    "wheat":     {"start_month": 10, "end_month": 4},
-    "rice":      {"start_month": 6, "end_month": 11},
+
     "cotton":    {"start_month": 5, "end_month": 11},
 }
 

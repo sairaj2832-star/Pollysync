@@ -49,7 +49,7 @@ def get_mock_bees(crop_type: str) -> list[str]:
     return MOCK_BEES.get(crop_type, ["Apis cerana"])
 
 
-def store_bees(farm_id: int, occurrences: list[dict], db: Session) -> None:
+def store_bees(farm_id: str, occurrences: list[dict], db: Session) -> None:
     for occ in occurrences:
         existing = (
             db.query(BeeOccurrence)
@@ -74,7 +74,7 @@ def store_bees(farm_id: int, occurrences: list[dict], db: Session) -> None:
     db.commit()
 
 
-def get_bee_species_for_farm(farm_id: int, db: Session) -> list[str]:
+def get_bee_species_for_farm(farm_id: str, db: Session) -> list[str]:
     rows = (
         db.query(BeeOccurrence.species_name)
         .filter(BeeOccurrence.farm_id == farm_id)

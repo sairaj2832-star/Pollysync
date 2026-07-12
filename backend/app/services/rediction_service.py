@@ -50,7 +50,7 @@ _load_models()
 
 
 def _predict_flowering_baseline(features: dict) -> tuple[int, float]:
-    base = {"mustard": 15, "wheat": 45, "sunflower": 60, "rice": 90, "cotton": 120}
+    base = {"mustard": 15, "sunflower": 60, "cotton": 120}
     crop = "mustard"
     for key in base:
         if features.get(f"crop_{key}", 0):

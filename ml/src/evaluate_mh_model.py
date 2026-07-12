@@ -33,7 +33,7 @@ MAHARASHTRA_DISTRICTS = [
 V1_FEATURES = [
     "temp_7d_mean", "humidity", "rainfall_7d", "wind_speed", "ndvi",
     "day_of_year", "month",
-    "crop_mustard", "crop_wheat", "crop_sunflower", "crop_rice", "crop_cotton",
+    "crop_mustard", "crop_sunflower", "crop_cotton",
     "bee_richness", "bee_count", "pollen_tree", "pollen_grass", "pollen_weed",
 ]
 
@@ -86,7 +86,7 @@ def prepare_input_matrix(df, expected_cols):
                 df[c] = 0
             elif c == "bee_count":
                 df[c] = 15
-            elif c in ("crop_mustard", "crop_wheat", "crop_sunflower", "crop_rice", "crop_cotton"):
+            elif c in ("crop_mustard", "crop_sunflower", "crop_cotton"):
                 df[c] = 0
             else:
                 df[c] = 0
@@ -204,7 +204,7 @@ def evaluate_on_ground_truth(models):
     X_mh = prepare_mh_features(df, use_v2=True)
 
     # Prepare V1 features (need crop one-hot first)
-    for c in ["mustard", "wheat", "sunflower", "rice", "cotton"]:
+    for c in ["mustard", "sunflower", "cotton"]:
         df[f"crop_{c}"] = (df["crop"].str.lower() == c).astype(int)
     X_v1 = df[V1_FEATURES]
 
@@ -300,7 +300,7 @@ def analyze_feature_importance(models):
                         "temp_wind"],
             "vegetation": ["ndvi", "ndvi_sq"],
             "temporal": ["day_of_year", "month"],
-            "crop": ["crop_mustard", "crop_wheat", "crop_sunflower", "crop_rice", "crop_cotton"],
+            "crop": ["crop_mustard", "crop_sunflower", "crop_cotton"],
             "pollinator": ["bee_richness", "bee_count", "bee_total"],
             "pollen": ["pollen_tree", "pollen_grass", "pollen_weed"],
             "district": ["elevation_m", "zone_western_ghats", "zone_scarce_rainfall",
@@ -325,7 +325,7 @@ def test_temperature_sensitivity(models):
     scaler = models["maharashtra_v2_scaler"]
     expected_cols = get_model_expected_cols(model, scaler, ALL_MH_FEATURES)
 
-    crops = ["sunflower", "mustard", "wheat", "rice", "cotton"]
+    crops = ["sunflower", "mustard", "cotton"]
     districts = ["nashik", "solapur"]
 
     print(f"  Testing per 1°C temp increase from 20°C to 35°C")
@@ -340,9 +340,7 @@ def test_temperature_sensitivity(models):
                     "wind_speed": 10, "ndvi": 0.6,
                     "day_of_year": 180, "month": 6,
                     "crop_mustard": 1 if crop == "mustard" else 0,
-                    "crop_wheat": 1 if crop == "wheat" else 0,
                     "crop_sunflower": 1 if crop == "sunflower" else 0,
-                    "crop_rice": 1 if crop == "rice" else 0,
                     "crop_cotton": 1 if crop == "cotton" else 0,
                     "bee_richness": 4, "bee_count": 20,
                     "pollen_tree": 3, "pollen_grass": 3, "pollen_weed": 3,
@@ -382,8 +380,8 @@ def compare_district_profiles(models):
             "temp_7d_mean": 28, "humidity": 60, "rainfall_7d": 5,
             "wind_speed": 10, "ndvi": 0.6,
             "day_of_year": 180, "month": 6,
-            "crop_mustard": 0, "crop_wheat": 0, "crop_sunflower": 1,
-            "crop_rice": 0, "crop_cotton": 0,
+            "crop_mustard": 0, "crop_sunflower": 1,
+            "crop_cotton": 0,
             "bee_richness": 4, "bee_count": 20,
             "pollen_tree": 3, "pollen_grass": 3, "pollen_weed": 3,
             "elevation_m": 500, "district": district,
@@ -539,7 +537,7 @@ def generate_report():
         "training_data": "1,545 real GDD-ground-truth rows + 3,000 augmented synthetic rows",
         "sample_weight": "5x weight on real data rows",
         "districts": MAHARASHTRA_DISTRICTS,
-        "crops": ["sunflower", "mustard", "wheat", "rice", "cotton"],
+        "crops": ["sunflower", "mustard", "cotton"],
     }
 
     if "General V1" in results and "MH V2" in results:
@@ -600,3 +598,6 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+
+

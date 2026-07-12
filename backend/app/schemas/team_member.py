@@ -17,11 +17,11 @@ class TeamMemberUpdate(BaseModel):
 class TeamMemberRead(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
-    id: int
-    farm_id: int
+    id: str
+    farm_id: str
     email: str
     name: str
     role: str
     status: str
-    invited_by: int
+    invited_by: str
     created_at: datetime

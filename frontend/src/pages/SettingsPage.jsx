@@ -4,20 +4,16 @@ import InteractiveGoogleMap from "../components/InteractiveGoogleMap";
 import { LOCATION_LIST } from "../components/ParameterForm";
 import {
   updateFarm,
+  getFarms,
   getNotificationPreferences,
   updateNotificationPreferences,
-  getTeamMembers,
-  inviteTeamMember,
-  removeTeamMember,
 } from "../lib/api";
 import { useAuth } from "../context/AuthContext";
 import Select from "../components/Select";
 
 const TABS = [
   { key: "general", label: "General", icon: "info" },
-  { key: "crop", label: "Crop Configuration", icon: "psychology" },
   { key: "alerts", label: "Alerts & Notifications", icon: "notifications_active" },
-  { key: "team", label: "Team", icon: "group" },
 ];
 
 const SOIL_TYPES = [
@@ -31,9 +27,7 @@ const SOIL_TYPES = [
 
 const CROP_OPTIONS = [
   { value: "mustard", label: "Mustard (Brassica juncea)", icon: "eco" },
-  { value: "wheat", label: "Wheat (Triticum aestivum)", icon: "grass" },
   { value: "sunflower", label: "Sunflower (Helianthus annuus)", icon: "local_florist" },
-  { value: "rice", label: "Rice (Oryza sativa)", icon: "water_drop" },
   { value: "cotton", label: "Cotton (Gossypium)", icon: "filter_drama" },
 ];
 
@@ -44,34 +38,27 @@ const VARIETY_OPTIONS = [
   { value: "variety4", label: "Pusa Agrani" },
 ];
 
-const TEAM_ROLES = [
-  { value: "viewer", label: "Viewer (read-only)" },
-  { value: "editor", label: "Editor (can modify)" },
-  { value: "admin", label: "Admin (full access)" },
-];
-
 export default function SettingsPage() {
   const toast = useToast();
   const { user } = useAuth();
   const [tab, setTab] = useState("general");
   const [saving, setSaving] = useState(false);
   const [loadingPrefs, setLoadingPrefs] = useState(false);
-  const [loadingTeam, setLoadingTeam] = useState(false);
-
   const [form, setForm] = useState({
-    farmName: "Nashik Mustard Farm",
-    location: "Nashik, Maharashtra",
-    lat: 19.9975,
-    lng: 73.7898,
-    acreage: "125.5",
-    soilType: "alluvial",
-    elevation: "600m ASL",
-    crop: "mustard",
-    variety: "variety1",
+    farmName: "",
+    location: "",
+    lat: null,
+    lng: null,
+    acreage: "",
+    soilType: "",
+    elevation: "",
+    crop: "",
+    variety: "",
     irrigationMethod: "",
-    plantingDate: "2023-11-15",
-    harvestDate: "2024-03-20",
+    plantingDate: "",
+    harvestDate: "",
   });
+  const [selectedFarmId, setSelectedFarmId] = useState(null);
 
   const handleMapLocationSelect = (coords) => {
     update("lat", coords.lat);
@@ -137,10 +124,34 @@ export default function SettingsPage() {
     smsAlerts: true,
   });
 
-  const [teamMembers, setTeamMembers] = useState([]);
-
   useEffect(() => {
-    handleDetectLocation();
+    async function loadFarm() {
+      try {
+        const farmId = localStorage.getItem("selectedFarmId");
+        const farms = await getFarms();
+        const farm = farms.find((f) => f.id === farmId) || farms[0];
+        if (farm) {
+          setSelectedFarmId(farm.id);
+          setForm({
+            farmName: farm.name || "",
+            location: farm.location_name || "",
+            lat: farm.location_lat,
+            lng: farm.location_lng,
+            acreage: farm.area_acres != null ? String(farm.area_acres) : "",
+            soilType: farm.soil_type || "",
+            elevation: "",
+            crop: farm.crop_type || "",
+            variety: farm.variety || "",
+            irrigationMethod: farm.irrigation_method || "",
+            plantingDate: farm.planting_date || "",
+            harvestDate: farm.harvest_date || "",
+          });
+        }
+      } catch {
+        // ignore
+      }
+    }
+    loadFarm();
   }, []);
 
   useEffect(() => {
@@ -166,65 +177,12 @@ export default function SettingsPage() {
     fetchPrefs();
   }, []);
 
-  useEffect(() => {
-    if (tab === "team") {
-      loadTeam();
-    }
-  }, [tab]);
-
-  async function loadTeam() {
-    setLoadingTeam(true);
-    try {
-      const members = await getTeamMembers(1);
-      setTeamMembers(members);
-    } catch {
-      setTeamMembers([]);
-    } finally {
-      setLoadingTeam(false);
-    }
-  }
-
-  const [invite, setInvite] = useState({ email: "", role: "viewer" });
-  const [teamError, setTeamError] = useState("");
-
   function update(field, value) {
     setForm((prev) => ({ ...prev, [field]: value }));
   }
 
   function toggleNotif(key) {
     setNotifications((prev) => ({ ...prev, [key]: !prev[key] }));
-  }
-
-  async function handleInvite() {
-    if (!invite.email) {
-      setTeamError("Please enter an email address");
-      return;
-    }
-    setTeamError("");
-    try {
-      const { getApiErrorMessage } = await import("../lib/api");
-      const member = await inviteTeamMember(1, {
-        email: invite.email,
-        name: invite.email.split("@")[0],
-        role: invite.role,
-      });
-      setTeamMembers((prev) => [...prev, member]);
-      setInvite({ email: "", role: "viewer" });
-      toast.success("Invitation sent to " + invite.email);
-    } catch (err) {
-      const { getApiErrorMessage } = await import("../lib/api");
-      toast.error(getApiErrorMessage(err, "Failed to send invitation"));
-    }
-  }
-
-  async function removeMember(id) {
-    try {
-      await removeTeamMember(1, id);
-      setTeamMembers((prev) => prev.filter((m) => m.id !== id));
-      toast.success("Team member removed");
-    } catch {
-      toast.error("Failed to remove team member");
-    }
   }
 
   async function handleSave(e) {
@@ -243,7 +201,7 @@ export default function SettingsPage() {
           sms_alerts: notifications.smsAlerts,
         });
       } else {
-        await updateFarm(1, {
+        await updateFarm(selectedFarmId, {
           name: form.farmName,
           crop_type: form.crop,
           variety: form.variety || undefined,
@@ -268,18 +226,18 @@ export default function SettingsPage() {
 
   function handleDiscard() {
     setForm({
-      farmName: "Nashik Mustard Farm",
-      location: "Nashik, Maharashtra",
-      lat: 19.9975,
-      lng: 73.7898,
-      acreage: "125.5",
-      soilType: "alluvial",
-      elevation: "600m ASL",
-      crop: "mustard",
-      variety: "variety1",
+      farmName: "",
+      location: "",
+      lat: null,
+      lng: null,
+      acreage: "",
+      soilType: "",
+      elevation: "",
+      crop: "",
+      variety: "",
       irrigationMethod: "",
-      plantingDate: "2023-11-15",
-      harvestDate: "2024-03-20",
+      plantingDate: "",
+      harvestDate: "",
     });
     setNotifications({
       pushCritical: true,
@@ -297,7 +255,7 @@ export default function SettingsPage() {
       <div className="mb-xl">
         <h1 className="font-headline-lg text-headline-lg font-bold text-on-surface">Farm Settings</h1>
         <p className="text-on-surface-variant font-body-md mt-xs">
-          Manage parameters for <span className="font-semibold text-primary">Nashik Mustard Farm</span>
+          Manage parameters for <span className="font-semibold text-primary">{form.farmName || "Your Farm"}</span>
         </p>
       </div>
 
@@ -323,14 +281,17 @@ export default function SettingsPage() {
       <form onSubmit={handleSave}>
         {tab === "general" && (
           <div className="grid grid-cols-12 gap-lg items-start">
-            <div className="col-span-12 lg:col-span-8 space-y-lg">
+            <div className="col-span-12 lg:col-span-7 space-y-lg">
               <section className="bg-surface border border-outline-variant rounded-xl p-lg shadow-sm">
                 <div className="flex items-center gap-sm mb-lg">
                   <span className="material-symbols-outlined text-primary">badge</span>
-                  <h2 className="font-headline-sm text-headline-sm">Farm Identity</h2>
+                  <div>
+                    <h2 className="font-headline-sm text-headline-sm">Farm Identity</h2>
+                    <p className="text-body-sm text-on-surface-variant">Core farm details for your prediction model and dashboard.</p>
+                  </div>
                 </div>
-                <div className="grid grid-cols-2 gap-lg mb-lg">
-                  <div className="col-span-2 md:col-span-1">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-lg mb-lg">
+                  <div>
                     <label className="block font-label-md text-on-surface-variant mb-sm">Farm Name</label>
                     <input
                       className="w-full bg-surface-container-lowest border border-outline-variant rounded-lg px-md py-sm font-body-md focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all"
@@ -339,8 +300,8 @@ export default function SettingsPage() {
                       onChange={(e) => update("farmName", e.target.value)}
                     />
                   </div>
-                  <div className="col-span-2 md:col-span-1 space-y-sm">
-                    <label className="block font-label-md text-on-surface-variant mb-sm">Location/District</label>
+                  <div>
+                    <label className="block font-label-md text-on-surface-variant mb-sm">Location / District</label>
                     <div className="flex gap-sm">
                       <input
                         className="flex-1 bg-surface-container-lowest border border-outline-variant rounded-lg px-md py-sm font-body-md focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all"
@@ -360,20 +321,88 @@ export default function SettingsPage() {
                     </div>
                   </div>
                 </div>
-                <div className="relative w-full h-48 rounded-xl overflow-hidden border border-outline-variant mb-md bg-surface-container-highest flex">
+
+                <div className="relative w-full h-64 rounded-xl overflow-hidden border border-outline-variant mb-md bg-surface-container-highest">
                   <InteractiveGoogleMap
-                    center={{ lat: form.lat || 19.9975, lng: form.lng || 73.7898 }}
+                    center={form.lat && form.lng ? { lat: form.lat, lng: form.lng } : null}
                     zoom={10}
                     onLocationSelect={handleMapLocationSelect}
                   />
                 </div>
-                <div className="flex items-center justify-between p-md bg-surface-container-low rounded-lg border border-outline-variant/50">
-                  <div className="flex items-center gap-sm">
-                    <span className="material-symbols-outlined text-on-surface-variant text-[20px]">explore</span>
-                    <span className="font-label-md text-on-surface-variant uppercase">Coordinates</span>
+
+                <div className="flex flex-col gap-md p-md bg-surface-container-low rounded-lg border border-outline-variant/50">
+                  <div className="flex items-center justify-between gap-sm">
+                    <div className="flex items-center gap-sm">
+                      <span className="material-symbols-outlined text-on-surface-variant text-[20px]">explore</span>
+                      <span className="font-label-md text-on-surface-variant uppercase">Coordinates</span>
+                    </div>
+                    <div className="font-body-sm font-mono text-on-surface">
+                      {form.lat ? `${form.lat.toFixed(4)}° N` : "—"}, {form.lng ? `${form.lng.toFixed(4)}° E` : "—"}
+                    </div>
                   </div>
-                  <div className="font-body-sm font-mono text-on-surface">
-                    {form.lat ? `${form.lat.toFixed(4)}° N` : "19.9975° N"}, {form.lng ? `${form.lng.toFixed(4)}° E` : "73.7898° E"}
+                  <div className="grid grid-cols-2 gap-lg">
+                    <div>
+                      <p className="font-label-sm text-label-sm text-on-surface-variant">Coordinates</p>
+                      <p className="font-body-sm text-body-sm text-on-surface mt-xs">Lat: {form.lat != null ? form.lat.toFixed(4) : "—"}, Lng: {form.lng != null ? form.lng.toFixed(4) : "—"}</p>
+                    </div>
+                    <div>
+                      <p className="font-label-sm text-label-sm text-on-surface-variant">Detected region</p>
+                      <p className="font-body-sm text-body-sm text-on-surface mt-xs">{form.location || "—"}</p>
+                    </div>
+                  </div>
+                </div>
+              </section>
+            </div>
+
+            <div className="col-span-12 lg:col-span-5 space-y-lg">
+              <section className="bg-surface border border-outline-variant rounded-xl p-lg shadow-sm">
+                <div className="flex items-center gap-sm mb-lg">
+                  <span className="material-symbols-outlined text-primary">potted_plant</span>
+                  <div>
+                    <h2 className="font-headline-sm text-headline-sm">Farm Parameters</h2>
+                    <p className="text-body-sm text-on-surface-variant">Crop and production settings used for your predictions.</p>
+                  </div>
+                </div>
+                <div className="space-y-lg">
+                  <Select
+                    label="Crop"
+                    value={form.crop}
+                    onChange={(v) => update("crop", v)}
+                    options={CROP_OPTIONS}
+                    placeholder="Choose a crop"
+                  />
+                  <Select
+                    label="Variety / Cultivar"
+                    value={form.variety}
+                    onChange={(v) => update("variety", v)}
+                    options={VARIETY_OPTIONS}
+                    placeholder="Choose variety"
+                  />
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-lg">
+                    <div>
+                      <label className="block font-label-md text-on-surface-variant mb-sm">Planting Date</label>
+                      <div className="relative">
+                        <input
+                          className="w-full bg-surface-container-lowest border border-outline-variant rounded-lg px-md py-sm font-body-md focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all"
+                          type="date"
+                          value={form.plantingDate}
+                          onChange={(e) => update("plantingDate", e.target.value)}
+                        />
+                        <span className="material-symbols-outlined absolute right-md top-1/2 -translate-y-1/2 text-on-surface-variant pointer-events-none">calendar_month</span>
+                      </div>
+                    </div>
+                    <div>
+                      <label className="block font-label-md text-on-surface-variant mb-sm">Expected Harvest</label>
+                      <div className="relative">
+                        <input
+                          className="w-full bg-surface-container-lowest border border-outline-variant rounded-lg px-md py-sm font-body-md focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all"
+                          type="date"
+                          value={form.harvestDate}
+                          onChange={(e) => update("harvestDate", e.target.value)}
+                        />
+                        <span className="material-symbols-outlined absolute right-md top-1/2 -translate-y-1/2 text-on-surface-variant pointer-events-none">event_available</span>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </section>
@@ -381,20 +410,20 @@ export default function SettingsPage() {
               <section className="bg-surface border border-outline-variant rounded-xl p-lg shadow-sm">
                 <div className="flex items-center gap-sm mb-lg">
                   <span className="material-symbols-outlined text-primary">data_usage</span>
-                  <h2 className="font-headline-sm text-headline-sm">Site Metadata</h2>
+                  <div>
+                    <h2 className="font-headline-sm text-headline-sm">Production Details</h2>
+                    <p className="text-body-sm text-on-surface-variant">Key metrics for farm performance and crop yield.</p>
+                  </div>
                 </div>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-lg">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-lg">
                   <div>
                     <label className="block font-label-md text-on-surface-variant mb-sm">Total Acreage (ha)</label>
-                    <div className="relative">
-                      <input
-                        className="w-full bg-surface-container-lowest border border-outline-variant rounded-lg px-md py-sm font-body-md focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all pr-xl"
-                        type="number"
-                        value={form.acreage}
-                        onChange={(e) => update("acreage", e.target.value)}
-                      />
-                      <span className="absolute right-md top-1/2 -translate-y-1/2 text-outline font-label-sm">ha</span>
-                    </div>
+                    <input
+                      className="w-full bg-surface-container-lowest border border-outline-variant rounded-lg px-md py-sm font-body-md focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all"
+                      type="number"
+                      value={form.acreage}
+                      onChange={(e) => update("acreage", e.target.value)}
+                    />
                   </div>
                   <div>
                     <Select
@@ -406,7 +435,7 @@ export default function SettingsPage() {
                     />
                   </div>
                   <div>
-                    <label className="block font-label-md text-on-surface-variant mb-sm">Elevation (m)</label>
+                    <label className="block font-label-md text-on-surface-variant mb-sm">Elevation</label>
                     <input
                       className="w-full bg-surface-container-lowest border border-outline-variant rounded-lg px-md py-sm font-body-md focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all"
                       type="text"
@@ -414,139 +443,23 @@ export default function SettingsPage() {
                       onChange={(e) => update("elevation", e.target.value)}
                     />
                   </div>
-                </div>
-              </section>
-            </div>
-
-            <div className="col-span-12 lg:col-span-4 space-y-lg">
-              <section className="bg-surface border border-outline-variant rounded-xl p-lg shadow-sm">
-                <div className="flex items-center gap-sm mb-lg">
-                  <span className="material-symbols-outlined text-primary">potted_plant</span>
-                  <h2 className="font-headline-sm text-headline-sm">Crop Configuration</h2>
-                </div>
-                <div className="space-y-md">
-                  <Select
-                    label="Select Crop"
-                    value={form.crop}
-                    onChange={(v) => update("crop", v)}
-                    options={CROP_OPTIONS}
-                    placeholder="Choose a crop"
-                  />
                   <div>
-                    <label className="block font-label-md text-on-surface-variant mb-sm">Planting Date</label>
-                    <div className="relative">
-                      <input
-                        className="w-full bg-surface-container-lowest border border-outline-variant rounded-lg px-md py-sm font-body-md focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all"
-                        type="date"
-                        value={form.plantingDate}
-                        onChange={(e) => update("plantingDate", e.target.value)}
-                      />
-                      <span className="material-symbols-outlined absolute right-md top-1/2 -translate-y-1/2 text-on-surface-variant pointer-events-none">calendar_month</span>
-                    </div>
-                  </div>
-                  <div>
-                    <label className="block font-label-md text-on-surface-variant mb-sm">Expected Harvest</label>
-                    <div className="relative">
-                      <input
-                        className="w-full bg-surface-container-lowest border border-outline-variant rounded-lg px-md py-sm font-body-md focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all"
-                        type="date"
-                        value={form.harvestDate}
-                        onChange={(e) => update("harvestDate", e.target.value)}
-                      />
-                      <span className="material-symbols-outlined absolute right-md top-1/2 -translate-y-1/2 text-on-surface-variant pointer-events-none">event_available</span>
-                    </div>
+                    <label className="block font-label-md text-on-surface-variant mb-sm">Irrigation Method</label>
+                    <Select
+                      value={form.irrigationMethod}
+                      onChange={(v) => update("irrigationMethod", v)}
+                      options={[
+                        { value: "drip", label: "Drip Irrigation" },
+                        { value: "sprinkler", label: "Sprinkler" },
+                        { value: "flood", label: "Flood Irrigation" },
+                        { value: "rainfed", label: "Rainfed (no irrigation)" },
+                      ]}
+                      placeholder="Select method"
+                    />
                   </div>
                 </div>
               </section>
             </div>
-          </div>
-        )}
-
-        {tab === "crop" && (
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-lg">
-            <section className="bg-surface border border-outline-variant rounded-xl p-lg shadow-sm space-y-lg">
-              <div className="flex items-center gap-sm">
-                <span className="material-symbols-outlined text-primary">psychology</span>
-                <h2 className="font-headline-sm text-headline-sm">Crop Details</h2>
-              </div>
-              <Select
-                label="Current Crop"
-                value={form.crop}
-                onChange={(v) => update("crop", v)}
-                options={CROP_OPTIONS}
-                placeholder="Select crop"
-              />
-              <Select
-                label="Variety / Cultivar"
-                value={form.variety}
-                onChange={(v) => update("variety", v)}
-                options={VARIETY_OPTIONS}
-                placeholder="Select variety"
-              />
-              <div>
-                <label className="block font-label-md text-on-surface-variant mb-sm">Planting Date</label>
-                <div className="relative">
-                  <input
-                    className="w-full bg-surface-container-lowest border border-outline-variant rounded-lg px-md py-sm font-body-md focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all"
-                    type="date"
-                    value={form.plantingDate}
-                    onChange={(e) => update("plantingDate", e.target.value)}
-                  />
-                  <span className="material-symbols-outlined absolute right-md top-1/2 -translate-y-1/2 text-on-surface-variant pointer-events-none">calendar_month</span>
-                </div>
-              </div>
-              <div>
-                <label className="block font-label-md text-on-surface-variant mb-sm">Expected Harvest</label>
-                <div className="relative">
-                  <input
-                    className="w-full bg-surface-container-lowest border border-outline-variant rounded-lg px-md py-sm font-body-md focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all"
-                    type="date"
-                    value={form.harvestDate}
-                    onChange={(e) => update("harvestDate", e.target.value)}
-                  />
-                  <span className="material-symbols-outlined absolute right-md top-1/2 -translate-y-1/2 text-on-surface-variant pointer-events-none">event_available</span>
-                </div>
-              </div>
-            </section>
-
-            <section className="bg-surface border border-outline-variant rounded-xl p-lg shadow-sm space-y-lg">
-              <div className="flex items-center gap-sm">
-                <span className="material-symbols-outlined text-primary">growing</span>
-                <h2 className="font-headline-sm text-headline-sm">Growth Parameters</h2>
-              </div>
-              <div>
-                <label className="block font-label-md text-on-surface-variant mb-sm">Soil Type</label>
-                <Select
-                  value={form.soilType}
-                  onChange={(v) => update("soilType", v)}
-                  options={SOIL_TYPES}
-                  placeholder="Select soil type"
-                />
-              </div>
-              <div>
-                <label className="block font-label-md text-on-surface-variant mb-sm">Total Acreage (ha)</label>
-                <input
-                  className="w-full bg-surface-container-lowest border border-outline-variant rounded-lg px-md py-sm font-body-md focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all"
-                  type="number"
-                  value={form.acreage}
-                  onChange={(e) => update("acreage", e.target.value)}
-                />
-              </div>
-              <div>
-                <label className="block font-label-md text-on-surface-variant mb-sm">Irrigation Method</label>
-                <Select
-                  value=""
-                  onChange={() => { }}
-                  options={[
-                    { value: "drip", label: "Drip Irrigation" },
-                    { value: "sprinkler", label: "Sprinkler" },
-                    { value: "flood", label: "Flood Irrigation" },
-                    { value: "rainfed", label: "Rainfed (no irrigation)" },
-                  ]}
-                  placeholder="Select method"
-                />
-              </div>
-            </section>
           </div>
         )}
 
@@ -675,116 +588,6 @@ export default function SettingsPage() {
           </div>
         )}
 
-        {tab === "team" && (
-          <div className="grid grid-cols-1 lg:grid-cols-5 gap-lg">
-            <div className="lg:col-span-3 space-y-lg">
-              <section className="bg-surface border border-outline-variant rounded-xl p-lg shadow-sm">
-                <div className="flex items-center gap-sm mb-lg">
-                  <span className="material-symbols-outlined text-primary">person_add</span>
-                  <h2 className="font-headline-sm text-headline-sm">Invite Team Member</h2>
-                </div>
-                <div className="flex flex-col sm:flex-row gap-md items-end">
-                  <div className="flex-1 w-full">
-                    <label className="block font-label-md text-on-surface-variant mb-sm">Email Address</label>
-                    <input
-                      type="email"
-                      placeholder="colleague@example.com"
-                      className="w-full bg-surface-container-lowest border border-outline-variant rounded-lg px-md py-sm font-body-md focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all"
-                      value={invite.email}
-                      onChange={(e) => setInvite({ ...invite, email: e.target.value })}
-                    />
-                  </div>
-                  <div className="w-full sm:w-44">
-                    <Select
-                      label="Role"
-                      value={invite.role}
-                      onChange={(v) => setInvite({ ...invite, role: v })}
-                      options={TEAM_ROLES}
-                      placeholder="Select role"
-                    />
-                  </div>
-                  <button
-                    type="button"
-                    onClick={handleInvite}
-                    className="bg-primary hover:brightness-90 text-on-primary font-label-md text-label-md py-sm px-lg rounded-lg transition-all active:scale-[0.98] flex items-center gap-sm whitespace-nowrap"
-                  >
-                    <span className="material-symbols-outlined text-[18px]">send</span>
-                    Send Invite
-                  </button>
-                </div>
-                {teamError && (
-                  <p className="mt-sm text-body-sm text-tertiary">{teamError}</p>
-                )}
-              </section>
-
-              <section className="bg-surface border border-outline-variant rounded-xl p-lg shadow-sm">
-                <div className="flex items-center gap-sm mb-lg">
-                  <span className="material-symbols-outlined text-primary">group</span>
-                  <h2 className="font-headline-sm text-headline-sm">Team Members</h2>
-                  <span className="ml-auto text-body-sm text-on-surface-variant">{teamMembers.length} members</span>
-                </div>
-                <div className="space-y-md">
-                  {teamMembers.map((member) => (
-                    <div
-                      key={member.id}
-                      className="flex items-center gap-md p-md rounded-lg bg-surface-container-low border border-outline-variant/50"
-                    >
-                      <div className="w-10 h-10 rounded-full bg-primary-container/20 flex items-center justify-center flex-shrink-0">
-                        <span className="material-symbols-outlined text-primary text-[20px]">person</span>
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <p className="font-label-md text-label-md text-on-surface truncate">{member.name}</p>
-                        <p className="text-body-sm text-on-surface-variant truncate">{member.email}</p>
-                      </div>
-                      <div className="flex items-center gap-sm">
-                        <span className={`px-sm py-xs rounded-full font-label-sm text-label-sm ${member.role === "admin"
-                            ? "bg-primary-container/10 text-primary"
-                            : member.role === "editor"
-                              ? "bg-secondary/10 text-secondary"
-                              : "bg-surface-container-highest text-on-surface-variant"
-                          }`}>
-                          {member.role.charAt(0).toUpperCase() + member.role.slice(1)}
-                        </span>
-                        <span className={`w-2 h-2 rounded-full ${member.status === "active" ? "bg-primary" : "bg-secondary"}`} />
-                        <button
-                          type="button"
-                          onClick={() => removeMember(member.id)}
-                          className="text-on-surface-variant hover:text-tertiary transition-colors p-xs"
-                        >
-                          <span className="material-symbols-outlined text-[18px]">remove_circle</span>
-                        </button>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </section>
-            </div>
-
-            <div className="lg:col-span-2">
-              <section className="bg-surface border border-outline-variant rounded-xl p-lg shadow-sm">
-                <div className="flex items-center gap-sm mb-lg">
-                  <span className="material-symbols-outlined text-primary">info</span>
-                  <h2 className="font-headline-sm text-headline-sm">Role Overview</h2>
-                </div>
-                <div className="space-y-md">
-                  {[
-                    { role: "Admin", icon: "admin_panel_settings", desc: "Full access to all settings, billing, and team management. Can add/remove members.", color: "text-primary" },
-                    { role: "Editor", icon: "edit", desc: "Can modify farm data, create predictions, and view analytics. Cannot manage team or billing.", color: "text-secondary" },
-                    { role: "Viewer", icon: "visibility", desc: "Read-only access to dashboards, predictions, and reports. Cannot make changes.", color: "text-on-surface-variant" },
-                  ].map((r) => (
-                    <div key={r.role} className="flex gap-md p-md rounded-lg bg-surface-container-low border border-outline-variant/50">
-                      <span className={`material-symbols-outlined ${r.color} text-[24px]`}>{r.icon}</span>
-                      <div>
-                        <p className="font-label-md text-label-md text-on-surface">{r.role}</p>
-                        <p className="text-body-sm text-on-surface-variant">{r.desc}</p>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </section>
-            </div>
-          </div>
-        )}
 
         <div className="flex items-center justify-end gap-md mt-xl pt-lg border-t border-outline-variant">
           <button

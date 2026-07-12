@@ -14,7 +14,7 @@ from app.schemas.notification_preference import (
 router = APIRouter(prefix="/notifications/preferences", tags=["notifications"])
 
 
-def _get_or_create_prefs(user_id: int, db: Session) -> NotificationPreference:
+def _get_or_create_prefs(user_id: str, db: Session) -> NotificationPreference:
     prefs = db.scalar(
         select(NotificationPreference).where(NotificationPreference.user_id == user_id)
     )

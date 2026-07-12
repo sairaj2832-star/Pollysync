@@ -27,7 +27,7 @@ def list_notifications(
 
 @router.patch("/{notification_id}/read", response_model=NotificationStatus)
 def mark_notification_read(
-    notification_id: int,
+    notification_id: str,
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ) -> NotificationStatus:

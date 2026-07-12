@@ -19,7 +19,7 @@ from app.services.weather_service import (
 router = APIRouter(prefix="/weather", tags=["weather"])
 
 
-def _owned_farm_or_404(farm_id: int, user_id: int, db: Session) -> Farm:
+def _owned_farm_or_404(farm_id: str, user_id: str, db: Session) -> Farm:
     farm = db.scalar(select(Farm).where(Farm.id == farm_id, Farm.user_id == user_id))
     if not farm:
         raise HTTPException(status_code=404, detail="Farm not found")
@@ -28,7 +28,7 @@ def _owned_farm_or_404(farm_id: int, user_id: int, db: Session) -> Farm:
 
 @router.get("/current", response_model=WeatherCurrent)
 async def current_weather(
-    farm_id: int = Query(...),
+    farm_id: str = Query(...),
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ) -> WeatherCurrent:
@@ -58,7 +58,7 @@ async def current_weather(
 
 @router.get("/forecast", response_model=WeatherForecast)
 async def forecast(
-    farm_id: int = Query(...),
+    farm_id: str = Query(...),
     days: int = Query(7, ge=1, le=16),
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),

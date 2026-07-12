@@ -6,6 +6,7 @@ import {
   MOCK_WEATHER_FORECAST,
   MOCK_PREDICTIONS_HISTORY,
   MOCK_LOCATIONS,
+  MOCK_DISTRICTS,
 } from "./mockData";
 
 const delay = (ms = 500) => new Promise((r) => setTimeout(r, ms));
@@ -69,7 +70,7 @@ export async function mockGetLatestPrediction(farm_id) {
 export async function mockGetDashboardSummary(farm_id) {
   await delay(600);
   return {
-    farm: { id: 1, name: "North Field", crop_type: "Mustard", location_lat: 20.011, location_lng: 73.79 },
+    farm: { id: "mock-farm-id-001", name: "North Field", crop_type: "Mustard", location_lat: 19.9975, location_lng: 73.7898 },
     current_weather: clone(MOCK_WEATHER_CURRENT),
     latest_prediction: clone(MOCK_PREDICTION),
     bee_species: ["Apis cerana", "Apis dorsata", "Apis florea"],
@@ -138,15 +139,15 @@ export async function mockUpdateNotificationPreferences(payload) {
 export async function mockGetTeamMembers(farm_id) {
   await delay(300);
   return [
-    { id: 1, farm_id, email: "elena@pollisync.ag", name: "Elena Rodriguez", role: "admin", status: "active", invited_by: 1, created_at: new Date().toISOString() },
-    { id: 2, farm_id, email: "james@pollisync.ag", name: "James Carter", role: "editor", status: "active", invited_by: 1, created_at: new Date().toISOString() },
-    { id: 3, farm_id, email: "priya@pollisync.ag", name: "Priya Sharma", role: "viewer", status: "pending", invited_by: 1, created_at: new Date().toISOString() },
+    { id: "mock-member-id-001", farm_id, email: "elena@pollisync.ag", name: "Elena Rodriguez", role: "admin", status: "active", invited_by: "mock-user-id-001", created_at: new Date().toISOString() },
+    { id: "mock-member-id-002", farm_id, email: "james@pollisync.ag", name: "James Carter", role: "editor", status: "active", invited_by: "mock-user-id-001", created_at: new Date().toISOString() },
+    { id: "mock-member-id-003", farm_id, email: "priya@pollisync.ag", name: "Priya Sharma", role: "viewer", status: "pending", invited_by: "mock-user-id-001", created_at: new Date().toISOString() },
   ];
 }
 
 export async function mockInviteTeamMember(farm_id, payload) {
   await delay(400);
-  return { id: Date.now(), farm_id, ...payload, status: "pending", invited_by: 1, created_at: new Date().toISOString() };
+  return { id: "mock-member-id-" + Date.now(), farm_id, ...payload, status: "pending", invited_by: "mock-user-id-001", created_at: new Date().toISOString() };
 }
 
 export async function mockRemoveTeamMember(farm_id, member_id) {
@@ -155,4 +156,18 @@ export async function mockRemoveTeamMember(farm_id, member_id) {
 
 export function getMockLocations() {
   return MOCK_LOCATIONS;
+}
+
+export async function mockGetDistricts() {
+  await delay(300);
+  return clone(MOCK_DISTRICTS);
+}
+
+export async function mockGetDistrict(slug) {
+  await delay(300);
+  const district = MOCK_DISTRICTS.find((d) => d.slug === slug);
+  if (!district) {
+    throw new Error("District not found");
+  }
+  return clone(district);
 }
