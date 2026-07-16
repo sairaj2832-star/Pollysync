@@ -28,6 +28,13 @@ CROP_PARAMS = {
         "gdd_to_maturity": 1700,
         "confidence": "low",
     },
+
+    "cotton": {
+        "t_base": 12.0,          # °C (heat-loving crop)
+        "gdd_to_flowering": 800,  # hybrid cotton, Maharashtra conditions
+        "gdd_to_maturity": 2200,
+        "confidence": "medium",
+    },
 }
 
 

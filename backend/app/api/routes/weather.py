@@ -1,7 +1,11 @@
-from fastapi import APIRouter, Depends, Query
+from fastapi import APIRouter, Depends, HTTPException, Query
+from sqlalchemy import select
 from sqlalchemy.orm import Session
 
+from app.auth import get_current_user
 from app.database import get_db
+from app.models.farm import Farm
+from app.models.user import User
 from app.models.weather_cache import WeatherCache
 from app.schemas.weather import ForecastDay, WeatherCurrent, WeatherForecast
 from app.services.weather_service import (
@@ -9,13 +13,26 @@ from app.services.weather_service import (
     get_cached_weather,
     parse_forecast,
     cache_weather,
+    get_fallback_weather,
 )
 
 router = APIRouter(prefix="/weather", tags=["weather"])
 
 
+def _owned_farm_or_404(farm_id: str, user_id: str, db: Session) -> Farm:
+    farm = db.scalar(select(Farm).where(Farm.id == farm_id, Farm.user_id == user_id))
+    if not farm:
+        raise HTTPException(status_code=404, detail="Farm not found")
+    return farm
+
+
 @router.get("/current", response_model=WeatherCurrent)
-async def current_weather(farm_id: int = Query(...), db: Session = Depends(get_db)) -> WeatherCurrent:
+async def current_weather(
+    farm_id: str = Query(...),
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+) -> WeatherCurrent:
+    farm = _owned_farm_or_404(farm_id, current_user.id, db)
     cached = get_cached_weather(farm_id, db)
     if cached:
         return WeatherCurrent(
@@ -25,7 +42,10 @@ async def current_weather(farm_id: int = Query(...), db: Session = Depends(get_d
             wind_speed=cached.wind_speed,
             timestamp=cached.timestamp.isoformat() if cached.timestamp else None,
         )
-    raw = await fetch_weather(0, 0)
+    try:
+        raw = await fetch_weather(farm.location_lat, farm.location_lng)
+    except Exception:
+        raw = get_fallback_weather(farm.location_lat, farm.location_lng)
     record = cache_weather(farm_id, raw, db)
     return WeatherCurrent(
         temperature=record.temperature,
@@ -38,14 +58,15 @@ async def current_weather(farm_id: int = Query(...), db: Session = Depends(get_d
 
 @router.get("/forecast", response_model=WeatherForecast)
 async def forecast(
-    farm_id: int = Query(...),
+    farm_id: str = Query(...),
     days: int = Query(7, ge=1, le=16),
     db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
 ) -> WeatherForecast:
-    from app.models.farm import Farm
-    farm = db.get(Farm, farm_id)
-    if not farm:
-        return WeatherForecast(forecast=[])
-    raw = await fetch_weather(farm.location_lat, farm.location_lng)
+    farm = _owned_farm_or_404(farm_id, current_user.id, db)
+    try:
+        raw = await fetch_weather(farm.location_lat, farm.location_lng)
+    except Exception:
+        raw = get_fallback_weather(farm.location_lat, farm.location_lng)
     forecast_data = parse_forecast(raw)[:days]
     return WeatherForecast(forecast=[ForecastDay(**d) for d in forecast_data])

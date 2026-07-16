@@ -15,7 +15,7 @@ MODELS_DIR = Path(__file__).resolve().parent.parent / "models"
 FEATURE_COLS = [
     "temp_7d_mean", "humidity", "rainfall_7d", "wind_speed", "ndvi",
     "day_of_year", "month",
-    "crop_mustard", "crop_wheat", "crop_sunflower", "crop_rice", "crop_cotton",
+    "crop_mustard", "crop_sunflower", "crop_cotton",
     "bee_richness", "bee_count", "pollen_tree", "pollen_grass", "pollen_weed",
 ]
 
@@ -23,7 +23,7 @@ def prepare_features(df):
     """Prepare features in the exact format expected by the model."""
     # One-hot encode crops
     df_copy = df.copy()
-    for crop in ["mustard", "wheat", "sunflower", "rice", "cotton"]:
+    for crop in ["mustard", "sunflower", "cotton"]:
         df_copy[f"crop_{crop}"] = (df_copy["crop"].str.lower() == crop).astype(int)
     
     # Ensure all feature columns exist
@@ -87,3 +87,4 @@ if __name__ == "__main__":
     print("🔍 Validating PolliSync Models\n")
     validate_flowering_model()
     print("\n✅ Validation complete")
+

@@ -4,9 +4,11 @@ from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
+from app.auth import get_current_user
 from app.database import get_db
 from app.models.farm import Farm
 from app.models.prediction import Prediction
+from app.models.user import User
 from app.schemas.prediction import DashboardSummary, PredictionCreate, PredictionRead
 from app.services.prediction_service import run_prediction
 
@@ -14,16 +16,25 @@ router = APIRouter(prefix="/predictions", tags=["predictions"])
 
 
 @router.post("", response_model=PredictionRead, status_code=201)
-async def create_prediction(payload: PredictionCreate, db: Session = Depends(get_db)) -> Prediction:
-    farm = db.get(Farm, payload.farm_id)
+async def create_prediction(
+    payload: PredictionCreate,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+) -> Prediction:
+    farm = _owned_farm_or_404(payload.farm_id, current_user.id, db)
     if not farm:
         raise HTTPException(status_code=404, detail="Farm not found")
-    prediction = await run_prediction(farm, db)
+    prediction = await run_prediction(farm, db, region=payload.region)
     return _prediction_to_read(prediction)
 
 
 @router.get("", response_model=list[PredictionRead])
-def list_predictions(farm_id: int = Query(...), db: Session = Depends(get_db)) -> list[Prediction]:
+def list_predictions(
+    farm_id: str = Query(...),
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+) -> list[Prediction]:
+    _owned_farm_or_404(farm_id, current_user.id, db)
     rows = (
         db.scalars(
             select(Prediction)
@@ -36,7 +47,12 @@ def list_predictions(farm_id: int = Query(...), db: Session = Depends(get_db)) -
 
 
 @router.get("/latest", response_model=PredictionRead | None)
-def latest_prediction(farm_id: int = Query(...), db: Session = Depends(get_db)) -> Prediction | None:
+def latest_prediction(
+    farm_id: str = Query(...),
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+) -> Prediction | None:
+    _owned_farm_or_404(farm_id, current_user.id, db)
     prediction = (
         db.scalars(
             select(Prediction)
@@ -52,14 +68,16 @@ def latest_prediction(farm_id: int = Query(...), db: Session = Depends(get_db)) 
 
 
 @router.get("/dashboard/summary", response_model=DashboardSummary)
-def dashboard_summary(farm_id: int = Query(...), db: Session = Depends(get_db)) -> DashboardSummary:
-    farm = db.get(Farm, farm_id)
-    if not farm:
-        raise HTTPException(status_code=404, detail="Farm not found")
+def dashboard_summary(
+    farm_id: str = Query(...),
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+) -> DashboardSummary:
+    farm = _owned_farm_or_404(farm_id, current_user.id, db)
     prediction = (
         db.scalars(
             select(Prediction)
-            .where(Prediction.farm_id == farm_id)
+            .where(Prediction.farm_id == farm.id)
             .order_by(Prediction.created_at.desc())
             .limit(1)
         )
@@ -74,6 +92,13 @@ def dashboard_summary(farm_id: int = Query(...), db: Session = Depends(get_db)) 
         latest_prediction=_prediction_to_read(prediction) if prediction else None,
         bee_species=bee_species,
     )
+
+
+def _owned_farm_or_404(farm_id: str, user_id: str, db: Session) -> Farm:
+    farm = db.scalar(select(Farm).where(Farm.id == farm_id, Farm.user_id == user_id))
+    if not farm:
+        raise HTTPException(status_code=404, detail="Farm not found")
+    return farm
 
 
 def _prediction_to_read(p: Prediction) -> PredictionRead:
@@ -91,10 +116,13 @@ def _prediction_to_read(p: Prediction) -> PredictionRead:
         bee_species=json.loads(p.bee_species) if p.bee_species else [],
         recommendation=p.recommendation,
         created_at=p.created_at,
+        model_source=p.model_source,
+        data_confidence=p.data_confidence,
+        prediction_inputs=json.loads(p.prediction_inputs) if p.prediction_inputs else {},
     )
 
 
-def _get_weather_summary(farm_id: int, db: Session) -> dict | None:
+def _get_weather_summary(farm_id: str, db: Session) -> dict | None:
     from app.models.weather_cache import WeatherCache
     wc = (
         db.query(WeatherCache)

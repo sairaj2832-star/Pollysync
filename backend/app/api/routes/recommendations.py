@@ -3,19 +3,22 @@ import json
 import httpx
 from fastapi import APIRouter, Depends, HTTPException
 from pydantic import BaseModel
+from sqlalchemy import select
 from sqlalchemy.orm import Session
 
+from app.auth import get_current_user
 from app.core.config import settings
 from app.database import get_db
 from app.models.farm import Farm
 from app.models.prediction import Prediction
+from app.models.user import User
 
 router = APIRouter(prefix="/recommendations", tags=["recommendations"])
 
 
 class GenerateRequest(BaseModel):
-    farm_id: int
-    prediction_id: int
+    farm_id: str
+    prediction_id: str
 
 
 def _build_prompt(farm: Farm, prediction: Prediction) -> str:
@@ -60,12 +63,12 @@ async def _generate_gemini_recommendation(farm: Farm, prediction: Prediction) ->
     prompt = _build_prompt(farm, prediction)
     url = (
         "https://generativelanguage.googleapis.com/v1beta/models/"
-        f"{settings.gemini_model}:generateContent"
+        f"{settings.llm_model or settings.gemini_model}:generateContent"
     )
     async with httpx.AsyncClient(timeout=15) as client:
         response = await client.post(
             url,
-            params={"key": settings.gemini_api_key},
+            params={"key": settings.llm_api_key or settings.gemini_api_key},
             json={
                 "contents": [
                     {
@@ -121,15 +124,22 @@ def _generate_local_recommendation(farm: Farm, prediction: Prediction) -> str:
 async def generate_recommendation(
     payload: GenerateRequest,
     db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
 ) -> dict:
-    farm = db.get(Farm, payload.farm_id)
+    farm = db.scalar(select(Farm).where(Farm.id == payload.farm_id, Farm.user_id == current_user.id))
     if not farm:
         raise HTTPException(status_code=404, detail="Farm not found")
-    prediction = db.get(Prediction, payload.prediction_id)
+    prediction = db.scalar(
+        select(Prediction).where(
+            Prediction.id == payload.prediction_id,
+            Prediction.farm_id == farm.id,
+        )
+    )
     if not prediction:
         raise HTTPException(status_code=404, detail="Prediction not found")
 
-    if settings.gemini_api_key and settings.gemini_api_key != "change-me-in-production":
+    active_llm_key = settings.llm_api_key or settings.gemini_api_key
+    if active_llm_key and active_llm_key != "change-me-in-production":
         try:
             recommendation = await _generate_gemini_recommendation(farm, prediction)
         except (httpx.HTTPError, ValueError):

@@ -29,12 +29,26 @@ class UserLogin(BaseModel):
     password: str = Field(min_length=1, max_length=128)
 
 
+class UserUpdate(BaseModel):
+    full_name: str | None = Field(default=None, min_length=2, max_length=120)
+    phone: str | None = Field(default=None, max_length=30)
+    role: str | None = Field(default=None, max_length=80)
+    organization: str | None = Field(default=None, max_length=255)
+    language: str | None = Field(default=None, max_length=10)
+    has_onboarded: bool | None = None
+
+
 class UserRead(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
-    id: int
+    id: str
     email: str
     full_name: str
+    phone: str | None = None
+    role: str | None = None
+    organization: str | None = None
+    language: str | None = "en"
+    has_onboarded: bool = False
     created_at: datetime
 
 
@@ -56,3 +70,7 @@ class RefreshTokenRequest(BaseModel):
 class OAuthCallback(BaseModel):
     code: str = Field(min_length=1)
     state: str | None = None
+
+
+class FirebaseAuthRequest(BaseModel):
+    id_token: str = Field(min_length=1)

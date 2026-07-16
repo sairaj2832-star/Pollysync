@@ -134,7 +134,8 @@ def get_current_user(
             detail="Invalid token payload",
             headers={"WWW-Authenticate": "Bearer"},
         )
-    user = db.get(User, int(subject))
+    # Subject is now a UUID string
+    user = db.get(User, subject)
     if user is None or not user.is_active:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,

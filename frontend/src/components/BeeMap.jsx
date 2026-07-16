@@ -1,4 +1,5 @@
 import { useEffect, useRef } from "react";
+import "leaflet/dist/leaflet.css";
 
 export default function BeeMap({ center = [20, 78], occurrences = [], zoom = 8 }) {
   const mapRef = useRef(null);
@@ -6,17 +7,14 @@ export default function BeeMap({ center = [20, 78], occurrences = [], zoom = 8 }
   const markersRef = useRef([]);
 
   useEffect(() => {
-    let leafletL, map;
-
     async function init() {
       const L = await import("leaflet");
-      leafletL = L;
 
       if (!mapInstance.current && mapRef.current) {
-        map = L.map(mapRef.current).setView(center, zoom);
+        const map = L.map(mapRef.current).setView(center, zoom);
         L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-          attribution: "&copy; OpenStreetMap contributors",
-          maxZoom: 18,
+          attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+          maxZoom: 19,
         }).addTo(map);
         mapInstance.current = map;
       }
@@ -28,7 +26,30 @@ export default function BeeMap({ center = [20, 78], occurrences = [], zoom = 8 }
       markersRef.current.forEach((m) => m.remove());
       markersRef.current = [];
     };
-  }, [center, zoom]);
+  }, []);
+
+  // Update map view when farm center changes dynamically
+  useEffect(() => {
+    if (mapInstance.current && center && center[0] && center[1]) {
+      mapInstance.current.setView(center, mapInstance.current.getZoom());
+    }
+  }, [center]);
+
+  // Automatically center on browser GPS location on mount if coordinates are default
+  useEffect(() => {
+    if (navigator.geolocation && center && center[0] === 20 && center[1] === 78) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const userCenter = [position.coords.latitude, position.coords.longitude];
+          if (mapInstance.current) {
+            mapInstance.current.setView(userCenter, mapInstance.current.getZoom());
+          }
+        },
+        (err) => console.log("Automatic dashboard geolocation skipped:", err),
+        { enableHighAccuracy: true, timeout: 5000 }
+      );
+    }
+  }, []);
 
   useEffect(() => {
     async function addMarkers() {
@@ -47,24 +68,44 @@ export default function BeeMap({ center = [20, 78], occurrences = [], zoom = 8 }
         shadowSize: [41, 41],
       });
 
+      const blueIcon = L.icon({
+        iconUrl: "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-icon.png",
+        shadowUrl: "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-shadow.png",
+        iconSize: [25, 41],
+        iconAnchor: [12, 41],
+        popupAnchor: [1, -34],
+        shadowSize: [41, 41],
+      });
+
+      // Add Farm Location marker (blue)
+      if (center && center[0] && center[1]) {
+        const farmMarker = L.marker(center, { icon: blueIcon })
+          .addTo(mapInstance.current)
+          .bindPopup(`Hello!`)
+          .openPopup();
+        markersRef.current.push(farmMarker);
+      }
+
+      // Add Bee Occurrences markers (red)
       occurrences.forEach((occ) => {
         const marker = L.marker([occ.lat, occ.lng], { icon: redIcon })
           .addTo(mapInstance.current)
-          .bindPopup(`<b>${occ.species}</b>`);
+          .bindPopup(`<b>${occ.species}</b><br/>Bee Sighting`);
         markersRef.current.push(marker);
       });
 
-      if (occurrences.length > 0) {
+      // Fit map bounds to show both the farm and all bee occurrences
+      if (markersRef.current.length > 0) {
         const group = L.featureGroup(markersRef.current);
-        mapInstance.current.fitBounds(group.getBounds().pad(0.1));
+        mapInstance.current.fitBounds(group.getBounds().pad(0.15));
       }
     }
 
     addMarkers();
-  }, [occurrences]);
+  }, [occurrences, center]);
 
   return (
-    <div className="rounded-2xl overflow-hidden border border-slate-100 shadow-soft">
+    <div className="bg-surface border border-outline-variant rounded-xl overflow-hidden shadow-[0_1px_3px_rgba(0,0,0,0.05)]">
       <div ref={mapRef} className="h-72 w-full" />
     </div>
   );

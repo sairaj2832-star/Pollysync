@@ -21,7 +21,28 @@ async def fetch_weather(lat: float, lng: float) -> dict:
         return resp.json()
 
 
-def get_cached_weather(farm_id: int, db: Session) -> WeatherCache | None:
+def get_fallback_weather(lat: float, lng: float) -> dict:
+    # Conservative fallback so prediction flows can continue even if the
+    # upstream weather API is unavailable locally.
+    return {
+        "current": {
+            "temperature_2m": 28,
+            "relative_humidity_2m": 62,
+            "precipitation": 1.2,
+            "wind_speed_10m": 9.5,
+        },
+        "daily": {
+            "time": [],
+            "temperature_2m_max": [],
+            "temperature_2m_min": [],
+            "precipitation_sum": [],
+        },
+        "fallback": True,
+        "source_location": {"lat": lat, "lng": lng},
+    }
+
+
+def get_cached_weather(farm_id: str, db: Session) -> WeatherCache | None:
     cutoff = datetime.now(timezone.utc) - timedelta(hours=1)
     return (
         db.query(WeatherCache)
@@ -34,7 +55,7 @@ def get_cached_weather(farm_id: int, db: Session) -> WeatherCache | None:
     )
 
 
-def cache_weather(farm_id: int, data: dict, db: Session) -> WeatherCache:
+def cache_weather(farm_id: str, data: dict, db: Session) -> WeatherCache:
     current = data.get("current", {})
     record = WeatherCache(
         farm_id=farm_id,

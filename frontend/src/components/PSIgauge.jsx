@@ -1,44 +1,33 @@
 export default function PSIgauge({ score = 0, size = "lg" }) {
   const clamped = Math.max(0, Math.min(100, score));
-  const color =
-    clamped >= 70 ? "text-emerald-600 stroke-emerald-500"
-    : clamped >= 40 ? "text-amber-600 stroke-amber-500"
-    : "text-red-600 stroke-red-500";
-
-  const radius = size === "sm" ? 48 : 64;
-  const circumference = 2 * Math.PI * radius;
+  const circumference = 283;
   const offset = circumference - (clamped / 100) * circumference;
+  const color =
+    clamped >= 70 ? "#10b981"
+    : clamped >= 40 ? "#fea619"
+    : "#b91a24";
 
   return (
-    <div className="flex flex-col items-center gap-2">
-      <svg width={radius * 2.5} height={radius * 2.5} className="-rotate-90">
+    <div className="relative w-40 h-40 flex items-center justify-center my-md">
+      <svg className="w-full h-full transform -rotate-90" viewBox="0 0 100 100">
+        <circle cx="50" cy="50" fill="none" r="45" stroke="#E2E8F0" strokeWidth="8" />
         <circle
-          cx={radius * 1.25}
-          cy={radius * 1.25}
-          r={radius}
+          cx="50"
+          cy="50"
           fill="none"
-          stroke="#e5e7eb"
-          strokeWidth={12}
-        />
-        <circle
-          cx={radius * 1.25}
-          cy={radius * 1.25}
-          r={radius}
-          fill="none"
-          className={color}
-          strokeWidth={12}
+          r="45"
+          stroke={color}
+          strokeWidth="8"
           strokeDasharray={circumference}
           strokeDashoffset={offset}
           strokeLinecap="round"
+          className="transition-all duration-1000 ease-in-out"
         />
       </svg>
-      <div className="absolute flex flex-col items-center">
-        <span className="text-5xl font-black">{clamped}</span>
-        <span className="text-sm font-semibold text-slate-500">/ 100</span>
+      <div className="absolute inset-0 flex flex-col items-center justify-center">
+        <span className="font-display text-display text-on-surface">{clamped}</span>
+        <span className="font-label-sm text-label-sm text-on-surface-variant">/ 100</span>
       </div>
-      <span className="text-sm font-bold uppercase tracking-wider text-slate-500">
-        Pollination Suitability
-      </span>
     </div>
   );
 }

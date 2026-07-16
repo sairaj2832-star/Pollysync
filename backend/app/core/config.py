@@ -1,10 +1,11 @@
 import os
+from pathlib import Path
 from dataclasses import dataclass
 
 from dotenv import load_dotenv
 
-
-load_dotenv()
+_env_path = Path(__file__).resolve().parents[2] / ".env"
+load_dotenv(_env_path, override=True)
 
 
 @dataclass(frozen=True)
@@ -21,8 +22,16 @@ class Settings:
     oauth_google_client_id: str = os.getenv("OAUTH_GOOGLE_CLIENT_ID", "")
     oauth_google_client_secret: str = os.getenv("OAUTH_GOOGLE_CLIENT_SECRET", "")
     oauth_google_redirect_uri: str = os.getenv("OAUTH_GOOGLE_REDIRECT_URI", "")
+    firebase_project_id: str = os.getenv("FIREBASE_PROJECT_ID", "")
+    firebase_service_account_json: str = os.getenv("FIREBASE_SERVICE_ACCOUNT_JSON", "")
+    firebase_service_account_path: str = os.getenv("FIREBASE_SERVICE_ACCOUNT_PATH", "")
     gemini_api_key: str = os.getenv("GEMINI_API_KEY", "")
-    gemini_model: str = os.getenv("GEMINI_MODEL", "gemini-1.5-flash")
+    gemini_model: str = os.getenv("GEMINI_MODEL", "gemini-2.5-flash")
+    llm_api_key: str = os.getenv("LLM_API_KEY", "")
+    llm_model: str = os.getenv("LLM_MODEL", "gemini-2.5-flash")
+    supabase_url: str = os.getenv("SUPABASE_URL", "")
+    supabase_anon_key: str = os.getenv("SUPABASE_ANON_KEY", "")
+    supabase_service_key: str = os.getenv("SUPABASE_SERVICE_KEY", "")
 
     @property
     def allowed_origins(self) -> list[str]:
@@ -34,6 +43,11 @@ class Settings:
     @property
     def is_production(self) -> bool:
         return self.app_env.lower() in {"prod", "production"}
+    
+    @property
+    def is_supabase_configured(self) -> bool:
+        """Check if Supabase is properly configured."""
+        return bool(self.supabase_url and self.supabase_anon_key)
 
     def validate_security(self) -> None:
         if self.is_production and self.secret_key == "change-me-in-production":

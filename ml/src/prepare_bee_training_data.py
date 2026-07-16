@@ -88,9 +88,7 @@ def _build_feature_dict(features: PollinationFeatures) -> dict:
         "day_of_year": features.day_of_year,
         "month": features.month,
         "crop_mustard": 1 if crop == "mustard" else 0,
-        "crop_wheat": 1 if crop == "wheat" else 0,
         "crop_sunflower": 1 if crop == "sunflower" else 0,
-        "crop_rice": 1 if crop == "rice" else 0,
         "crop_cotton": 1 if crop == "cotton" else 0,
         "bee_richness": features.bee_count,
         "bee_count": features.bee_abundance,
@@ -118,7 +116,7 @@ def _baseline_flowering(features: PollinationFeatures) -> tuple[int, int]:
             return start_doy, start_doy + 7
 
     # Fallback
-    base = {"mustard": 15, "wheat": 45, "sunflower": 60, "rice": 90, "cotton": 120}
+    base = {"mustard": 15, "sunflower": 60, "cotton": 120}
     start = base.get(crop, 60)
     start += int(features.temperature_c - 25) * 2
     start = max(1, min(365, start))
@@ -298,3 +296,4 @@ def predict_from_dict(d: dict) -> dict:
     features = PollinationFeatures(**d)
     result = predict(features)
     return asdict(result)
+
