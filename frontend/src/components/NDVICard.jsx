@@ -1,4 +1,4 @@
-export default function NDVICard({ value = 0 }) {
+export default function NDVICard({ value = 0, onViewTrend }) {
   const clamped = Math.max(0, Math.min(1, value));
   const health = clamped >= 0.7 ? "Healthy" : clamped >= 0.4 ? "Moderate" : "Poor";
   const color = clamped >= 0.7 ? "text-primary"
@@ -38,6 +38,15 @@ export default function NDVICard({ value = 0 }) {
           </defs>
         </svg>
       </div>
+      {onViewTrend && (
+        <button
+          onClick={onViewTrend}
+          className="mt-md inline-flex min-h-11 items-center justify-center gap-sm rounded-lg bg-primary/10 px-md text-label-md font-bold text-primary hover:bg-primary/15"
+        >
+          <span className="material-symbols-outlined text-[18px]">show_chart</span>
+          View NDVI trend
+        </button>
+      )}
     </div>
   );
 }

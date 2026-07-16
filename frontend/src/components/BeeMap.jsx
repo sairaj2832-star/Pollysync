@@ -1,7 +1,7 @@
 import { useEffect, useRef } from "react";
 import "leaflet/dist/leaflet.css";
 
-export default function BeeMap({ center = [20, 78], occurrences = [], zoom = 8 }) {
+export default function BeeMap({ center = [20, 78], occurrences = [], zoom = 8, farmName = "Farm", crop = "", psiScore }) {
   const mapRef = useRef(null);
   const mapInstance = useRef(null);
   const markersRef = useRef([]);
@@ -81,7 +81,7 @@ export default function BeeMap({ center = [20, 78], occurrences = [], zoom = 8 }
       if (center && center[0] && center[1]) {
         const farmMarker = L.marker(center, { icon: blueIcon })
           .addTo(mapInstance.current)
-          .bindPopup(`Hello!`)
+          .bindPopup(`<b>${farmName}</b>${crop ? `<br/>${crop}` : ""}${psiScore != null ? `<br/>PSI: ${psiScore}/100` : ""}`)
           .openPopup();
         markersRef.current.push(farmMarker);
       }
@@ -102,7 +102,7 @@ export default function BeeMap({ center = [20, 78], occurrences = [], zoom = 8 }
     }
 
     addMarkers();
-  }, [occurrences, center]);
+  }, [occurrences, center, farmName, crop, psiScore]);
 
   return (
     <div className="bg-surface border border-outline-variant rounded-xl overflow-hidden shadow-[0_1px_3px_rgba(0,0,0,0.05)]">

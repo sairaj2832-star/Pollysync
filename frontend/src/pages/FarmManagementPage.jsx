@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { getFarms, createFarm, deleteFarm } from "../lib/api";
 import { useToast } from "../context/ToastContext";
 import Card from "../components/Card";
@@ -14,6 +14,7 @@ const CROP_ICONS = {
 
 export default function FarmManagementPage() {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const toast = useToast();
   const [farms, setFarms] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -25,12 +26,20 @@ export default function FarmManagementPage() {
     location: "",
     area_acres: "",
     soil_type: "loamy",
+    planting_date: "",
+    harvest_date: "",
   });
   const [submitting, setSubmitting] = useState(false);
 
   useEffect(() => {
     loadFarms();
   }, []);
+
+  useEffect(() => {
+    if (searchParams.get("new") === "1") {
+      setShowForm(true);
+    }
+  }, [searchParams]);
 
   async function loadFarms() {
     try {
@@ -61,10 +70,12 @@ export default function FarmManagementPage() {
         location: form.location,
         area_acres: parseFloat(form.area_acres),
         soil_type: form.soil_type,
+        planting_date: form.planting_date || null,
+        harvest_date: form.harvest_date || null,
       });
 
       toast.success(`Farm "${form.name}" added successfully!`);
-      setForm({ name: "", crop: "", location: "", area_acres: "", soil_type: "loamy" });
+      setForm({ name: "", crop: "", location: "", area_acres: "", soil_type: "loamy", planting_date: "", harvest_date: "" });
       setShowForm(false);
       await loadFarms();
     } catch (err) {
@@ -162,6 +173,33 @@ export default function FarmManagementPage() {
                 <option value="clay">Clay (heavy)</option>
                 <option value="silty">Silty (fertile)</option>
               </select>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-lg">
+              <div className="space-y-sm">
+                <label className="block font-label-md text-label-md font-bold text-on-surface">
+                  Planting Date <span className="font-body-sm text-body-sm font-normal text-on-surface-variant">(optional)</span>
+                </label>
+                <input
+                  type="date"
+                  value={form.planting_date}
+                  onChange={(e) => setForm({ ...form, planting_date: e.target.value })}
+                  className="w-full px-md py-sm rounded-lg border border-outline-variant bg-surface text-on-surface font-body-md focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
+                  disabled={submitting}
+                />
+              </div>
+              <div className="space-y-sm">
+                <label className="block font-label-md text-label-md font-bold text-on-surface">
+                  Expected Harvest <span className="font-body-sm text-body-sm font-normal text-on-surface-variant">(optional)</span>
+                </label>
+                <input
+                  type="date"
+                  value={form.harvest_date}
+                  onChange={(e) => setForm({ ...form, harvest_date: e.target.value })}
+                  className="w-full px-md py-sm rounded-lg border border-outline-variant bg-surface text-on-surface font-body-md focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
+                  disabled={submitting}
+                />
+              </div>
             </div>
 
             <div className="flex gap-md">

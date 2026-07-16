@@ -1,645 +1,189 @@
-import { useState, useEffect } from "react";
-import { useToast } from "../context/ToastContext";
+import { useEffect, useMemo, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import InteractiveGoogleMap from "../components/InteractiveGoogleMap";
-import { LOCATION_LIST } from "../components/ParameterForm";
-import {
-  updateFarm,
-  getFarms,
-  getNotificationPreferences,
-  updateNotificationPreferences,
-} from "../lib/api";
-import { useAuth } from "../context/AuthContext";
 import Select from "../components/Select";
+import { useFarm } from "../context/FarmContext";
+import { useToast } from "../context/ToastContext";
+import { reverseGeocode, searchLocations } from "../lib/location";
+import { getNotificationPreferences, updateFarm, updateNotificationPreferences } from "../lib/api";
 
 const TABS = [
-  { key: "general", label: "General", icon: "info" },
-  { key: "alerts", label: "Alerts & Notifications", icon: "notifications_active" },
-];
-
-const SOIL_TYPES = [
-  { value: "alluvial", label: "Alluvial" },
-  { value: "black", label: "Black Soil (Regur)" },
-  { value: "red", label: "Red and Yellow" },
-  { value: "laterite", label: "Laterite" },
-  { value: "sandy", label: "Sandy" },
-  { value: "clay", label: "Clay" },
+  { key: "general", label: "Farm settings", icon: "agriculture" },
+  { key: "alerts", label: "Notifications", icon: "notifications_active" },
 ];
 
 const CROP_OPTIONS = [
-  { value: "mustard", label: "Mustard (Brassica juncea)", icon: "eco" },
-  { value: "sunflower", label: "Sunflower (Helianthus annuus)", icon: "local_florist" },
-  { value: "cotton", label: "Cotton (Gossypium)", icon: "filter_drama" },
+  { value: "Mustard", label: "Mustard", icon: "eco" },
+  { value: "Sunflower", label: "Sunflower", icon: "local_florist" },
+  { value: "Cotton", label: "Cotton", icon: "filter_drama" },
+  { value: "Wheat", label: "Wheat", icon: "grass" },
+  { value: "Rice", label: "Rice", icon: "rice_bowl" },
 ];
 
-const VARIETY_OPTIONS = [
-  { value: "variety1", label: "Varuna (RH-30)" },
-  { value: "variety2", label: "Pusa Jaikisan" },
-  { value: "variety3", label: "Kranti" },
-  { value: "variety4", label: "Pusa Agrani" },
+const SOIL_TYPES = [
+  { value: "loamy", label: "Loamy" }, { value: "alluvial", label: "Alluvial" },
+  { value: "black", label: "Black soil (Regur)" }, { value: "red", label: "Red and yellow" },
+  { value: "laterite", label: "Laterite" }, { value: "sandy", label: "Sandy" }, { value: "clay", label: "Clay" },
 ];
+
+const IRRIGATION_OPTIONS = [
+  { value: "drip", label: "Drip irrigation" }, { value: "sprinkler", label: "Sprinkler" },
+  { value: "flood", label: "Flood irrigation" }, { value: "rainfed", label: "Rainfed" },
+];
+
+function farmToForm(farm) {
+  return {
+    farmName: farm?.name || "", crop: farm?.crop_type || "", variety: farm?.variety || "",
+    irrigationMethod: farm?.irrigation_method || "", plantingDate: farm?.planting_date || "",
+    harvestDate: farm?.harvest_date || "", location: farm?.location_name || "",
+    lat: farm?.location_lat ?? null, lng: farm?.location_lng ?? null,
+    acreage: farm?.area_acres != null ? String(farm.area_acres) : "", soilType: farm?.soil_type || "",
+  };
+}
+
+function sameRelevantSettings(before, after) {
+  return ["crop", "plantingDate", "harvestDate", "location", "lat", "lng"].every((key) => String(before[key] ?? "") === String(after[key] ?? ""));
+}
 
 export default function SettingsPage() {
+  const navigate = useNavigate();
   const toast = useToast();
-  const { user } = useAuth();
+  const { selectedFarm, selectedFarmId, loadingFarms, refreshFarms } = useFarm();
   const [tab, setTab] = useState("general");
+  const [form, setForm] = useState(() => farmToForm(null));
+  const [savedForm, setSavedForm] = useState(() => farmToForm(null));
   const [saving, setSaving] = useState(false);
-  const [loadingPrefs, setLoadingPrefs] = useState(false);
-  const [form, setForm] = useState({
-    farmName: "",
-    location: "",
-    lat: null,
-    lng: null,
-    acreage: "",
-    soilType: "",
-    elevation: "",
-    crop: "",
-    variety: "",
-    irrigationMethod: "",
-    plantingDate: "",
-    harvestDate: "",
-  });
-  const [selectedFarmId, setSelectedFarmId] = useState(null);
+  const [locating, setLocating] = useState(false);
+  const [locationResults, setLocationResults] = useState([]);
+  const [showRunPrompt, setShowRunPrompt] = useState(false);
+  const [notifications, setNotifications] = useState({ pushCritical: true, pushDaily: true, pushSystem: false, emailWeekly: true, emailBilling: true, whatsappUrgent: false, smsAlerts: true });
 
-  const handleMapLocationSelect = (coords) => {
-    update("lat", coords.lat);
-    update("lng", coords.lng);
-  };
+  useEffect(() => {
+    const next = farmToForm(selectedFarm);
+    setForm(next);
+    setSavedForm(next);
+    setShowRunPrompt(false);
+  }, [selectedFarmId, selectedFarm]);
 
-  function getClosestLocation(lat, lng) {
-    let closest = LOCATION_LIST[0];
-    let minDist = Infinity;
-    for (const loc of LOCATION_LIST) {
-      const dist = Math.hypot(loc.lat - lat, loc.lng - lng);
-      if (dist < minDist) {
-        minDist = dist;
-        closest = loc;
-      }
+  useEffect(() => {
+    let active = true;
+    getNotificationPreferences().then((data) => {
+      if (!active) return;
+      setNotifications({ pushCritical: data.push_critical, pushDaily: data.push_daily, pushSystem: data.push_system, emailWeekly: data.email_weekly, emailBilling: data.email_billing, whatsappUrgent: data.whatsapp_urgent, smsAlerts: data.sms_alerts });
+    }).catch(() => {});
+    return () => { active = false; };
+  }, []);
+
+  useEffect(() => {
+    const query = form.location.trim();
+    if (query.length < 3 || (selectedFarm?.location_name || "") === query) {
+      setLocationResults([]);
+      return undefined;
     }
-    return closest;
+    const timer = window.setTimeout(() => {
+      searchLocations(query).then(setLocationResults).catch(() => setLocationResults([]));
+    }, 350);
+    return () => window.clearTimeout(timer);
+  }, [form.location, selectedFarm?.location_name]);
+
+  const mapCenter = useMemo(() => form.lat != null && form.lng != null ? { lat: Number(form.lat), lng: Number(form.lng) } : { lat: 19.9975, lng: 73.7898 }, [form.lat, form.lng]);
+  const update = (field, value) => setForm((current) => ({ ...current, [field]: value }));
+
+  async function applyCoordinates(coords, preferredName = "") {
+    setLocating(true);
+    try {
+      const resolved = preferredName ? { address: preferredName } : await reverseGeocode(coords.lat, coords.lng);
+      setForm((current) => ({ ...current, lat: coords.lat, lng: coords.lng, location: resolved.address }));
+      setLocationResults([]);
+    } catch {
+      setForm((current) => ({ ...current, lat: coords.lat, lng: coords.lng, location: preferredName || current.location || "Selected location" }));
+      toast.error("Coordinates were updated, but the place name could not be found.");
+    } finally {
+      setLocating(false);
+    }
   }
 
-  const handleDetectLocation = () => {
+  function detectLocation() {
     if (!navigator.geolocation) {
-      toast.error("Geolocation is not supported by your browser");
+      toast.error("Geolocation is not supported by this browser.");
       return;
     }
-
+    setLocating(true);
     navigator.geolocation.getCurrentPosition(
-      (position) => {
-        const coords = {
-          lat: position.coords.latitude,
-          lng: position.coords.longitude,
-        };
-        update("lat", coords.lat);
-        update("lng", coords.lng);
-        const closest = getClosestLocation(coords.lat, coords.lng);
-        update("location", `${closest.district}, ${closest.state}`);
-        toast.success("Location updated successfully!");
-      },
-      (err) => {
-        console.error("Geolocation error:", err);
-        let msg = "Failed to detect location.";
-        if (err.code === 1) {
-          msg = "Location access denied. Please click the site settings icon (lock/sliders) in your browser address bar next to the URL, change Location to 'Allow', and try again.";
-        } else if (err.code === 2) {
-          msg = "Position unavailable. Please ensure your device location services are enabled.";
-        } else if (err.code === 3) {
-          msg = "Location request timed out. Please try again.";
-        } else {
-          msg = `Error: ${err.message}`;
-        }
-        toast.error(msg);
-      },
-      { enableHighAccuracy: true, timeout: 5000, maximumAge: 0 }
+      (position) => applyCoordinates({ lat: position.coords.latitude, lng: position.coords.longitude }),
+      () => { setLocating(false); toast.error("Unable to access your current location. Check browser location permissions."); },
+      { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 },
     );
-  };
-
-  const [notifications, setNotifications] = useState({
-    pushCritical: true,
-    pushDaily: true,
-    pushSystem: false,
-    emailWeekly: true,
-    emailBilling: true,
-    whatsappUrgent: false,
-    smsAlerts: true,
-  });
-
-  useEffect(() => {
-    async function loadFarm() {
-      try {
-        const farmId = localStorage.getItem("selectedFarmId");
-        const farms = await getFarms();
-        const farm = farms.find((f) => f.id === farmId) || farms[0];
-        if (farm) {
-          setSelectedFarmId(farm.id);
-          setForm({
-            farmName: farm.name || "",
-            location: farm.location_name || "",
-            lat: farm.location_lat,
-            lng: farm.location_lng,
-            acreage: farm.area_acres != null ? String(farm.area_acres) : "",
-            soilType: farm.soil_type || "",
-            elevation: "",
-            crop: farm.crop_type || "",
-            variety: farm.variety || "",
-            irrigationMethod: farm.irrigation_method || "",
-            plantingDate: farm.planting_date || "",
-            harvestDate: farm.harvest_date || "",
-          });
-        }
-      } catch {
-        // ignore
-      }
-    }
-    loadFarm();
-  }, []);
-
-  useEffect(() => {
-    async function fetchPrefs() {
-      setLoadingPrefs(true);
-      try {
-        const data = await getNotificationPreferences();
-        setNotifications({
-          pushCritical: data.push_critical,
-          pushDaily: data.push_daily,
-          pushSystem: data.push_system,
-          emailWeekly: data.email_weekly,
-          emailBilling: data.email_billing,
-          whatsappUrgent: data.whatsapp_urgent,
-          smsAlerts: data.sms_alerts,
-        });
-      } catch {
-        // ignore, use defaults
-      } finally {
-        setLoadingPrefs(false);
-      }
-    }
-    fetchPrefs();
-  }, []);
-
-  function update(field, value) {
-    setForm((prev) => ({ ...prev, [field]: value }));
   }
 
-  function toggleNotif(key) {
-    setNotifications((prev) => ({ ...prev, [key]: !prev[key] }));
-  }
-
-  async function handleSave(e) {
-    e.preventDefault();
+  async function handleSave(event) {
+    event.preventDefault();
+    if (tab === "general" && (!selectedFarmId || !form.farmName.trim() || !form.crop)) {
+      toast.error("Farm name and crop are required.");
+      return;
+    }
     setSaving(true);
     try {
-      const { getApiErrorMessage } = await import("../lib/api");
       if (tab === "alerts") {
-        await updateNotificationPreferences({
-          push_critical: notifications.pushCritical,
-          push_daily: notifications.pushDaily,
-          push_system: notifications.pushSystem,
-          email_weekly: notifications.emailWeekly,
-          email_billing: notifications.emailBilling,
-          whatsapp_urgent: notifications.whatsappUrgent,
-          sms_alerts: notifications.smsAlerts,
-        });
+        await updateNotificationPreferences({ push_critical: notifications.pushCritical, push_daily: notifications.pushDaily, push_system: notifications.pushSystem, email_weekly: notifications.emailWeekly, email_billing: notifications.emailBilling, whatsapp_urgent: notifications.whatsappUrgent, sms_alerts: notifications.smsAlerts });
+        toast.success("Notification preferences saved.");
       } else {
         await updateFarm(selectedFarmId, {
-          name: form.farmName,
-          crop_type: form.crop,
-          variety: form.variety || undefined,
-          irrigation_method: form.irrigationMethod || undefined,
-          planting_date: form.plantingDate || undefined,
-          harvest_date: form.harvestDate || undefined,
-          location_name: form.location,
-          location_lat: form.lat,
-          location_lng: form.lng,
-          area_acres: form.acreage ? parseFloat(form.acreage) : undefined,
-          soil_type: form.soilType,
+          name: form.farmName.trim(), crop_type: form.crop, variety: form.variety || null,
+          irrigation_method: form.irrigationMethod || null, planting_date: form.plantingDate || null,
+          harvest_date: form.harvestDate || null, location_name: form.location.trim() || null,
+          location_lat: form.lat, location_lng: form.lng,
+          area_acres: form.acreage ? Number(form.acreage) : null, soil_type: form.soilType || null,
         });
+        const requiresPrediction = !sameRelevantSettings(savedForm, form);
+        await refreshFarms();
+        setSavedForm(form);
+        setShowRunPrompt(requiresPrediction);
+        toast.success(requiresPrediction ? "Farm saved. Run a new prediction to refresh your results." : "Farm settings saved.");
       }
-      toast.success("Settings saved successfully.");
-    } catch (err) {
-      const { getApiErrorMessage } = await import("../lib/api");
-      toast.error(getApiErrorMessage(err, "Failed to save settings"));
+    } catch (error) {
+      toast.error(error?.response?.data?.detail || "Could not save your changes.");
     } finally {
       setSaving(false);
     }
   }
 
-  function handleDiscard() {
-    setForm({
-      farmName: "",
-      location: "",
-      lat: null,
-      lng: null,
-      acreage: "",
-      soilType: "",
-      elevation: "",
-      crop: "",
-      variety: "",
-      irrigationMethod: "",
-      plantingDate: "",
-      harvestDate: "",
-    });
-    setNotifications({
-      pushCritical: true,
-      pushDaily: true,
-      pushSystem: false,
-      emailWeekly: true,
-      emailBilling: true,
-      whatsappUrgent: false,
-      smsAlerts: true,
-    });
-  }
+  if (loadingFarms) return <div className="p-lg text-body-md text-on-surface-variant">Loading farm settings…</div>;
+  if (!selectedFarm) return <div className="rounded-2xl border border-outline-variant bg-surface p-xl text-center"><h1 className="text-headline-md font-headline-md">No farm selected</h1><p className="mt-sm text-body-md text-on-surface-variant">Create a farm before configuring crop settings.</p><button onClick={() => navigate("/farms?new=1")} className="mt-lg min-h-11 rounded-lg bg-primary px-lg font-bold text-on-primary">Go to My Farms</button></div>;
 
   return (
-    <div className="max-w-6xl mx-auto pb-2xl">
-      <div className="mb-xl">
-        <h1 className="font-headline-lg text-headline-lg font-bold text-on-surface">Farm Settings</h1>
-        <p className="text-on-surface-variant font-body-md mt-xs">
-          Manage parameters for <span className="font-semibold text-primary">{form.farmName || "Your Farm"}</span>
-        </p>
-      </div>
+    <div className="mx-auto max-w-7xl space-y-lg pb-28">
+      <header>
+        <p className="text-label-sm font-bold uppercase tracking-wide text-primary">Selected farm</p>
+        <h1 className="mt-1 text-headline-lg font-headline-lg text-on-surface">Farm settings</h1>
+        <p className="mt-1 text-body-md text-on-surface-variant">Update {selectedFarm.name}; new predictions will use these details.</p>
+      </header>
 
-      <div className="flex gap-lg border-b border-outline-variant mb-xl overflow-x-auto">
-        {TABS.map((t) => {
-          const active = tab === t.key;
-          return (
-            <button
-              key={t.key}
-              onClick={() => setTab(t.key)}
-              className={`px-sm py-md font-label-md whitespace-nowrap flex items-center gap-sm border-b-2 transition-colors ${active
-                  ? "text-primary border-primary"
-                  : "text-on-surface-variant hover:text-on-surface border-transparent"
-                }`}
-            >
-              <span className="material-symbols-outlined text-[20px]">{t.icon}</span>
-              {t.label}
-            </button>
-          );
-        })}
+      {showRunPrompt && <section className="flex flex-col gap-md rounded-2xl border border-secondary/40 bg-secondary-container/10 p-lg sm:flex-row sm:items-center sm:justify-between"><div className="flex gap-sm"><span className="material-symbols-outlined text-secondary">update</span><div><h2 className="font-label-md text-on-surface">Prediction needs an update</h2><p className="mt-1 text-body-sm text-on-surface-variant">Your crop, planting date, or location changed. Existing results remain in history.</p></div></div><button onClick={() => navigate(`/predict?farm_id=${selectedFarmId}`)} className="min-h-11 rounded-lg bg-primary px-lg text-label-md font-bold text-on-primary">Run new prediction</button></section>}
+
+      <div role="tablist" aria-label="Settings sections" className="flex gap-sm overflow-x-auto border-b border-outline-variant">
+        {TABS.map((item) => <button key={item.key} role="tab" aria-selected={tab === item.key} onClick={() => setTab(item.key)} className={`min-h-11 shrink-0 border-b-2 px-md text-label-md ${tab === item.key ? "border-primary font-bold text-primary" : "border-transparent text-on-surface-variant"}`}><span className="material-symbols-outlined mr-xs align-middle text-[18px]">{item.icon}</span>{item.label}</button>)}
       </div>
 
       <form onSubmit={handleSave}>
-        {tab === "general" && (
-          <div className="grid grid-cols-12 gap-lg items-start">
-            <div className="col-span-12 lg:col-span-7 space-y-lg">
-              <section className="bg-surface border border-outline-variant rounded-xl p-lg shadow-sm">
-                <div className="flex items-center gap-sm mb-lg">
-                  <span className="material-symbols-outlined text-primary">badge</span>
-                  <div>
-                    <h2 className="font-headline-sm text-headline-sm">Farm Identity</h2>
-                    <p className="text-body-sm text-on-surface-variant">Core farm details for your prediction model and dashboard.</p>
-                  </div>
-                </div>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-lg mb-lg">
-                  <div>
-                    <label className="block font-label-md text-on-surface-variant mb-sm">Farm Name</label>
-                    <input
-                      className="w-full bg-surface-container-lowest border border-outline-variant rounded-lg px-md py-sm font-body-md focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all"
-                      type="text"
-                      value={form.farmName}
-                      onChange={(e) => update("farmName", e.target.value)}
-                    />
-                  </div>
-                  <div>
-                    <label className="block font-label-md text-on-surface-variant mb-sm">Location / District</label>
-                    <div className="flex gap-sm">
-                      <input
-                        className="flex-1 bg-surface-container-lowest border border-outline-variant rounded-lg px-md py-sm font-body-md focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all"
-                        type="text"
-                        value={form.location}
-                        onChange={(e) => update("location", e.target.value)}
-                      />
-                      <button
-                        type="button"
-                        onClick={handleDetectLocation}
-                        className="flex items-center gap-xs bg-surface-container-high hover:bg-surface-container-highest text-primary border border-outline-variant rounded-lg px-md py-sm transition-colors text-label-sm font-label-sm font-bold active:scale-[0.98]"
-                        title="Detect GPS from browser"
-                      >
-                        <span className="material-symbols-outlined text-[20px]">my_location</span>
-                        GPS
-                      </button>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="relative w-full h-64 rounded-xl overflow-hidden border border-outline-variant mb-md bg-surface-container-highest">
-                  <InteractiveGoogleMap
-                    center={form.lat && form.lng ? { lat: form.lat, lng: form.lng } : null}
-                    zoom={10}
-                    onLocationSelect={handleMapLocationSelect}
-                  />
-                </div>
-
-                <div className="flex flex-col gap-md p-md bg-surface-container-low rounded-lg border border-outline-variant/50">
-                  <div className="flex items-center justify-between gap-sm">
-                    <div className="flex items-center gap-sm">
-                      <span className="material-symbols-outlined text-on-surface-variant text-[20px]">explore</span>
-                      <span className="font-label-md text-on-surface-variant uppercase">Coordinates</span>
-                    </div>
-                    <div className="font-body-sm font-mono text-on-surface">
-                      {form.lat ? `${form.lat.toFixed(4)}° N` : "—"}, {form.lng ? `${form.lng.toFixed(4)}° E` : "—"}
-                    </div>
-                  </div>
-                  <div className="grid grid-cols-2 gap-lg">
-                    <div>
-                      <p className="font-label-sm text-label-sm text-on-surface-variant">Coordinates</p>
-                      <p className="font-body-sm text-body-sm text-on-surface mt-xs">Lat: {form.lat != null ? form.lat.toFixed(4) : "—"}, Lng: {form.lng != null ? form.lng.toFixed(4) : "—"}</p>
-                    </div>
-                    <div>
-                      <p className="font-label-sm text-label-sm text-on-surface-variant">Detected region</p>
-                      <p className="font-body-sm text-body-sm text-on-surface mt-xs">{form.location || "—"}</p>
-                    </div>
-                  </div>
-                </div>
-              </section>
-            </div>
-
-            <div className="col-span-12 lg:col-span-5 space-y-lg">
-              <section className="bg-surface border border-outline-variant rounded-xl p-lg shadow-sm">
-                <div className="flex items-center gap-sm mb-lg">
-                  <span className="material-symbols-outlined text-primary">potted_plant</span>
-                  <div>
-                    <h2 className="font-headline-sm text-headline-sm">Farm Parameters</h2>
-                    <p className="text-body-sm text-on-surface-variant">Crop and production settings used for your predictions.</p>
-                  </div>
-                </div>
-                <div className="space-y-lg">
-                  <Select
-                    label="Crop"
-                    value={form.crop}
-                    onChange={(v) => update("crop", v)}
-                    options={CROP_OPTIONS}
-                    placeholder="Choose a crop"
-                  />
-                  <Select
-                    label="Variety / Cultivar"
-                    value={form.variety}
-                    onChange={(v) => update("variety", v)}
-                    options={VARIETY_OPTIONS}
-                    placeholder="Choose variety"
-                  />
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-lg">
-                    <div>
-                      <label className="block font-label-md text-on-surface-variant mb-sm">Planting Date</label>
-                      <div className="relative">
-                        <input
-                          className="w-full bg-surface-container-lowest border border-outline-variant rounded-lg px-md py-sm font-body-md focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all"
-                          type="date"
-                          value={form.plantingDate}
-                          onChange={(e) => update("plantingDate", e.target.value)}
-                        />
-                        <span className="material-symbols-outlined absolute right-md top-1/2 -translate-y-1/2 text-on-surface-variant pointer-events-none">calendar_month</span>
-                      </div>
-                    </div>
-                    <div>
-                      <label className="block font-label-md text-on-surface-variant mb-sm">Expected Harvest</label>
-                      <div className="relative">
-                        <input
-                          className="w-full bg-surface-container-lowest border border-outline-variant rounded-lg px-md py-sm font-body-md focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all"
-                          type="date"
-                          value={form.harvestDate}
-                          onChange={(e) => update("harvestDate", e.target.value)}
-                        />
-                        <span className="material-symbols-outlined absolute right-md top-1/2 -translate-y-1/2 text-on-surface-variant pointer-events-none">event_available</span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </section>
-
-              <section className="bg-surface border border-outline-variant rounded-xl p-lg shadow-sm">
-                <div className="flex items-center gap-sm mb-lg">
-                  <span className="material-symbols-outlined text-primary">data_usage</span>
-                  <div>
-                    <h2 className="font-headline-sm text-headline-sm">Production Details</h2>
-                    <p className="text-body-sm text-on-surface-variant">Key metrics for farm performance and crop yield.</p>
-                  </div>
-                </div>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-lg">
-                  <div>
-                    <label className="block font-label-md text-on-surface-variant mb-sm">Total Acreage (ha)</label>
-                    <input
-                      className="w-full bg-surface-container-lowest border border-outline-variant rounded-lg px-md py-sm font-body-md focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all"
-                      type="number"
-                      value={form.acreage}
-                      onChange={(e) => update("acreage", e.target.value)}
-                    />
-                  </div>
-                  <div>
-                    <Select
-                      label="Soil Type"
-                      value={form.soilType}
-                      onChange={(v) => update("soilType", v)}
-                      options={SOIL_TYPES}
-                      placeholder="Select soil type"
-                    />
-                  </div>
-                  <div>
-                    <label className="block font-label-md text-on-surface-variant mb-sm">Elevation</label>
-                    <input
-                      className="w-full bg-surface-container-lowest border border-outline-variant rounded-lg px-md py-sm font-body-md focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all"
-                      type="text"
-                      value={form.elevation}
-                      onChange={(e) => update("elevation", e.target.value)}
-                    />
-                  </div>
-                  <div>
-                    <label className="block font-label-md text-on-surface-variant mb-sm">Irrigation Method</label>
-                    <Select
-                      value={form.irrigationMethod}
-                      onChange={(v) => update("irrigationMethod", v)}
-                      options={[
-                        { value: "drip", label: "Drip Irrigation" },
-                        { value: "sprinkler", label: "Sprinkler" },
-                        { value: "flood", label: "Flood Irrigation" },
-                        { value: "rainfed", label: "Rainfed (no irrigation)" },
-                      ]}
-                      placeholder="Select method"
-                    />
-                  </div>
-                </div>
-              </section>
-            </div>
-          </div>
-        )}
-
-        {tab === "alerts" && (
-          <div className="grid grid-cols-1 lg:grid-cols-5 gap-lg">
-            <div className="lg:col-span-3 space-y-lg">
-              <section className="bg-surface border border-outline-variant rounded-xl p-lg shadow-sm">
-                <div className="flex items-center gap-sm mb-lg">
-                  <span className="material-symbols-outlined text-primary">notifications_active</span>
-                  <h2 className="font-headline-sm text-headline-sm">Push Notifications</h2>
-                  <span className="text-body-sm text-on-surface-variant ml-auto">Mobile & Web Browser</span>
-                </div>
-                <div className="space-y-md">
-                  <ToggleSwitch
-                    label="Critical Risk Alerts"
-                    desc="Immediate alerts for pollination drops or pest spikes"
-                    checked={notifications.pushCritical}
-                    onChange={() => toggleNotif("pushCritical")}
-                  />
-                  <ToggleSwitch
-                    label="Daily Summary"
-                    desc="A morning briefing of today's pollination forecast"
-                    checked={notifications.pushDaily}
-                    onChange={() => toggleNotif("pushDaily")}
-                  />
-                  <ToggleSwitch
-                    label="System Updates"
-                    desc="New feature announcements and app maintenance"
-                    checked={notifications.pushSystem}
-                    onChange={() => toggleNotif("pushSystem")}
-                  />
-                </div>
-              </section>
-
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-lg">
-                <section className="bg-surface border border-outline-variant rounded-xl p-lg shadow-sm">
-                  <div className="flex items-center gap-sm mb-md">
-                    <span className="material-symbols-outlined text-primary">mail</span>
-                    <h3 className="font-headline-sm text-headline-sm">Email Alerts</h3>
-                  </div>
-                  <div className="space-y-md">
-                    <ToggleSwitch
-                      label="Weekly Reports"
-                      checked={notifications.emailWeekly}
-                      onChange={() => toggleNotif("emailWeekly")}
-                    />
-                    <ToggleSwitch
-                      label="Billing & Legal"
-                      checked={notifications.emailBilling}
-                      onChange={() => toggleNotif("emailBilling")}
-                    />
-                  </div>
-                </section>
-
-                <section className="bg-surface border border-outline-variant rounded-xl p-lg shadow-sm">
-                  <div className="flex items-center gap-sm mb-md">
-                    <span className="material-symbols-outlined text-primary">chat</span>
-                    <h3 className="font-headline-sm text-headline-sm">WhatsApp</h3>
-                  </div>
-                  <ToggleSwitch
-                    label="Urgent Risk Escalation"
-                    desc="Secondary channel for critical failures"
-                    checked={notifications.whatsappUrgent}
-                    onChange={() => toggleNotif("whatsappUrgent")}
-                  />
-                </section>
-              </div>
-
-              <section className="bg-surface border border-outline-variant rounded-xl p-lg shadow-sm">
-                <div className="flex items-center gap-sm">
-                  <div className="p-sm rounded-lg bg-primary-container/10 text-primary">
-                    <span className="material-symbols-outlined">sms</span>
-                  </div>
-                  <div className="flex-1">
-                    <h3 className="font-headline-sm text-headline-sm">SMS Notifications</h3>
-                    <p className="text-body-sm text-on-surface-variant">Real-time weather alerts via mobile carrier</p>
-                  </div>
-                  <ToggleSwitch
-                    checked={notifications.smsAlerts}
-                    onChange={() => toggleNotif("smsAlerts")}
-                  />
-                </div>
-              </section>
-            </div>
-
-            <div className="lg:col-span-2">
-              <div className="bg-surface border border-outline-variant rounded-xl p-lg shadow-sm sticky top-4">
-                <div className="flex items-center gap-sm mb-md">
-                  <span className="px-md py-xs rounded-full bg-primary-container/10 text-primary font-label-sm text-label-sm">Live Preview</span>
-                </div>
-                <div className="rounded-2xl overflow-hidden border-2 border-outline-variant bg-[#1f1b17] shadow-lg mx-auto max-w-[260px]">
-                  <div className="bg-[#1f1b17] px-md pt-lg pb-sm">
-                    <div className="flex justify-between items-center mb-lg">
-                      <span className="text-white/80 text-body-sm font-bold">9:41</span>
-                      <div className="flex gap-xs text-white/60">
-                        <span className="material-symbols-outlined text-[14px]">signal_cellular_alt</span>
-                        <span className="material-symbols-outlined text-[14px]">wifi</span>
-                        <span className="material-symbols-outlined text-[14px]">battery_full</span>
-                      </div>
-                    </div>
-                    <div className="rounded-xl overflow-hidden" style={{ background: "linear-gradient(135deg, #2d5a27 0%, #8b6f3a 50%, #c4a265 100%)" }}>
-                      <div className="px-md py-lg min-h-[280px] flex flex-col justify-end">
-                        <div className="bg-white/95 backdrop-blur-sm rounded-xl p-md shadow-lg animate-[bounceIn_0.5s_ease-out]">
-                          <div className="flex items-center gap-sm mb-xs">
-                            <span className="material-symbols-outlined text-[16px] text-primary">eco</span>
-                            <span className="text-label-sm text-primary font-bold">PolliSync</span>
-                          </div>
-                          <p className="text-body-sm text-on-surface font-medium">
-                            High Pollination Risk detected in Sector B. Immediate action recommended.
-                          </p>
-                          <p className="text-label-xs text-on-surface-variant mt-xs">now</p>
-                        </div>
-                      </div>
-                    </div>
-                    <div className="flex justify-between px-lg py-sm">
-                      <span className="material-symbols-outlined text-white/60 text-[18px]">flashlight_on</span>
-                      <span className="material-symbols-outlined text-white/60 text-[18px]">camera</span>
-                    </div>
-                  </div>
-                </div>
-                <p className="text-body-xs text-on-surface-variant text-center mt-md">
-                  Example of an urgent risk escalation alert appearing on your lock screen.
-                </p>
-              </div>
-            </div>
-          </div>
-        )}
-
-
-        <div className="flex items-center justify-end gap-md mt-xl pt-lg border-t border-outline-variant">
-          <button
-            type="button"
-            onClick={handleDiscard}
-            className="px-xl py-sm font-label-md text-on-surface-variant hover:text-on-surface transition-colors active:scale-95"
-          >
-            Discard Changes
-          </button>
-          <button
-            type="submit"
-            disabled={saving}
-            className="bg-primary text-on-primary px-xl py-sm rounded-lg font-label-md shadow-md hover:bg-opacity-90 transition-all active:scale-95 flex items-center gap-sm disabled:opacity-60"
-          >
-            {saving ? (
-              <>
-                <svg className="animate-spin h-5 w-5 text-on-primary" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
-                </svg>
-                Saving...
-              </>
-            ) : (
-              <>
-                <span className="material-symbols-outlined text-[20px]">save</span>
-                Save Settings
-              </>
-            )}
-          </button>
-        </div>
+        {tab === "general" ? <div className="grid gap-lg lg:grid-cols-12">
+          <section className="rounded-2xl border border-outline-variant bg-surface p-lg shadow-sm lg:col-span-7">
+            <div className="mb-lg"><h2 className="text-headline-md font-headline-md">Farm identity & location</h2><p className="mt-1 text-body-sm text-on-surface-variant">Map, GPS, and search always save the location name with its coordinates.</p></div>
+            <div className="grid gap-md sm:grid-cols-2"><Field label="Farm name"><input required value={form.farmName} onChange={(event) => update("farmName", event.target.value)} className="input-base" /></Field><Field label="Location search"><div className="relative"><input value={form.location} onChange={(event) => update("location", event.target.value)} placeholder="Search a town, village, or district" className="input-base pr-24" /><button type="button" onClick={detectLocation} disabled={locating} className="absolute right-1 top-1 min-h-9 rounded-md px-sm text-label-sm font-bold text-primary hover:bg-surface-container">{locating ? "Finding…" : "Use GPS"}</button>{locationResults.length > 0 && <div className="absolute z-20 mt-1 w-full rounded-lg border border-outline-variant bg-surface p-1 shadow-lg">{locationResults.map((result) => <button key={result.id} type="button" onClick={() => applyCoordinates(result, result.name)} className="w-full rounded-md px-sm py-sm text-left text-body-sm text-on-surface hover:bg-surface-container">{result.name}</button>)}</div>}</div></Field></div>
+            <div className="mt-lg h-72 overflow-hidden rounded-xl border border-outline-variant"><InteractiveGoogleMap center={mapCenter} zoom={10} onLocationSelect={applyCoordinates} /></div>
+            <div className="mt-md grid gap-sm rounded-xl bg-surface-container p-md sm:grid-cols-2"><p className="text-body-sm text-on-surface-variant"><strong className="text-on-surface">Coordinates: </strong>{form.lat != null ? `${Number(form.lat).toFixed(4)}° N` : "—"}, {form.lng != null ? `${Number(form.lng).toFixed(4)}° E` : "—"}</p><p className="truncate text-body-sm text-on-surface-variant"><strong className="text-on-surface">Saved location: </strong>{form.location || "—"}</p></div>
+          </section>
+          <div className="space-y-lg lg:col-span-5"><section className="rounded-2xl border border-outline-variant bg-surface p-lg shadow-sm"><h2 className="text-headline-md font-headline-md">Crop settings</h2><div className="mt-lg space-y-md"><Select label="Crop" value={form.crop} onChange={(value) => update("crop", value)} options={CROP_OPTIONS} placeholder="Choose a crop" /><Field label="Variety / cultivar"><input value={form.variety} onChange={(event) => update("variety", event.target.value)} className="input-base" placeholder="Optional" /></Field><div className="grid gap-md sm:grid-cols-2"><Field label="Planting date"><input type="date" value={form.plantingDate} onChange={(event) => update("plantingDate", event.target.value)} className="input-base" /></Field><Field label="Expected harvest"><input type="date" min={form.plantingDate || undefined} value={form.harvestDate} onChange={(event) => update("harvestDate", event.target.value)} className="input-base" /></Field></div></div></section><section className="rounded-2xl border border-outline-variant bg-surface p-lg shadow-sm"><h2 className="text-headline-md font-headline-md">Production details</h2><div className="mt-lg grid gap-md sm:grid-cols-2"><Field label="Total acreage (acres)"><input type="number" min="0" step="0.1" value={form.acreage} onChange={(event) => update("acreage", event.target.value)} className="input-base" /></Field><Select label="Soil type" value={form.soilType} onChange={(value) => update("soilType", value)} options={SOIL_TYPES} placeholder="Select soil type" /><div className="sm:col-span-2"><Select label="Irrigation method" value={form.irrigationMethod} onChange={(value) => update("irrigationMethod", value)} options={IRRIGATION_OPTIONS} placeholder="Select irrigation method" /></div></div></section></div>
+        </div> : <NotificationSettings notifications={notifications} setNotifications={setNotifications} />}
+        <footer className="fixed inset-x-0 bottom-0 z-30 border-t border-outline-variant bg-surface/95 p-md backdrop-blur lg:left-64"><div className="mx-auto flex max-w-7xl justify-end gap-sm"><button type="button" onClick={() => { setForm(savedForm); setShowRunPrompt(false); }} className="min-h-11 rounded-lg px-lg text-label-md font-bold text-on-surface-variant">Discard</button><button type="submit" disabled={saving} className="min-h-11 rounded-lg bg-primary px-lg text-label-md font-bold text-on-primary disabled:opacity-60">{saving ? "Saving…" : tab === "alerts" ? "Save notifications" : "Save farm settings"}</button></div></footer>
       </form>
     </div>
   );
 }
 
-function ToggleSwitch({ label, desc, checked, onChange }) {
-  return (
-    <label className="flex items-center justify-between gap-md cursor-pointer group">
-      <div className="flex-1">
-        <p className="font-label-md text-label-md text-on-surface">{label}</p>
-        {desc && <p className="text-body-sm text-on-surface-variant">{desc}</p>}
-      </div>
-      <div className="relative">
-        <input
-          type="checkbox"
-          className="sr-only peer"
-          checked={checked}
-          onChange={onChange}
-        />
-        <div className="w-11 h-6 rounded-full border border-outline-variant bg-surface-container-high peer-checked:bg-primary peer-checked:border-primary transition-colors cursor-pointer peer-focus:ring-2 peer-focus:ring-primary/20" />
-        <div className="absolute top-[2px] left-[2px] w-5 h-5 rounded-full bg-white border border-outline-variant peer-checked:border-primary peer-checked:translate-x-5 transition-all shadow-sm pointer-events-none" />
-      </div>
-    </label>
-  );
+function Field({ label, children }) { return <label className="block text-label-md text-on-surface-variant"><span className="mb-sm block">{label}</span>{children}</label>; }
+
+function NotificationSettings({ notifications, setNotifications }) {
+  const items = [["pushCritical", "Critical risk alerts", "Receive urgent pollination-risk updates."], ["pushDaily", "Daily summary", "Receive the daily field outlook."], ["pushSystem", "System updates", "Receive product and maintenance updates."], ["emailWeekly", "Weekly email report", "Receive a weekly performance report."], ["smsAlerts", "SMS alerts", "Receive time-sensitive alerts by SMS."]];
+  return <section className="max-w-3xl rounded-2xl border border-outline-variant bg-surface p-lg shadow-sm"><h2 className="text-headline-md font-headline-md">Notifications</h2><p className="mt-1 text-body-sm text-on-surface-variant">Choose how PolliSync should contact you.</p><div className="mt-lg divide-y divide-outline-variant">{items.map(([key, title, description]) => <label key={key} className="flex min-h-16 cursor-pointer items-center justify-between gap-lg py-md"><span><span className="block text-label-md font-bold text-on-surface">{title}</span><span className="mt-1 block text-body-sm text-on-surface-variant">{description}</span></span><input type="checkbox" checked={notifications[key]} onChange={() => setNotifications((current) => ({ ...current, [key]: !current[key] }))} className="h-5 w-5 accent-primary" /></label>)}</div></section>;
 }

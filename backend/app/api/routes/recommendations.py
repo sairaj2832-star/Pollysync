@@ -21,34 +21,55 @@ class GenerateRequest(BaseModel):
     prediction_id: str
 
 
+def _weather(prediction: Prediction) -> dict:
+    try:
+        return json.loads(prediction.weather_summary or "{}")
+    except (TypeError, ValueError):
+        return {}
+
+
 def _build_prompt(farm: Farm, prediction: Prediction) -> str:
-    weather = json.loads(prediction.weather_summary) if prediction.weather_summary else {}
-    bee_species = json.loads(prediction.bee_species) if prediction.bee_species else []
-    return f"""You are an expert agronomist advising Indian farmers.
+    weather = _weather(prediction)
+    try:
+        bee_species = json.loads(prediction.bee_species or "[]")
+    except (TypeError, ValueError):
+        bee_species = []
 
-Farm Details:
+    return f"""You are an expert agronomist advising an Indian farmer. Use only the supplied facts; never invent pests, rainfall, or crop stages.
+
+Farm details:
 - Crop: {farm.crop_type}
-- Location: {farm.location_lat}, {farm.location_lng}
+- Location: {farm.location_name or 'Recorded farm location'} ({farm.location_lat}, {farm.location_lng})
+- Planting date: {farm.planting_date or 'Not recorded'}
+- Expected harvest: {farm.harvest_date or 'Not recorded'}
+- Variety: {farm.variety or 'Not recorded'}
+- Soil: {farm.soil_type or 'Not recorded'}
 
-Current Conditions:
+Current conditions:
 - Temperature: {weather.get('temperature', 'N/A')} C
 - Humidity: {weather.get('humidity', 'N/A')}%
-- Rainfall: {weather.get('rainfall', 'N/A')}mm
-- Wind: {weather.get('wind_speed', 'N/A')}km/h
+- Rainfall: {weather.get('rainfall', 'N/A')} mm
+- Wind: {weather.get('wind_speed', 'N/A')} km/h
 
-Predictions:
-- Flowering Window: {prediction.flowering_start} to {prediction.flowering_end}
-- Pollination Suitability Index: {prediction.psi_score}/100
-- Risk Level: {prediction.risk_level}
-- Nearby Bee Species: {', '.join(bee_species) if bee_species else 'N/A'}
+Prediction:
+- Flowering window: {prediction.flowering_start} to {prediction.flowering_end}
+- Pollination suitability index: {prediction.psi_score}/100
+- Risk level: {prediction.risk_level}
+- NDVI crop health index: {prediction.ndvi_value:.2f}
+- Nearby bee species: {', '.join(bee_species) if bee_species else 'N/A'}
 
-Write a concise, actionable recommendation (max 200 words) in markdown format with:
-1. A brief assessment
-2. 2-3 specific actions the farmer should take
-3. Any warnings if risk is Medium or High
-4. End with a confidence statement
+Write a concise 90-140 word Markdown advisory in this exact structure:
+## <crop> advisory
+<two-sentence assessment using PSI, weather, flowering window, and NDVI.>
+**Recommended now**
+- <specific action 1>
+- <specific action 2>
+- <specific action 3, only if useful>
+**Watch out**
+<one clear risk warning; say "No urgent warning" for low risk.>
+**Confidence:** <one short sentence>
 
-Be practical. Mention the crop by name."""
+Be practical, concise, and mention the crop by name."""
 
 
 def _extract_gemini_text(payload: dict) -> str:
@@ -59,8 +80,20 @@ def _extract_gemini_text(payload: dict) -> str:
     return "\n".join(part.get("text", "") for part in parts).strip()
 
 
+def _is_valid_recommendation(recommendation: str, farm: Farm) -> bool:
+    compact = " ".join(recommendation.split())
+    crop = (farm.crop_type or "").strip().lower()
+    action_terms = ("recommend", "avoid", "monitor", "check", "maintain", "schedule", "scout")
+    return (
+        len(compact) >= 120
+        and bool(crop)
+        and crop in compact.lower()
+        and "recommended now" in compact.lower()
+        and any(term in compact.lower() for term in action_terms)
+    )
+
+
 async def _generate_gemini_recommendation(farm: Farm, prediction: Prediction) -> str:
-    prompt = _build_prompt(farm, prediction)
     url = (
         "https://generativelanguage.googleapis.com/v1beta/models/"
         f"{settings.llm_model or settings.gemini_model}:generateContent"
@@ -70,53 +103,56 @@ async def _generate_gemini_recommendation(farm: Farm, prediction: Prediction) ->
             url,
             params={"key": settings.llm_api_key or settings.gemini_api_key},
             json={
-                "contents": [
-                    {
-                        "role": "user",
-                        "parts": [{"text": prompt}],
-                    }
-                ],
-                "generationConfig": {
-                    "temperature": 0.7,
-                    "maxOutputTokens": 300,
-                },
+                "contents": [{"role": "user", "parts": [{"text": _build_prompt(farm, prediction)}]}],
+                "generationConfig": {"temperature": 0.35, "maxOutputTokens": 360},
             },
         )
         response.raise_for_status()
     recommendation = _extract_gemini_text(response.json())
-    if not recommendation:
-        raise ValueError("Gemini returned an empty recommendation")
+    if not _is_valid_recommendation(recommendation, farm):
+        raise ValueError("AI returned an incomplete recommendation")
     return recommendation
 
 
 def _generate_local_recommendation(farm: Farm, prediction: Prediction) -> str:
-    risk_advisory = ""
-    if prediction.risk_level == "High":
-        risk_advisory = (
-            f"\n\n**Warning:** The PSI of {prediction.psi_score}/100 indicates "
-            "High risk. Consider delaying sowing or using supplemental pollination methods. "
-            "Monitor weather conditions closely."
-        )
-    elif prediction.risk_level == "Medium":
-        risk_advisory = (
-            f"\n\n**Caution:** The PSI of {prediction.psi_score}/100 is moderate. "
-            "Ensure adequate irrigation and consider introducing managed pollinators."
-        )
-    else:
-        risk_advisory = (
-            f"\n\nConditions are favourable. Maintain regular crop management practices."
-        )
+    weather = _weather(prediction)
+    temperature = weather.get("temperature", "N/A")
+    humidity = weather.get("humidity", "N/A")
+    wind = weather.get("wind_speed", "N/A")
+    crop = farm.crop_type or "Your crop"
+    ndvi_note = "healthy canopy cover" if prediction.ndvi_value >= 0.6 else "crop health that needs closer scouting"
 
+    if prediction.risk_level == "High":
+        actions = [
+            "Avoid pesticide spraying during pollinator activity and postpone non-essential disturbance.",
+            "Inspect flowers and soil moisture early today, then correct water stress before midday.",
+            "Check the next forecast before scheduling exposed field work.",
+        ]
+        warning = "High pollination risk: protect flowering activity until weather conditions improve."
+    elif prediction.risk_level == "Medium":
+        actions = [
+            "Scout flowering plants early and record moisture or pest stress.",
+            "Keep irrigation steady through the flowering window without overwatering.",
+            "Plan sprays outside active pollinator hours and reassess the weather first.",
+        ]
+        warning = "Moderate risk: watch humidity and wind before a field intervention."
+    else:
+        actions = [
+            "Keep flowering rows and field edges accessible for pollinators.",
+            "Maintain the current irrigation schedule and scout during the cooler part of the day.",
+            "Schedule any spray outside active pollinator hours.",
+        ]
+        warning = "No urgent warning; continue monitoring weather ahead of the flowering window."
+
+    action_lines = "\n".join(f"- {action}" for action in actions)
     return (
-        f"## Assessment for {farm.crop_type}\n\n"
-        f"Based on current conditions (temp {prediction.psi_score}°C, "
-        f"rainfall in normal range) and the predicted flowering window "
-        f"({prediction.flowering_start} to {prediction.flowering_end}), "
-        f"the pollination suitability is **{prediction.risk_level.lower()} risk** "
-        f"with a score of **{prediction.psi_score}/100**."
-        f"{risk_advisory}\n\n"
-        f"**Confidence:** Moderate — predictions are based on seasonal models and "
-        f"local weather data. Real-time satellite data will improve accuracy."
+        f"## {crop} advisory\n\n"
+        f"Your PSI is {prediction.psi_score}/100 ({prediction.risk_level.lower()} risk). "
+        f"Temperature is {temperature}°C, humidity is {humidity}%, wind is {wind} km/h, and NDVI indicates {ndvi_note}. "
+        f"The predicted flowering window is {prediction.flowering_start} to {prediction.flowering_end}.\n\n"
+        f"**Recommended now**\n{action_lines}\n\n"
+        f"**Watch out**\n{warning}\n\n"
+        "**Confidence:** Based on the latest weather, farm settings, and prediction model."
     )
 
 
@@ -130,10 +166,7 @@ async def generate_recommendation(
     if not farm:
         raise HTTPException(status_code=404, detail="Farm not found")
     prediction = db.scalar(
-        select(Prediction).where(
-            Prediction.id == payload.prediction_id,
-            Prediction.farm_id == farm.id,
-        )
+        select(Prediction).where(Prediction.id == payload.prediction_id, Prediction.farm_id == farm.id)
     )
     if not prediction:
         raise HTTPException(status_code=404, detail="Prediction not found")
@@ -149,5 +182,4 @@ async def generate_recommendation(
 
     prediction.recommendation = recommendation
     db.commit()
-
     return {"recommendation": recommendation}

@@ -28,6 +28,7 @@ class PredictionRead(BaseModel):
     model_source: str | None = None
     data_confidence: str | None = None
     prediction_inputs: Any = None
+    is_stale: bool = False
 
 
 class DashboardSummary(BaseModel):

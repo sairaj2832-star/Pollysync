@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect, useCallback } from "react";
 import { useAuth } from "../context/AuthContext";
-import { getFarms } from "../lib/api";
+import { useFarm } from "../context/FarmContext";
 
 const INITIAL_MESSAGES = [
   {
@@ -18,8 +18,21 @@ const SUGGESTIONS = [
   "When is the next flowering window?",
 ];
 
+const USE_MOCK = import.meta.env.VITE_USE_MOCK === "true";
+
+function getDemoReply(question, farm) {
+  const query = question.toLowerCase();
+  const farmName = farm?.name || "your selected farm";
+  if (query.includes("water") || query.includes("irrig")) return `For ${farmName}, keep the root zone evenly moist this week. Your latest field record shows healthy moisture after recent rain, so inspect before adding a full irrigation cycle.`;
+  if (query.includes("ndvi") || query.includes("health")) return `Crop health is trending upward: the latest NDVI is 0.78, compared with 0.61 three weeks ago. Keep monitoring the lower-west edge, where canopy growth is slightly behind the field average.`;
+  if (query.includes("flower") || query.includes("bloom")) return `The strongest flowering window is July 19–29 with 91% confidence. Place or confirm hives before the window begins and avoid spraying during active bee hours.`;
+  if (query.includes("pollin") || query.includes("bee")) return `Pollination conditions are favorable today (PSI 82). Four bee species have been recorded near the field; calm mornings between 8–11 AM should have the best activity.`;
+  return `Based on the latest data for ${farmName}, conditions are favorable for pollination. The most useful next step is to review the morning weather window and keep pesticide applications outside bee-foraging hours.`;
+}
+
 export default function ChatPage() {
   const { user } = useAuth();
+  const { selectedFarm } = useFarm();
   const [messages, setMessages] = useState(INITIAL_MESSAGES);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
@@ -32,10 +45,8 @@ export default function ChatPage() {
   }, [messages]);
 
   useEffect(() => {
-    getFarms()
-      .then((farms) => {
-        if (farms && farms.length > 0) {
-          const f = farms[0];
+    if (selectedFarm) {
+          const f = selectedFarm;
           setFarmData({
             farmer_name: user?.full_name || "Farmer",
             location: f.location_name || f.location || "Unknown",
@@ -59,10 +70,10 @@ export default function ChatPage() {
             avg_bee_arrival_date: "2026-08-18",
             trend: "Stable",
           });
-        }
-      })
-      .catch(() => {});
-  }, [user]);
+    } else {
+      setFarmData(null);
+    }
+  }, [user, selectedFarm]);
 
   const sendMessage = useCallback(async (text) => {
     if (!text.trim() || loading) return;
@@ -77,6 +88,11 @@ export default function ChatPage() {
     setLoading(true);
 
     try {
+      if (USE_MOCK) {
+        await new Promise((resolve) => setTimeout(resolve, 650));
+        setMessages((prev) => [...prev, { id: Date.now() + 1, role: "assistant", content: getDemoReply(text, selectedFarm), timestamp: new Date().toISOString() }]);
+        return;
+      }
       const conversation = [...messages, userMsg].map((m) => ({
         role: m.role === "assistant" ? "model" : "user",
         content: m.content,
@@ -123,7 +139,7 @@ export default function ChatPage() {
     } finally {
       setLoading(false);
     }
-  }, [messages, loading, farmData, apiBase]);
+  }, [messages, loading, farmData, apiBase, selectedFarm]);
 
   function handleSubmit(e) {
     e.preventDefault();
@@ -135,7 +151,7 @@ export default function ChatPage() {
   }
 
   return (
-    <div className="flex flex-col h-[calc(100vh-8rem)] max-w-[800px] mx-auto">
+    <div className="flex flex-col h-[calc(100vh-10rem)] lg:h-[calc(100vh-8rem)] max-w-[800px] mx-auto">
       <div className="mb-lg">
         <h1 className="font-headline-lg text-headline-lg text-on-surface">AI Assistant</h1>
         <p className="font-body-md text-body-md text-on-surface-variant">

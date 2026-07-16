@@ -1,5 +1,5 @@
 import json
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
 import joblib
@@ -109,6 +109,39 @@ def _predict_psi_baseline(features: dict) -> tuple[int, str]:
         risk = "High"
 
     return score, risk
+
+
+def _flowering_window_from_farm_settings(farm: Farm) -> tuple[datetime, datetime, float] | None:
+    if not farm.planting_date:
+        return None
+
+    try:
+        planting = datetime.fromisoformat(farm.planting_date)
+    except ValueError:
+        return None
+
+    crop_offsets = {
+        "mustard": (35, 45),
+        "sunflower": (50, 60),
+        "cotton": (55, 70),
+        "wheat": (70, 85),
+        "rice": (60, 75),
+    }
+    crop_key = (farm.crop_type or "").lower()
+    start_offset, end_offset = crop_offsets.get(crop_key, (45, 55))
+    start_date = planting + timedelta(days=start_offset)
+    end_date = planting + timedelta(days=end_offset)
+
+    if farm.harvest_date:
+        try:
+            harvest = datetime.fromisoformat(farm.harvest_date)
+            end_date = min(end_date, harvest)
+            if end_date <= start_date:
+                end_date = start_date + timedelta(days=7)
+        except ValueError:
+            pass
+
+    return start_date, end_date, 0.82
 
 
 def _prepare_features_for_model(features: dict, model) -> dict:
@@ -298,8 +331,13 @@ async def run_prediction(farm: Farm, db: Session, region: str = "auto") -> Predi
         data_confidence = "low"
 
     from datetime import datetime as dt
-    start_date = dt.fromordinal(dt(2026, 1, 1).toordinal() + start_doy - 1)
-    end_date = dt.fromordinal(start_date.toordinal() + 7)
+    settings_window = _flowering_window_from_farm_settings(farm)
+    if settings_window:
+        start_date, end_date, settings_confidence = settings_window
+        confidence = max(confidence, settings_confidence)
+    else:
+        start_date = dt.fromordinal(dt(now.year, 1, 1).toordinal() + start_doy - 1)
+        end_date = dt.fromordinal(start_date.toordinal() + 7)
 
     prediction = Prediction(
         farm_id=farm.id,
@@ -316,6 +354,16 @@ async def run_prediction(farm: Farm, db: Session, region: str = "auto") -> Predi
         bee_species=json.dumps(bee_species),
         model_source=model_source,
         data_confidence=data_confidence,
+        prediction_inputs=json.dumps({
+            "farm_settings": {
+                "crop_type": farm.crop_type,
+                "planting_date": farm.planting_date,
+                "harvest_date": farm.harvest_date,
+                "location_name": farm.location_name,
+                "location_lat": farm.location_lat,
+                "location_lng": farm.location_lng,
+            }
+        }),
     )
     db.add(prediction)
     db.commit()
