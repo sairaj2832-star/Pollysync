@@ -13,11 +13,11 @@ const NOTIFICATION_ICONS = {
 };
 
 const NOTIFICATION_COLORS = {
-  weather: "bg-blue-100 text-blue-700 border-blue-200",
-  bloom: "bg-green-100 text-green-700 border-green-200",
-  pollinator: "bg-yellow-100 text-yellow-700 border-yellow-200",
-  alert: "bg-red-100 text-red-700 border-red-200",
-  info: "bg-gray-100 text-gray-700 border-gray-200",
+  weather: "bg-primary-container/15 text-primary border-primary/20",
+  bloom: "bg-primary-container/15 text-primary border-primary/20",
+  pollinator: "bg-secondary-container/20 text-secondary border-secondary/20",
+  alert: "bg-tertiary-container/20 text-tertiary border-tertiary/20",
+  info: "bg-surface-container-high text-on-surface-variant border-outline-variant",
 };
 
 export default function NotificationsPage() {

@@ -1,8 +1,8 @@
 const CONFIG = {
   temperature: { icon: "thermostat", bg: "bg-secondary-container/20", color: "text-secondary-container" },
   humidity: { icon: "water_drop", bg: "bg-primary-container/20", color: "text-primary-container" },
-  rainfall: { icon: "rainy", bg: "bg-blue-100", color: "text-blue-600" },
-  wind: { icon: "air", bg: "bg-gray-100", color: "text-gray-600" },
+  rainfall: { icon: "rainy", bg: "bg-primary-container/15", color: "text-primary" },
+  wind: { icon: "air", bg: "bg-surface-container-high", color: "text-on-surface-variant" },
 };
 
 export default function WeatherCard({ label, value, unit, icon = "temperature", trend }) {

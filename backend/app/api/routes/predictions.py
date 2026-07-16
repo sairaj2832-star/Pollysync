@@ -25,7 +25,7 @@ async def create_prediction(
     if not farm:
         raise HTTPException(status_code=404, detail="Farm not found")
     prediction = await run_prediction(farm, db, region=payload.region)
-    return _prediction_to_read(prediction)
+    return _prediction_to_read(prediction, farm)
 
 
 @router.get("", response_model=list[PredictionRead])
@@ -34,7 +34,7 @@ def list_predictions(
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ) -> list[Prediction]:
-    _owned_farm_or_404(farm_id, current_user.id, db)
+    farm = _owned_farm_or_404(farm_id, current_user.id, db)
     rows = (
         db.scalars(
             select(Prediction)
@@ -43,7 +43,7 @@ def list_predictions(
         )
         .all()
     )
-    return [_prediction_to_read(p) for p in rows]
+    return [_prediction_to_read(p, farm) for p in rows]
 
 
 @router.get("/latest", response_model=PredictionRead | None)
@@ -52,7 +52,7 @@ def latest_prediction(
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ) -> Prediction | None:
-    _owned_farm_or_404(farm_id, current_user.id, db)
+    farm = _owned_farm_or_404(farm_id, current_user.id, db)
     prediction = (
         db.scalars(
             select(Prediction)
@@ -64,7 +64,7 @@ def latest_prediction(
     )
     if not prediction:
         return None
-    return _prediction_to_read(prediction)
+    return _prediction_to_read(prediction, farm)
 
 
 @router.get("/dashboard/summary", response_model=DashboardSummary)
@@ -89,7 +89,7 @@ def dashboard_summary(
         farm={"id": farm.id, "name": farm.name, "crop_type": farm.crop_type,
               "location_lat": farm.location_lat, "location_lng": farm.location_lng},
         current_weather=_get_weather_summary(farm_id, db),
-        latest_prediction=_prediction_to_read(prediction) if prediction else None,
+        latest_prediction=_prediction_to_read(prediction, farm) if prediction else None,
         bee_species=bee_species,
     )
 
@@ -101,7 +101,28 @@ def _owned_farm_or_404(farm_id: str, user_id: str, db: Session) -> Farm:
     return farm
 
 
-def _prediction_to_read(p: Prediction) -> PredictionRead:
+def _normalise_setting(value):
+    if isinstance(value, str):
+        return value.strip().lower()
+    if isinstance(value, float):
+        return round(value, 6)
+    return value
+
+
+def _is_prediction_stale(prediction: Prediction, farm: Farm) -> bool:
+    try:
+        snapshot = json.loads(prediction.prediction_inputs or "{}").get("farm_settings")
+    except (TypeError, ValueError):
+        return False
+    if not snapshot:
+        return False
+    for field in ("crop_type", "planting_date", "harvest_date", "location_name", "location_lat", "location_lng"):
+        if _normalise_setting(snapshot.get(field)) != _normalise_setting(getattr(farm, field)):
+            return True
+    return False
+
+
+def _prediction_to_read(p: Prediction, farm: Farm | None = None) -> PredictionRead:
     return PredictionRead(
         id=p.id,
         farm_id=p.farm_id,
@@ -119,6 +140,7 @@ def _prediction_to_read(p: Prediction) -> PredictionRead:
         model_source=p.model_source,
         data_confidence=p.data_confidence,
         prediction_inputs=json.loads(p.prediction_inputs) if p.prediction_inputs else {},
+        is_stale=_is_prediction_stale(p, farm) if farm else False,
     )
 
 

@@ -28,6 +28,8 @@ export default function OnboardingPage() {
   const [cropType, setCropType] = useState("");
   const [areaAcres, setAreaAcres] = useState("");
   const [soilType, setSoilType] = useState("");
+  const [plantingDate, setPlantingDate] = useState("");
+  const [harvestDate, setHarvestDate] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
@@ -89,6 +91,8 @@ export default function OnboardingPage() {
         location_name: selectedDistrict?.name || districtSlug,
         area_acres: areaAcres ? parseFloat(areaAcres) : null,
         soil_type: soilType || null,
+        planting_date: plantingDate || null,
+        harvest_date: harvestDate || null,
       });
 
       await updateProfile({ has_onboarded: true });
@@ -373,6 +377,33 @@ export default function OnboardingPage() {
                   <option value="other">Other</option>
                 </select>
               </div>
+              <div className="grid grid-cols-1 gap-md sm:grid-cols-2">
+                <div>
+                  <label className="block font-label-md text-label-md text-on-surface-variant mb-sm">
+                    Planting Date <span className="font-body-sm text-body-sm">(optional)</span>
+                  </label>
+                  <input
+                    type="date"
+                    className="w-full px-md py-sm rounded-lg border border-outline-variant bg-surface text-body-md text-on-surface outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all"
+                    value={plantingDate}
+                    onChange={(e) => setPlantingDate(e.target.value)}
+                  />
+                </div>
+                <div>
+                  <label className="block font-label-md text-label-md text-on-surface-variant mb-sm">
+                    Expected Harvest <span className="font-body-sm text-body-sm">(optional)</span>
+                  </label>
+                  <input
+                    type="date"
+                    className="w-full px-md py-sm rounded-lg border border-outline-variant bg-surface text-body-md text-on-surface outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all"
+                    value={harvestDate}
+                    onChange={(e) => setHarvestDate(e.target.value)}
+                  />
+                </div>
+              </div>
+              <p className="text-body-sm text-on-surface-variant">
+                These dates are optional. When present, PolliSync uses them as farm settings to make flowering-window predictions more farm-specific.
+              </p>
             </div>
 
             {/* Summary */}
@@ -397,6 +428,12 @@ export default function OnboardingPage() {
                   <p>
                     <span className="font-medium text-on-surface">Area:</span>{" "}
                     {areaAcres} acres
+                  </p>
+                )}
+                {plantingDate && (
+                  <p>
+                    <span className="font-medium text-on-surface">Planting:</span>{" "}
+                    {plantingDate}
                   </p>
                 )}
               </div>

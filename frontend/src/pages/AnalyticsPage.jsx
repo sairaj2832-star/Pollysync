@@ -1,106 +1,85 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, Tooltip, Filler } from "chart.js";
 import { Line } from "react-chartjs-2";
-import { getFarms, getPredictions } from "../lib/api";
-import Card from "../components/Card";
-import { MetricText } from "../components/MetricDisplay";
+import { getPredictions } from "../lib/api";
+import { useFarm } from "../context/FarmContext";
 import ChartWrapper, { exportChartData } from "../components/ChartWrapper";
 import { EmptyState, DashboardSkeleton, ErrorState } from "../components/LoadingSkeleton";
-import { FarmSelector } from "../components/ParameterForm";
+import FarmSelector from "../components/FarmSelector";
 
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Tooltip, Filler);
 
+const ranges = { "7D": 7, "30D": 30, Season: 120, All: Infinity };
+
 export default function AnalyticsPage() {
-  const [searchParams, setSearchParams] = useSearchParams();
-  const farmId = searchParams.get("farm_id") || "";
+  const [params, setParams] = useSearchParams();
+  const { farms, selectedFarm, selectedFarmId, loadingFarms, selectFarm } = useFarm();
+  const requestedFarmId = params.get("farm_id");
+  const farmId = requestedFarmId || selectedFarmId;
   const [predictions, setPredictions] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-  const [farms, setFarms] = useState([]);
+  const [range, setRange] = useState("30D");
+  const [tab, setTab] = useState("trends");
 
   useEffect(() => {
-    loadData();
-  }, [farmId]);
+    if (requestedFarmId) selectFarm(requestedFarmId);
+  }, [requestedFarmId, selectFarm]);
 
-  async function loadData() {
-    try {
-      setLoading(true);
-      setError("");
-      const farmList = await getFarms();
-      const safeFarms = Array.isArray(farmList) ? farmList : [];
-      setFarms(safeFarms);
-
-      if (safeFarms.length === 0) {
-        setPredictions([]);
-        return;
-      }
-
-      const resolvedFarmId = farmId || String(safeFarms[0].id);
-      if (!farmId) {
-        setSearchParams({ farm_id: resolvedFarmId }, { replace: true });
-      }
-
-      const data = await getPredictions(resolvedFarmId);
-      setPredictions(Array.isArray(data) ? data : []);
-    } catch (err) {
-      setError(err?.response?.data?.detail || "Failed to load predictions");
-    } finally {
+  useEffect(() => {
+    if (loadingFarms) return;
+    if (!farmId) {
+      setPredictions([]);
       setLoading(false);
+      return;
     }
-  }
+    setLoading(true);
+    setError("");
+    getPredictions(farmId)
+      .then((data) => setPredictions(Array.isArray(data) ? data : []))
+      .catch((err) => setError(err?.response?.data?.detail || "Failed to load analytics"))
+      .finally(() => setLoading(false));
+  }, [farmId, loadingFarms]);
 
-  if (loading) return <DashboardSkeleton />;
-  if (error) return <ErrorState error={error} onRetry={loadData} />;
+  const filtered = useMemo(() => {
+    const cutoff = Date.now() - ranges[range] * 86400000;
+    return [...predictions]
+      .filter((item) => range === "All" || new Date(item.created_at).getTime() >= cutoff)
+      .sort((a, b) => new Date(a.created_at) - new Date(b.created_at));
+  }, [predictions, range]);
 
-  const selectedFarm = farms.find((farm) => String(farm.id) === String(farmId)) || farms[0] || null;
-
-  // Calculate metrics
-  const sorted = [...predictions].sort((a, b) => new Date(a.created_at) - new Date(b.created_at));
-  const avgPSI = sorted.length ? (sorted.reduce((sum, p) => sum + p.psi_score, 0) / sorted.length).toFixed(1) : 0;
-  const maxPSI = sorted.length ? Math.max(...sorted.map((p) => p.psi_score)).toFixed(0) : 0;
-  const minPSI = sorted.length ? Math.min(...sorted.map((p) => p.psi_score)).toFixed(0) : 0;
-
-  // Count predictions by risk level
-  const riskCounts = {
-    high: sorted.filter((p) => p.risk_level === "High").length,
-    medium: sorted.filter((p) => p.risk_level === "Medium").length,
-    low: sorted.filter((p) => p.risk_level === "Low").length,
-  };
-
-  // Group by crop
-  const cropStats = {};
-  sorted.forEach((p) => {
-    const cropName = selectedFarm?.crop || selectedFarm?.crop_type || "Unknown Crop";
-    if (!cropStats[cropName]) {
-      cropStats[cropName] = { count: 0, totalPSI: 0, avgPSI: 0 };
-    }
-    cropStats[cropName].count += 1;
-    cropStats[cropName].totalPSI += p.psi_score;
-    cropStats[cropName].avgPSI = (cropStats[cropName].totalPSI / cropStats[cropName].count).toFixed(1);
-  });
-
-  // Chart data
-  const labels = sorted.map((p) => {
-    const d = new Date(p.created_at);
-    return d.toLocaleDateString("en-IN", { month: "short", day: "numeric" });
-  });
+  const labels = filtered.map((item) => new Date(item.created_at).toLocaleDateString("en-IN", { month: "short", day: "numeric" }));
+  const scores = filtered.map((item) => item.psi_score);
+  const ndviScores = filtered.map((item) => item.ndvi_value ?? null);
+  const average = scores.length ? (scores.reduce((sum, score) => sum + score, 0) / scores.length).toFixed(1) : "-";
+  const delta = scores.length > 1 ? (scores.at(-1) - scores[0]).toFixed(0) : 0;
+  const highRisk = filtered.filter((item) => item.risk_level === "High").length;
+  const lowRisk = filtered.filter((item) => item.risk_level === "Low").length;
+  const mediumRisk = filtered.length - lowRisk - highRisk;
 
   const chartData = {
     labels,
     datasets: [
       {
-        label: "PSI Score",
-        data: sorted.map((p) => p.psi_score),
+        label: "PSI score",
+        data: scores,
         borderColor: "#006c49",
-        backgroundColor: "rgba(0, 108, 73, 0.1)",
+        backgroundColor: "rgba(0,108,73,.12)",
         fill: true,
-        tension: 0.3,
-        pointRadius: 5,
+        tension: 0.35,
+        pointRadius: 4,
         pointHoverRadius: 7,
-        pointBackgroundColor: sorted.map((p) =>
-          p.psi_score >= 70 ? "#10b981" : p.psi_score >= 40 ? "#fea619" : "#b91a24"
-        ),
+        pointBackgroundColor: scores.map((score) => score >= 70 ? "#10b981" : score >= 40 ? "#fea619" : "#b91a24"),
+      },
+      {
+        label: "NDVI x100",
+        data: ndviScores.map((value) => value == null ? null : Math.round(value * 100)),
+        borderColor: "#4f46e5",
+        backgroundColor: "rgba(79,70,229,.08)",
+        fill: false,
+        tension: 0.35,
+        pointRadius: 3,
       },
     ],
   };
@@ -112,221 +91,105 @@ export default function AnalyticsPage() {
       legend: { display: false },
       tooltip: {
         backgroundColor: "#342f2b",
-        titleFont: { family: "Geist Sans", size: 12, weight: "600" },
-        bodyFont: { family: "Inter", size: 12 },
-        cornerRadius: 8,
         padding: 10,
+        callbacks: {
+          label: (context) => context.dataset.label === "NDVI x100" ? ` NDVI: ${(context.parsed.y / 100).toFixed(2)}` : ` PSI: ${context.parsed.y}/100`,
+        },
       },
     },
     scales: {
-      x: {
-        grid: { display: false },
-        ticks: { font: { family: "Geist Sans", size: 11 } },
-      },
-      y: {
-        grid: { color: "rgba(0,0,0,0.05)" },
-        min: 0,
-        max: 100,
-        ticks: { font: { family: "Inter", size: 11 } },
-      },
+      x: { grid: { display: false }, ticks: { maxTicksLimit: 6 } },
+      y: { min: 0, max: 100, grid: { color: "rgba(108,122,113,.18)" }, ticks: { stepSize: 20 } },
     },
   };
 
-  function handleExport() {
-    exportChartData(
-      `PSI Analytics - Farm ${farmId}`,
-      labels,
-      chartData.datasets
-    );
+  function changeFarm(id) {
+    selectFarm(id);
+    setParams({ farm_id: String(id) }, { replace: true });
   }
 
-  if (predictions.length === 0) {
+  if (loading || loadingFarms) return <DashboardSkeleton />;
+  if (error) return <ErrorState error={error} onRetry={() => window.location.reload()} />;
+
+  if (!farmId || predictions.length === 0) {
     return (
       <div className="space-y-lg">
-        {farms.length > 0 ? (
-          <Card header="Select Farm">
-            <FarmSelector
-              farms={farms}
-              value={farmId}
-              onChange={(nextFarmId) => setSearchParams({ farm_id: String(nextFarmId) })}
-            />
-          </Card>
-        ) : null}
+        {farms.length ? <div className="max-w-xs"><FarmSelector farms={farms} selectedFarmId={farmId} onSelectFarm={changeFarm} showCreateAction={false} /></div> : null}
         <EmptyState
           icon="analytics"
-          title={farms.length === 0 ? "No farms yet" : "No predictions yet"}
-          description={
-            farms.length === 0
-              ? "Create a farm first to start generating analytics."
-              : "Run a prediction to start tracking your farm's pollination trends"
-          }
+          title={farms.length ? "No predictions in this farm" : "No farm selected"}
+          description="Run a prediction from a farm workspace to build trend and risk analytics."
         />
       </div>
     );
   }
 
   return (
-    <div className="space-y-lg">
-      {/* Header */}
-      <div>
-        <h1 className="font-display text-display text-on-surface">Analytics & Reports</h1>
-        <p className="font-body-md text-body-md text-on-surface-variant mt-xs">
-          Track PSI trends, crop performance, and pollination patterns over time
-        </p>
-      </div>
-
-      {farms.length > 0 ? (
-        <Card header="Farm Filter">
-          <FarmSelector
-            farms={farms}
-            value={selectedFarm ? String(selectedFarm.id) : ""}
-            onChange={(nextFarmId) => setSearchParams({ farm_id: String(nextFarmId) })}
-          />
-        </Card>
-      ) : null}
-
-      {/* Key Metrics */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-lg">
-        <MetricText
-          label="Average PSI"
-          value={avgPSI}
-          badge={avgPSI >= 70 ? "Good" : avgPSI >= 40 ? "Fair" : "Poor"}
-          badge_color={
-            avgPSI >= 70
-              ? "bg-primary-container/20 text-primary"
-              : avgPSI >= 40
-                ? "bg-secondary/20 text-secondary"
-                : "bg-tertiary/20 text-tertiary"
-          }
-          description="Across all predictions"
-        />
-        <MetricText
-          label="Max PSI"
-          value={maxPSI}
-          description="Best prediction"
-        />
-        <MetricText
-          label="Min PSI"
-          value={minPSI}
-          description="Lowest prediction"
-        />
-        <MetricText
-          label="Total Predictions"
-          value={sorted.length}
-          description="Since you started"
-        />
-      </div>
-
-      {/* Risk Distribution */}
-      <Card header="Predictions by Risk Level">
-        <div className="grid grid-cols-3 gap-md">
-          <div className="text-center">
-            <div className="text-4xl font-bold text-primary mb-md">{riskCounts.low}</div>
-            <p className="font-body-sm text-body-sm text-on-surface-variant">Low Risk</p>
-            <p className="text-sm text-on-surface-variant mt-xs">
-              {((riskCounts.low / sorted.length) * 100).toFixed(0)}%
-            </p>
-          </div>
-          <div className="text-center">
-            <div className="text-4xl font-bold text-secondary mb-md">{riskCounts.medium}</div>
-            <p className="font-body-sm text-body-sm text-on-surface-variant">Medium Risk</p>
-            <p className="text-sm text-on-surface-variant mt-xs">
-              {((riskCounts.medium / sorted.length) * 100).toFixed(0)}%
-            </p>
-          </div>
-          <div className="text-center">
-            <div className="text-4xl font-bold text-tertiary mb-md">{riskCounts.high}</div>
-            <p className="font-body-sm text-body-sm text-on-surface-variant">High Risk</p>
-            <p className="text-sm text-on-surface-variant mt-xs">
-              {((riskCounts.high / sorted.length) * 100).toFixed(0)}%
-            </p>
-          </div>
+    <div className="space-y-lg pb-lg">
+      <header className="flex flex-col gap-md lg:flex-row lg:items-end lg:justify-between">
+        <div>
+          <p className="text-label-sm text-primary font-bold uppercase tracking-wide">Farm intelligence</p>
+          <h1 className="mt-1 font-display text-display text-on-surface">Analytics</h1>
+          <p className="mt-1 text-body-md text-on-surface-variant">Track PSI movement and risk concentration for the selected farm.</p>
         </div>
-      </Card>
+        <div className="min-w-[220px]"><FarmSelector farms={farms} selectedFarmId={farmId} onSelectFarm={changeFarm} showCreateAction={false} /></div>
+      </header>
 
-      {/* PSI Trend Chart */}
-      <ChartWrapper
-        title="PSI Trend Over Time"
-        legend={[{ label: "PSI Score", color: "#006c49" }]}
-        onExport={handleExport}
-      >
-        <Line data={chartData} options={chartOptions} />
-      </ChartWrapper>
-
-      {/* Crop Performance */}
-      <Card header="Performance by Crop">
-        <div className="space-y-md">
-          {Object.entries(cropStats).map(([crop, stats]) => (
-            <div key={crop} className="flex items-center justify-between p-md bg-surface-container rounded-lg">
-              <div>
-                <p className="font-headline-sm text-headline-sm text-on-surface">{crop}</p>
-                <p className="font-body-sm text-body-sm text-on-surface-variant mt-xs">
-                  {stats.count} prediction{stats.count !== 1 ? "s" : ""}
-                </p>
-              </div>
-              <div className="text-right">
-                <p className="font-headline-md text-headline-md text-on-surface">
-                  {stats.avgPSI}
-                </p>
-                <p className="font-label-sm text-label-sm text-on-surface-variant">avg PSI</p>
-              </div>
-            </div>
+      <div className="sticky top-0 z-20 -mx-md border-y border-outline-variant bg-background/95 px-md py-sm backdrop-blur sm:static sm:mx-0 sm:rounded-xl sm:border sm:bg-surface sm:p-sm">
+        <div className="flex gap-xs overflow-x-auto" role="tablist" aria-label="Analytics time range">
+          {Object.keys(ranges).map((item) => (
+            <button key={item} onClick={() => setRange(item)} className={`min-h-11 shrink-0 rounded-lg px-md text-label-sm ${range === item ? "bg-primary text-on-primary font-bold" : "text-on-surface-variant hover:bg-surface-container"}`}>
+              {item}
+            </button>
           ))}
         </div>
-      </Card>
+      </div>
 
-      {/* Recent Predictions Table */}
-      <Card header="Recent Predictions">
-        <div className="overflow-x-auto">
-          <table className="w-full">
-            <thead>
-              <tr className="border-b border-outline-variant">
-                <th className="text-left py-md px-md font-label-md text-label-md text-on-surface-variant">
-                  Date
-                </th>
-                <th className="text-left py-md px-md font-label-md text-label-md text-on-surface-variant">
-                  Crop
-                </th>
-                <th className="text-left py-md px-md font-label-md text-label-md text-on-surface-variant">
-                  PSI Score
-                </th>
-                <th className="text-left py-md px-md font-label-md text-label-md text-on-surface-variant">
-                  Risk Level
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              {sorted.map((pred, i) => {
-                const scoreColor =
-                  pred.psi_score >= 70 ? "text-primary" : pred.psi_score >= 40 ? "text-secondary" : "text-tertiary";
-                const riskBg =
-                  pred.risk_level === "Low"
-                    ? "bg-primary-container/20 text-primary"
-                    : pred.risk_level === "Medium"
-                      ? "bg-secondary/20 text-secondary"
-                      : "bg-tertiary/20 text-tertiary";
+      <section className="grid grid-cols-2 gap-sm lg:grid-cols-4">
+        {[["Average PSI", average, Number(average) >= 70 ? "Favorable" : "Needs attention"], ["Trend", `${delta > 0 ? "+" : ""}${delta}`, "vs. first result"], ["High-risk days", highRisk, "in selected range"], ["Predictions", filtered.length, `${lowRisk} low-risk`]].map(([label, value, hint]) => (
+          <article key={label} className="rounded-xl border border-outline-variant bg-surface p-md shadow-sm">
+            <p className="text-label-sm text-on-surface-variant">{label}</p>
+            <p className="mt-xs text-headline-lg font-headline-lg text-on-surface">{value}</p>
+            <p className="mt-1 text-body-sm text-on-surface-variant">{hint}</p>
+          </article>
+        ))}
+      </section>
 
-                return (
-                  <tr key={i} className="border-b border-outline-variant/30 hover:bg-surface-container/50">
-                    <td className="py-md px-md font-body-sm text-on-surface">
-                      {new Date(pred.created_at).toLocaleDateString("en-IN")}
-                    </td>
-                    <td className="py-md px-md font-body-sm text-on-surface">
-                      {selectedFarm?.crop || selectedFarm?.crop_type || "--"}
-                    </td>
-                    <td className={`py-md px-md font-headline-sm ${scoreColor}`}>{pred.psi_score}</td>
-                    <td className="py-md px-md">
-                      <span className={`px-md py-xs rounded-full font-label-xs text-label-xs font-bold ${riskBg}`}>
-                        {pred.risk_level}
-                      </span>
-                    </td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
-        </div>
-      </Card>
+      <div className="flex gap-xs overflow-x-auto border-b border-outline-variant" role="tablist" aria-label="Analytics sections">
+        {[["trends", "Trends"], ["risk", "Risk"]].map(([id, label]) => (
+          <button key={id} role="tab" aria-selected={tab === id} onClick={() => setTab(id)} className={`min-h-11 shrink-0 border-b-2 px-md text-label-md ${tab === id ? "border-primary text-primary font-bold" : "border-transparent text-on-surface-variant"}`}>
+            {label}
+          </button>
+        ))}
+      </div>
+
+      {tab === "trends" && (
+        <ChartWrapper
+          title="PSI and NDVI Trend"
+          legend={[{ label: "PSI score", color: "#006c49" }, { label: "NDVI x100", color: "#4f46e5" }]}
+          onExport={() => exportChartData(`Trends-${selectedFarm?.name || farmId}-${range}`, labels, chartData.datasets)}
+        >
+          <Line data={chartData} options={chartOptions} />
+        </ChartWrapper>
+      )}
+
+      {tab === "risk" && (
+        <article className="rounded-xl border border-outline-variant bg-surface p-lg">
+          <h2 className="text-headline-sm font-headline-sm text-on-surface">Risk distribution</h2>
+          <p className="mt-xs text-body-md text-on-surface-variant">{highRisk ? `${highRisk} high-risk prediction${highRisk > 1 ? "s" : ""} need closer planning in this range.` : "No high-risk predictions in this range."}</p>
+          <div className="mt-lg flex h-5 overflow-hidden rounded-full bg-surface-container-high">
+            {[["Low", lowRisk, "bg-primary"], ["Medium", mediumRisk, "bg-secondary"], ["High", highRisk, "bg-tertiary"]].map(([label, count, color]) => Number(count) > 0 && <div key={label} title={`${label}: ${count}`} className={color} style={{ width: `${(Number(count) / filtered.length) * 100}%` }} />)}
+          </div>
+          <div className="mt-md grid grid-cols-3 text-center">
+            {[["Low", lowRisk], ["Medium", mediumRisk], ["High", highRisk]].map(([label, count]) => (
+              <div key={label}>
+                <p className="text-headline-md font-headline-md text-on-surface">{count}</p>
+                <p className="text-body-sm text-on-surface-variant">{label} risk</p>
+              </div>
+            ))}
+          </div>
+        </article>
+      )}
     </div>
   );
 }

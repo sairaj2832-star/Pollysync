@@ -19,7 +19,7 @@ export default function PollenBar({ pollen = {} }) {
                 <span className="text-on-surface font-medium">{label}</span>
                 <span className="text-on-surface-variant">{level} / {maxLevel}</span>
               </div>
-              <div className="h-3 w-full bg-surface-variant rounded-full overflow-hidden">
+              <div className="h-3 w-full bg-surface-container-high rounded-full overflow-hidden">
                 <div
                   className={`h-full rounded-full transition-all duration-500 ${color}`}
                   style={{ width: `${(level / maxLevel) * 100}%` }}

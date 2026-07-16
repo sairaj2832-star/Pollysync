@@ -1,11 +1,12 @@
 import { useState, useEffect, useRef } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate, Link, useSearchParams } from "react-router-dom";
 import { useToast } from "../context/ToastContext";
 import { useAuth } from "../context/AuthContext";
 import { useDistricts } from "../context/DistrictContext";
 import { createPrediction, generateRecommendation, getFarms, getApiErrorMessage } from "../lib/api";
 import InteractiveGoogleMap from "../components/InteractiveGoogleMap";
 import DistrictSelector from "../components/DistrictSelector";
+import { useFarm } from "../context/FarmContext";
 
 const CROPS = [
   { value: "Mustard", icon: "eco", desc: "Brassica juncea. High sensitivity to temperature fluctuations during bloom.", bg: "bg-secondary-container/20", color: "text-secondary-container" },
@@ -28,9 +29,11 @@ const LOADING_MESSAGES = [
 
 export default function PredictPage() {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const toast = useToast();
   const { user } = useAuth();
   const { getDistrictBySlug } = useDistricts();
+  const { selectedFarmId: globalFarmId, selectFarm } = useFarm();
   const [step, setStep] = useState(1);
   const [farms, setFarms] = useState([]);
   const [selectedFarmId, setSelectedFarmId] = useState(null);
@@ -51,8 +54,13 @@ export default function PredictPage() {
       const data = await getFarms();
       setFarms(data);
       if (data.length > 0) {
-        const defaultFarm = data.find((f) => f.is_default) || data[0];
+        const requestedFarmId = searchParams.get("farm_id");
+        const defaultFarm = data.find((f) => String(f.id) === String(requestedFarmId))
+          || data.find((f) => String(f.id) === String(globalFarmId))
+          || data.find((f) => f.is_default)
+          || data[0];
         setSelectedFarmId(defaultFarm.id);
+        selectFarm(defaultFarm.id);
       }
     } catch (err) {
       console.error("Failed to fetch farms:", err);
@@ -86,6 +94,7 @@ export default function PredictPage() {
 
     try {
       setLoadMsgIndex(0);
+      selectFarm(selectedFarmId);
       const prediction = await createPrediction(selectedFarmId);
 
       setLoadMsgIndex(6);
@@ -184,11 +193,11 @@ export default function PredictPage() {
               <span className="material-symbols-outlined text-on-surface-variant text-[48px]">agriculture</span>
               <p className="mt-md text-on-surface-variant">No farms found. Create a farm first.</p>
               <Link
-                to="/onboarding"
+                to="/farms?new=1"
                 className="mt-md inline-flex items-center gap-sm bg-primary text-on-primary px-md py-sm rounded-lg hover:brightness-90 transition-all"
               >
                 <span className="material-symbols-outlined text-[18px]">add</span>
-                Create Farm
+                Go to My Farms
               </Link>
             </div>
           ) : (
@@ -203,7 +212,7 @@ export default function PredictPage() {
                       name="farm_selection"
                       className="peer sr-only"
                       checked={isSelected}
-                      onChange={() => setSelectedFarmId(farm.id)}
+                      onChange={() => { setSelectedFarmId(farm.id); selectFarm(farm.id); }}
                     />
                     <div className={`bg-surface rounded-xl p-md flex items-center gap-md transition-all relative overflow-hidden ${
                       isSelected

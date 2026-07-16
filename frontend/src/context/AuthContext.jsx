@@ -6,12 +6,13 @@ import {
   signOut,
   updateProfile,
 } from "firebase/auth";
-import { firebaseAuth as apiFirebaseAuth, getMe, logout as apiLogout } from "../lib/api";
+import { firebaseAuth as apiFirebaseAuth, getMe, login as apiLogin, logout as apiLogout, register as apiRegister } from "../lib/api";
 import { firebaseAuth, googleProvider, isFirebaseConfigured } from "../lib/firebase";
 
 const AuthContext = createContext(null);
 const ACCESS_TOKEN_KEY = "pollisync_token";
 const REFRESH_TOKEN_KEY = "pollisync_refresh_token";
+const USE_MOCK = import.meta.env.VITE_USE_MOCK === "true";
 
 function storeSession(data) {
   localStorage.setItem(ACCESS_TOKEN_KEY, data.access_token);
@@ -53,6 +54,13 @@ export function AuthProvider({ children }) {
   }
 
   async function login(email, password) {
+    if (USE_MOCK) {
+      const data = await apiLogin(email, password);
+      storeSession(data);
+      setToken(data.access_token);
+      setUser(data.user);
+      return data;
+    }
     if (!isFirebaseConfigured || !firebaseAuth) {
       throw new Error("Firebase auth is not configured in the frontend environment.");
     }
@@ -66,6 +74,13 @@ export function AuthProvider({ children }) {
   }
 
   async function register(email, password, fullName) {
+    if (USE_MOCK) {
+      const data = await apiRegister(email, password, fullName);
+      storeSession(data);
+      setToken(data.access_token);
+      setUser(data.user);
+      return data;
+    }
     if (!isFirebaseConfigured || !firebaseAuth) {
       throw new Error("Firebase auth is not configured in the frontend environment.");
     }
@@ -82,6 +97,9 @@ export function AuthProvider({ children }) {
   }
 
   async function loginWithGoogle() {
+    if (USE_MOCK) {
+      return login("ananya@greenridge.farm", "demo");
+    }
     if (!isFirebaseConfigured || !firebaseAuth || !googleProvider) {
       throw new Error("Firebase Google auth is not configured in the frontend environment.");
     }
@@ -140,7 +158,7 @@ export function AuthProvider({ children }) {
         logout,
         refreshUser,
         setOnboarded,
-        isFirebaseConfigured,
+        isFirebaseConfigured: USE_MOCK || isFirebaseConfigured,
       }}
     >
       {children}
