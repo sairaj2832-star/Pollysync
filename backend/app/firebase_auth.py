@@ -4,6 +4,8 @@ from functools import lru_cache
 
 import firebase_admin
 from firebase_admin import auth, credentials
+from google.auth.transport import requests as google_requests
+from google.oauth2 import id_token as google_id_token
 
 from app.core.config import settings
 
@@ -32,9 +34,12 @@ def get_firebase_app():
     if settings.firebase_service_account_json:
         certificate = credentials.Certificate(json.loads(settings.firebase_service_account_json))
     elif settings.firebase_service_account_path:
-        certificate = credentials.Certificate(
-            _resolve_service_account_path(settings.firebase_service_account_path)
-        )
+        resolved_path = Path(_resolve_service_account_path(settings.firebase_service_account_path))
+        if not resolved_path.exists():
+            raise RuntimeError(
+                f"Firebase Admin service account file not found: {resolved_path}"
+            )
+        certificate = credentials.Certificate(str(resolved_path))
     else:
         raise RuntimeError("Firebase Admin is not configured")
 
@@ -43,5 +48,19 @@ def get_firebase_app():
 
 
 def verify_firebase_token(id_token: str) -> dict:
-    app = get_firebase_app()
+    try:
+        app = get_firebase_app()
+    except RuntimeError:
+        if not settings.firebase_project_id:
+            raise
+        request = google_requests.Request()
+        decoded = google_id_token.verify_firebase_token(
+            id_token,
+            request,
+            audience=settings.firebase_project_id,
+        )
+        if not decoded:
+            raise RuntimeError("Firebase token verification returned no payload")
+        return decoded
+
     return auth.verify_id_token(id_token, app=app, check_revoked=True)

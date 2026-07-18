@@ -8,6 +8,26 @@ const api = axios.create({
   withCredentials: true,
 });
 
+function getCookie(name) {
+  if (typeof document === "undefined") return null;
+  const cookies = document.cookie ? document.cookie.split("; ") : [];
+  const prefix = `${name}=`;
+  const match = cookies.find((cookie) => cookie.startsWith(prefix));
+  return match ? decodeURIComponent(match.slice(prefix.length)) : null;
+}
+
+api.interceptors.request.use((config) => {
+  const method = (config.method || "get").toUpperCase();
+  if (["POST", "PUT", "PATCH", "DELETE"].includes(method)) {
+    const csrfToken = getCookie("XSRF-TOKEN");
+    if (csrfToken) {
+      config.headers = config.headers ?? {};
+      config.headers["X-XSRF-TOKEN"] = csrfToken;
+    }
+  }
+  return config;
+});
+
 function real(apiFunc) {
   return (...args) => apiFunc(...args);
 }

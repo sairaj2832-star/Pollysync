@@ -1,10 +1,12 @@
 import { createContext, useCallback, useContext, useEffect, useState } from "react";
 import { getFarms } from "../lib/api";
+import { useAuth } from "./AuthContext";
 
 const FarmContext = createContext(null);
 const STORAGE_KEY = "selectedFarmId";
 
 export function FarmProvider({ children }) {
+  const { user, loading } = useAuth();
   const [farms, setFarms] = useState([]);
   const [selectedFarmId, setSelectedFarmId] = useState(() => localStorage.getItem(STORAGE_KEY) || "");
   const [loadingFarms, setLoadingFarms] = useState(true);
@@ -32,7 +34,17 @@ export function FarmProvider({ children }) {
     }
   }, []);
 
-  useEffect(() => { refreshFarms(); }, [refreshFarms]);
+  useEffect(() => {
+    if (loading) return;
+    if (!user) {
+      setFarms([]);
+      setSelectedFarmId("");
+      localStorage.removeItem(STORAGE_KEY);
+      setLoadingFarms(false);
+      return;
+    }
+    refreshFarms();
+  }, [loading, refreshFarms, user]);
 
   const selectFarm = useCallback((id) => {
     const nextId = id == null ? "" : String(id);

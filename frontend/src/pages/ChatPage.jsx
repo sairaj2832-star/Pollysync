@@ -21,6 +21,14 @@ const SUGGESTIONS = [
 
 const USE_MOCK = import.meta.env.VITE_USE_MOCK === "true";
 
+function getCookie(name) {
+  if (typeof document === "undefined") return null;
+  const cookies = document.cookie ? document.cookie.split("; ") : [];
+  const prefix = `${name}=`;
+  const match = cookies.find((cookie) => cookie.startsWith(prefix));
+  return match ? decodeURIComponent(match.slice(prefix.length)) : null;
+}
+
 function getDemoReply(question, farm) {
   const query = question.toLowerCase();
   const farmName = farm?.name || "your selected farm";
@@ -155,9 +163,14 @@ export default function ChatPage() {
         payload.farm_data = farmData;
       }
 
+      const csrfToken = getCookie("XSRF-TOKEN");
+
       const res = await fetch(`${apiBase}/api/agent/chat`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          ...(csrfToken ? { "X-XSRF-TOKEN": csrfToken } : {}),
+        },
         credentials: "include",
         body: JSON.stringify(payload),
       });

@@ -1,9 +1,12 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { getFarms, createFarm, deleteFarm } from "../lib/api";
 import { useToast } from "../context/ToastContext";
+import { useDistricts } from "../context/DistrictContext";
 import Card from "../components/Card";
-import { CropSelector, LocationSelector } from "../components/ParameterForm";
+import { CropSelector } from "../components/ParameterForm";
+import DistrictSelector from "../components/DistrictSelector";
+import InteractiveGoogleMap from "../components/InteractiveGoogleMap";
 import { EmptyState, ErrorState, DashboardSkeleton } from "../components/LoadingSkeleton";
 
 const CROP_ICONS = {
@@ -16,6 +19,7 @@ export default function FarmManagementPage() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const toast = useToast();
+  const { getDistrictBySlug } = useDistricts();
   const [farms, setFarms] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -23,13 +27,17 @@ export default function FarmManagementPage() {
   const [form, setForm] = useState({
     name: "",
     crop: "",
+    district_slug: "",
     location: "",
+    lat: null,
+    lng: null,
     area_acres: "",
     soil_type: "loamy",
     planting_date: "",
     harvest_date: "",
   });
   const [submitting, setSubmitting] = useState(false);
+  const selectedDistrict = getDistrictBySlug(form.district_slug);
 
   useEffect(() => {
     loadFarms();
@@ -40,6 +48,62 @@ export default function FarmManagementPage() {
       setShowForm(true);
     }
   }, [searchParams]);
+
+  useEffect(() => {
+    if (!selectedDistrict) return;
+    setForm((current) => {
+      const nextLocation = selectedDistrict.name;
+      const nextLat = current.lat ?? selectedDistrict.centroid_lat;
+      const nextLng = current.lng ?? selectedDistrict.centroid_lng;
+      if (
+        current.location === nextLocation &&
+        current.lat === nextLat &&
+        current.lng === nextLng
+      ) {
+        return current;
+      }
+      return {
+        ...current,
+        location: nextLocation,
+        lat: nextLat,
+        lng: nextLng,
+      };
+    });
+  }, [selectedDistrict]);
+
+  const resetForm = useCallback(() => {
+    setForm({
+      name: "",
+      crop: "",
+      district_slug: "",
+      location: "",
+      lat: null,
+      lng: null,
+      area_acres: "",
+      soil_type: "loamy",
+      planting_date: "",
+      harvest_date: "",
+    });
+  }, []);
+
+  const handleDistrictChange = useCallback((districtSlug) => {
+    const district = getDistrictBySlug(districtSlug);
+    setForm((current) => ({
+      ...current,
+      district_slug: districtSlug,
+      location: district?.name || "",
+      lat: district?.centroid_lat ?? null,
+      lng: district?.centroid_lng ?? null,
+    }));
+  }, [getDistrictBySlug]);
+
+  const handleLocationSelect = useCallback((coords) => {
+    setForm((current) => ({
+      ...current,
+      lat: coords.lat,
+      lng: coords.lng,
+    }));
+  }, []);
 
   async function loadFarms() {
     try {
@@ -57,8 +121,8 @@ export default function FarmManagementPage() {
   async function handleAddFarm(e) {
     e.preventDefault();
 
-    if (!form.name || !form.crop || !form.location || !form.area_acres) {
-      toast.error("Please fill in all fields");
+    if (!form.name || !form.crop || !form.district_slug || !form.area_acres || form.lat == null || form.lng == null) {
+      toast.error("Please complete the farm, district, area, and map location");
       return;
     }
 
@@ -67,7 +131,10 @@ export default function FarmManagementPage() {
       await createFarm({
         name: form.name,
         crop: form.crop,
+        district_slug: form.district_slug,
         location: form.location,
+        location_lat: form.lat,
+        location_lng: form.lng,
         area_acres: parseFloat(form.area_acres),
         soil_type: form.soil_type,
         planting_date: form.planting_date || null,
@@ -75,7 +142,7 @@ export default function FarmManagementPage() {
       });
 
       toast.success(`Farm "${form.name}" added successfully!`);
-      setForm({ name: "", crop: "", location: "", area_acres: "", soil_type: "loamy", planting_date: "", harvest_date: "" });
+      resetForm();
       setShowForm(false);
       await loadFarms();
     } catch (err) {
@@ -156,7 +223,40 @@ export default function FarmManagementPage() {
 
             <CropSelector value={form.crop} onChange={(crop) => setForm({ ...form, crop })} disabled={submitting} />
 
-            <LocationSelector value={form.location} onChange={(loc) => setForm({ ...form, location: loc })} disabled={submitting} />
+            <DistrictSelector value={form.district_slug} onChange={handleDistrictChange} disabled={submitting} />
+
+            {selectedDistrict && (
+              <div className="space-y-sm">
+                <label className="block font-label-md text-label-md font-bold text-on-surface">
+                  Farm Pin
+                </label>
+                <p className="font-body-sm text-body-sm text-on-surface-variant">
+                  Click on the map or drag the marker to save the exact farm latitude and longitude.
+                </p>
+                <div className="h-[280px] overflow-hidden rounded-xl border border-outline-variant">
+                  <InteractiveGoogleMap
+                    center={{
+                      lat: form.lat ?? selectedDistrict.centroid_lat,
+                      lng: form.lng ?? selectedDistrict.centroid_lng,
+                    }}
+                    zoom={13}
+                    district={selectedDistrict}
+                    onLocationSelect={handleLocationSelect}
+                  />
+                </div>
+                <div className="rounded-lg bg-surface-container-low p-md">
+                  <p className="font-body-sm text-body-sm text-on-surface-variant">
+                    <strong className="text-on-surface">Coordinates: </strong>
+                    {form.lat != null ? `${Number(form.lat).toFixed(4)}° N` : "—"},{" "}
+                    {form.lng != null ? `${Number(form.lng).toFixed(4)}° E` : "—"}
+                  </p>
+                  <p className="font-body-sm text-body-sm text-on-surface-variant">
+                    <strong className="text-on-surface">Saved location: </strong>
+                    {form.location || "—"}
+                  </p>
+                </div>
+              </div>
+            )}
 
             <div className="space-y-sm">
               <label className="block font-label-md text-label-md font-bold text-on-surface">
@@ -212,7 +312,10 @@ export default function FarmManagementPage() {
               </button>
               <button
                 type="button"
-                onClick={() => setShowForm(false)}
+                onClick={() => {
+                  resetForm();
+                  setShowForm(false);
+                }}
                 disabled={submitting}
                 className="flex-1 px-lg py-sm rounded-lg bg-surface-container text-on-surface font-label-md text-label-md font-bold hover:bg-surface-container/80 transition disabled:opacity-50 disabled:cursor-not-allowed"
               >
