@@ -32,7 +32,7 @@ const CROPS = [
 const REGIONS = ["Maharashtra", "Punjab", "Rajasthan", "Gujarat", "Haryana"];
 
 export default function HomePage() {
-  const { token } = useAuth();
+  const { user } = useAuth();
   const { dark, toggle } = useTheme();
 
   return (
@@ -55,7 +55,7 @@ export default function HomePage() {
             >
               <span className="material-symbols-outlined text-xl">{dark ? "light_mode" : "dark_mode"}</span>
             </button>
-            {token ? (
+            {user ? (
               <Link
                 to="/dashboard"
                 className="px-md py-sm bg-primary text-on-primary rounded-lg font-label-md shadow-md hover:opacity-90 active:scale-95 transition-all"
@@ -93,7 +93,7 @@ export default function HomePage() {
             AI-powered pollination forecasts for Indian farmers. Predict flowering windows, bee activity, and weather risks — all in one dashboard.
           </p>
           <div className="flex flex-col md:flex-row items-center justify-center gap-md pt-md">
-            {token ? (
+            {user ? (
               <Link
                 to="/dashboard"
                 className="px-3xl py-md bg-primary-container text-on-primary-container font-label-md text-lg rounded-xl shadow-lg hover:shadow-xl transition-all flex items-center gap-2"

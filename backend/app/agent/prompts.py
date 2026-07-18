@@ -19,11 +19,6 @@ def get_user_message(**kwargs) -> str:
     return _inject(template, kwargs)
 
 
-def get_assistant_template(**kwargs) -> str:
-    template = _load("assistant_template.txt")
-    return _inject(template, kwargs)
-
-
 def get_embedding_doc() -> str:
     return _load("embedding_doc.txt")
 

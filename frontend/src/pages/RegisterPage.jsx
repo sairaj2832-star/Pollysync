@@ -14,7 +14,7 @@ const LOCATIONS = [
 ];
 
 export default function RegisterPage() {
-  const { token, loading: authLoading, register, isFirebaseConfigured } = useAuth();
+  const { user, loading: authLoading, register, isFirebaseConfigured } = useAuth();
   const navigate = useNavigate();
   const [form, setForm] = useState({
     email: "", password: "", fullName: "",
@@ -35,7 +35,7 @@ export default function RegisterPage() {
     );
   }
 
-  if (token) return <Navigate to="/dashboard" replace />;
+  if (user) return <Navigate to="/dashboard" replace />;
 
   function validateStep1() {
     const errors = {};

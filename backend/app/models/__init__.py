@@ -6,6 +6,8 @@ from app.models.prediction import Prediction
 from app.models.team_member import TeamMember
 from app.models.user import RefreshToken, User
 from app.models.weather_cache import WeatherCache
+from app.models.agent_rate_limit import AgentRateLimit
+from app.models.revoked_token import RevokedToken
 
 __all__ = [
     "BeeOccurrence",
@@ -17,4 +19,6 @@ __all__ = [
     "TeamMember",
     "User",
     "WeatherCache",
+    "AgentRateLimit",
+    "RevokedToken",
 ]

@@ -37,8 +37,14 @@ def _get_models(use_mh: bool):
     if cache_key not in _model_cache:
         models = {}
         for name in ("flowering", "psi", "risk"):
-            model_path = MODELS_DIR / f"{name}_model{suffix}.pkl"
-            scaler_path = MODELS_DIR / f"{name}_scaler{suffix}.pkl"
+            model_path = (MODELS_DIR / f"{name}_model{suffix}.pkl").resolve()
+            scaler_path = (MODELS_DIR / f"{name}_scaler{suffix}.pkl").resolve()
+            
+            # Validate path traversal protection
+            models_dir_resolved = MODELS_DIR.resolve()
+            if not str(model_path).startswith(str(models_dir_resolved)) or not str(scaler_path).startswith(str(models_dir_resolved)):
+                raise ValueError("Unauthorized path traversal detected in model loading.")
+
             if model_path.exists():
                 try:
                     models[f"{name}_model"] = joblib.load(str(model_path))

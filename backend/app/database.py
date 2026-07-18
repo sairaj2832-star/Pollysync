@@ -72,42 +72,48 @@ def reconcile_sqlite_schema() -> None:
     with engine.begin() as connection:
         if "users" in table_names:
             existing_columns = {column["name"] for column in inspector.get_columns("users")}
-            user_migrations = {
-                "oauth_provider": "ALTER TABLE users ADD COLUMN oauth_provider VARCHAR(50)",
-                "oauth_subject": "ALTER TABLE users ADD COLUMN oauth_subject VARCHAR(255)",
-                "is_active": "ALTER TABLE users ADD COLUMN is_active BOOLEAN DEFAULT 1 NOT NULL",
-                "phone": "ALTER TABLE users ADD COLUMN phone VARCHAR(30)",
-                "role": "ALTER TABLE users ADD COLUMN role VARCHAR(80)",
-                "organization": "ALTER TABLE users ADD COLUMN organization VARCHAR(255)",
-                "language": "ALTER TABLE users ADD COLUMN language VARCHAR(10) DEFAULT 'en'",
-            }
-            for column_name, statement in user_migrations.items():
-                if column_name not in existing_columns:
-                    connection.execute(text(statement))
+            if "oauth_provider" not in existing_columns:
+                connection.execute(text("ALTER TABLE users ADD COLUMN oauth_provider VARCHAR(50)"))
+            if "oauth_subject" not in existing_columns:
+                connection.execute(text("ALTER TABLE users ADD COLUMN oauth_subject VARCHAR(255)"))
+            if "is_active" not in existing_columns:
+                connection.execute(text("ALTER TABLE users ADD COLUMN is_active BOOLEAN DEFAULT 1 NOT NULL"))
+            if "phone" not in existing_columns:
+                connection.execute(text("ALTER TABLE users ADD COLUMN phone VARCHAR(30)"))
+            if "role" not in existing_columns:
+                connection.execute(text("ALTER TABLE users ADD COLUMN role VARCHAR(80)"))
+            if "organization" not in existing_columns:
+                connection.execute(text("ALTER TABLE users ADD COLUMN organization VARCHAR(255)"))
+            if "language" not in existing_columns:
+                connection.execute(text("ALTER TABLE users ADD COLUMN language VARCHAR(10) DEFAULT 'en'"))
+            if "failed_login_attempts" not in existing_columns:
+                connection.execute(text("ALTER TABLE users ADD COLUMN failed_login_attempts INTEGER DEFAULT 0 NOT NULL"))
+            if "lockout_until" not in existing_columns:
+                connection.execute(text("ALTER TABLE users ADD COLUMN lockout_until DATETIME"))
 
         if "farms" in table_names:
             existing_columns = {column["name"] for column in inspector.get_columns("farms")}
-            farm_migrations = {
-                "location_name": "ALTER TABLE farms ADD COLUMN location_name VARCHAR(255)",
-                "area_acres": "ALTER TABLE farms ADD COLUMN area_acres FLOAT",
-                "soil_type": "ALTER TABLE farms ADD COLUMN soil_type VARCHAR(50)",
-                "user_id": "ALTER TABLE farms ADD COLUMN user_id INTEGER",
-                "variety": "ALTER TABLE farms ADD COLUMN variety VARCHAR(80)",
-                "irrigation_method": "ALTER TABLE farms ADD COLUMN irrigation_method VARCHAR(50)",
-                "planting_date": "ALTER TABLE farms ADD COLUMN planting_date VARCHAR(16)",
-                "harvest_date": "ALTER TABLE farms ADD COLUMN harvest_date VARCHAR(16)",
-            }
-            for column_name, statement in farm_migrations.items():
-                if column_name not in existing_columns:
-                    connection.execute(text(statement))
+            if "location_name" not in existing_columns:
+                connection.execute(text("ALTER TABLE farms ADD COLUMN location_name VARCHAR(255)"))
+            if "area_acres" not in existing_columns:
+                connection.execute(text("ALTER TABLE farms ADD COLUMN area_acres FLOAT"))
+            if "soil_type" not in existing_columns:
+                connection.execute(text("ALTER TABLE farms ADD COLUMN soil_type VARCHAR(50)"))
+            if "user_id" not in existing_columns:
+                connection.execute(text("ALTER TABLE farms ADD COLUMN user_id INTEGER"))
+            if "variety" not in existing_columns:
+                connection.execute(text("ALTER TABLE farms ADD COLUMN variety VARCHAR(80)"))
+            if "irrigation_method" not in existing_columns:
+                connection.execute(text("ALTER TABLE farms ADD COLUMN irrigation_method VARCHAR(50)"))
+            if "planting_date" not in existing_columns:
+                connection.execute(text("ALTER TABLE farms ADD COLUMN planting_date VARCHAR(16)"))
+            if "harvest_date" not in existing_columns:
+                connection.execute(text("ALTER TABLE farms ADD COLUMN harvest_date VARCHAR(16)"))
 
-            nullable_location_migrations = {
-                "location_lat": "UPDATE farms SET location_lat = NULL WHERE location_lat = ''",
-                "location_lng": "UPDATE farms SET location_lng = NULL WHERE location_lng = ''",
-            }
-            for column_name, statement in nullable_location_migrations.items():
-                if column_name in existing_columns:
-                    connection.execute(text(statement))
+            if "location_lat" in existing_columns:
+                connection.execute(text("UPDATE farms SET location_lat = NULL WHERE location_lat = ''"))
+            if "location_lng" in existing_columns:
+                connection.execute(text("UPDATE farms SET location_lng = NULL WHERE location_lng = ''"))
 
 
 def seed_districts_if_needed() -> None:

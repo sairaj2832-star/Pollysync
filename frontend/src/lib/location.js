@@ -26,6 +26,7 @@ export async function reverseGeocode(lat, lng) {
   const response = await fetch(url.toString(), {
     headers: {
       Accept: "application/json",
+      "User-Agent": "PolliSync-App/1.0 (contact: info@pollisync.example.com)",
     },
   });
 
@@ -54,6 +55,7 @@ export async function searchLocations(query) {
   const response = await fetch(url.toString(), {
     headers: {
       Accept: "application/json",
+      "User-Agent": "PolliSync-App/1.0 (contact: info@pollisync.example.com)",
     },
   });
 

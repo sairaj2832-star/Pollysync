@@ -101,7 +101,7 @@ async def _generate_gemini_recommendation(farm: Farm, prediction: Prediction) ->
     async with httpx.AsyncClient(timeout=15) as client:
         response = await client.post(
             url,
-            params={"key": settings.llm_api_key or settings.gemini_api_key},
+            headers={"x-goog-api-key": settings.llm_api_key or settings.gemini_api_key},
             json={
                 "contents": [{"role": "user", "parts": [{"text": _build_prompt(farm, prediction)}]}],
                 "generationConfig": {"temperature": 0.35, "maxOutputTokens": 360},

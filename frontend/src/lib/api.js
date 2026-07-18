@@ -3,16 +3,9 @@ import axios from "axios";
 const USE_MOCK = import.meta.env.VITE_USE_MOCK === "true";
 
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL ?? "http://localhost:8001",
+  baseURL: import.meta.env.VITE_API_URL ?? "http://localhost:8000",
   timeout: 15000,
-});
-
-api.interceptors.request.use((config) => {
-  const token = window.localStorage.getItem("pollisync_token");
-  if (token) {
-    config.headers.Authorization = "Bearer " + token;
-  }
-  return config;
+  withCredentials: true,
 });
 
 function real(apiFunc) {
@@ -174,17 +167,21 @@ export async function createPrediction(farm_id) {
   return data;
 }
 
+export async function refreshAccessToken(refreshToken) {
+  const { data } = await api.post("/api/auth/refresh", { refresh_token: refreshToken });
+  return data;
+}
+
 export async function firebaseAuth(idToken) {
   const { data } = await api.post("/api/auth/firebase", { id_token: idToken });
   return data;
 }
 
-export async function logout(refreshToken) {
-  if (!refreshToken) {
-    return null;
+export async function logout() {
+  try {
+    await api.post("/api/auth/logout");
+  } catch {
   }
-  const { data } = await api.post("/api/auth/logout", { refresh_token: refreshToken });
-  return data;
 }
 
 export async function getPredictions(farm_id) {

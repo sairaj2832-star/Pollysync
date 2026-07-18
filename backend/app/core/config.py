@@ -15,7 +15,7 @@ class Settings:
     database_url: str = os.getenv("DATABASE_URL", "sqlite:///./pollisync.db")
     frontend_origin: str = os.getenv("FRONTEND_ORIGIN", "http://localhost:5173")
     cors_origins: str = os.getenv("CORS_ORIGINS", "")
-    secret_key: str = os.getenv("SECRET_KEY", "change-me-in-production")
+    secret_key: str = os.getenv("SECRET_KEY", "")
     algorithm: str = "HS256"
     access_token_minutes: int = int(os.getenv("ACCESS_TOKEN_MINUTES", "30"))
     refresh_token_days: int = int(os.getenv("REFRESH_TOKEN_DAYS", "14"))
@@ -50,8 +50,16 @@ class Settings:
         return bool(self.supabase_url and self.supabase_anon_key)
 
     def validate_security(self) -> None:
-        if self.is_production and self.secret_key == "change-me-in-production":
-            raise RuntimeError("SECRET_KEY must be set to a strong random value in production.")
+        if not self.secret_key:
+            raise RuntimeError("SECRET_KEY must be set in .env to a strong random value.")
+        if self.is_production:
+            if (
+                self.secret_key == "change-me-in-production"
+                or "dev-key" in self.secret_key
+                or "do-not-use" in self.secret_key
+                or len(self.secret_key) < 32
+            ):
+                raise RuntimeError("SECRET_KEY must be a strong random value of at least 32 characters in production.")
 
 
 settings = Settings()

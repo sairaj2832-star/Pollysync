@@ -10,55 +10,34 @@ import { firebaseAuth as apiFirebaseAuth, getMe, login as apiLogin, logout as ap
 import { firebaseAuth, googleProvider, isFirebaseConfigured } from "../lib/firebase";
 
 const AuthContext = createContext(null);
-const ACCESS_TOKEN_KEY = "pollisync_token";
-const REFRESH_TOKEN_KEY = "pollisync_refresh_token";
 const USE_MOCK = import.meta.env.VITE_USE_MOCK === "true";
-
-function storeSession(data) {
-  localStorage.setItem(ACCESS_TOKEN_KEY, data.access_token);
-  localStorage.setItem(REFRESH_TOKEN_KEY, data.refresh_token);
-}
-
-function clearSession() {
-  localStorage.removeItem(ACCESS_TOKEN_KEY);
-  localStorage.removeItem(REFRESH_TOKEN_KEY);
-}
 
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
-  const [token, setToken] = useState(localStorage.getItem(ACCESS_TOKEN_KEY));
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (token) {
-      getMe()
-        .then((data) => setUser(data))
-        .catch(() => {
-          clearSession();
-          setToken(null);
-          setUser(null);
-        })
-        .finally(() => setLoading(false));
-    } else {
-      setLoading(false);
-    }
-  }, [token]);
+    getMe()
+      .then((data) => setUser(data))
+      .catch(() => setUser(null))
+      .finally(() => setLoading(false));
+  }, []);
+
+  function setUserFromData(data) {
+    setUser(data.user);
+  }
 
   async function exchangeFirebaseSession(firebaseUser) {
     const idToken = await firebaseUser.getIdToken();
     const data = await apiFirebaseAuth(idToken);
-    storeSession(data);
-    setToken(data.access_token);
-    setUser(data.user);
+    setUserFromData(data);
     return data;
   }
 
   async function login(email, password) {
     if (USE_MOCK) {
       const data = await apiLogin(email, password);
-      storeSession(data);
-      setToken(data.access_token);
-      setUser(data.user);
+      setUserFromData(data);
       return data;
     }
     if (!isFirebaseConfigured || !firebaseAuth) {
@@ -76,9 +55,7 @@ export function AuthProvider({ children }) {
   async function register(email, password, fullName) {
     if (USE_MOCK) {
       const data = await apiRegister(email, password, fullName);
-      storeSession(data);
-      setToken(data.access_token);
-      setUser(data.user);
+      setUserFromData(data);
       return data;
     }
     if (!isFirebaseConfigured || !firebaseAuth) {
@@ -128,12 +105,9 @@ export function AuthProvider({ children }) {
   }
 
   async function logout() {
-    const refreshToken = localStorage.getItem(REFRESH_TOKEN_KEY);
-    if (refreshToken) {
-      try {
-        await apiLogout(refreshToken);
-      } catch {
-      }
+    try {
+      await apiLogout();
+    } catch {
     }
     if (firebaseAuth) {
       try {
@@ -141,8 +115,6 @@ export function AuthProvider({ children }) {
       } catch {
       }
     }
-    clearSession();
-    setToken(null);
     setUser(null);
   }
 
@@ -150,7 +122,6 @@ export function AuthProvider({ children }) {
     <AuthContext.Provider
       value={{
         user,
-        token,
         loading,
         login,
         register,

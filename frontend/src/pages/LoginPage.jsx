@@ -4,7 +4,7 @@ import { useAuth } from "../context/AuthContext";
 import { getApiErrorMessage } from "../lib/api";
 
 export default function LoginPage() {
-  const { token, loading: authLoading, login, loginWithGoogle, isFirebaseConfigured } = useAuth();
+  const { user, loading: authLoading, login, loginWithGoogle, isFirebaseConfigured } = useAuth();
   const navigate = useNavigate();
   const [form, setForm] = useState({ email: "", password: "" });
   const [showPassword, setShowPassword] = useState(false);
@@ -19,7 +19,7 @@ export default function LoginPage() {
     );
   }
 
-  if (token) return <Navigate to="/dashboard" replace />;
+  if (user) return <Navigate to="/dashboard" replace />;
 
   async function handleSubmit(e) {
     e.preventDefault();

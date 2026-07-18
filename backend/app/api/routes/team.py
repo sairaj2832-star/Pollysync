@@ -74,6 +74,7 @@ def update_member(
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ) -> TeamMember:
+    _owned_farm_or_404(farm_id, current_user.id, db)
     member = db.scalar(
         select(TeamMember).where(
             TeamMember.id == member_id,
@@ -96,6 +97,7 @@ def remove_member(
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ) -> Response:
+    _owned_farm_or_404(farm_id, current_user.id, db)
     member = db.scalar(
         select(TeamMember).where(
             TeamMember.id == member_id,

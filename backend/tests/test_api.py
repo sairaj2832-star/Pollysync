@@ -127,3 +127,184 @@ def test_auth_register_login_refresh_and_logout() -> None:
             json={"refresh_token": refreshed.json()["refresh_token"]},
         )
         assert logged_out.status_code == 204
+
+
+def test_team_idor() -> None:
+    with TestClient(app) as client:
+        # Create user A and farm A
+        headers_a = _auth_headers(client, email="user-a@example.com")
+        farm_payload = {
+            "name": "Farm A",
+            "crop": "Mustard",
+            "location": "Nashik, Maharashtra",
+            "area_acres": 5.0,
+            "soil_type": "loamy",
+        }
+        res_a = client.post("/api/farms", json=farm_payload, headers=headers_a)
+        assert res_a.status_code == 201
+        farm_a_id = res_a.json()["id"]
+
+        # Invite a member to Farm A
+        invite_payload = {
+            "email": "member-a@example.com",
+            "name": "Member A",
+            "role": "viewer",
+        }
+        invite_res = client.post(f"/api/farms/{farm_a_id}/team", json=invite_payload, headers=headers_a)
+        assert invite_res.status_code == 201
+        member_id = invite_res.json()["id"]
+
+        # Create user B
+        headers_b = _auth_headers(client, email="user-b@example.com")
+
+        # Try to update member of Farm A using User B's auth -> Should return 404
+        update_payload = {"role": "editor"}
+        res_update = client.patch(
+            f"/api/farms/{farm_a_id}/team/{member_id}",
+            json=update_payload,
+            headers=headers_b,
+        )
+        assert res_update.status_code == 404
+
+        # Try to delete member of Farm A using User B's auth -> Should return 404
+        res_delete = client.delete(
+            f"/api/farms/{farm_a_id}/team/{member_id}",
+            headers=headers_b,
+        )
+        assert res_delete.status_code == 404
+
+
+def test_csrf_cookie_protection() -> None:
+    email = "csrf-user@example.com"
+    password = "StrongPass1!"
+    register_payload = {
+        "email": email,
+        "password": password,
+        "full_name": "CSRF User",
+    }
+
+    with TestClient(app) as client:
+        # Register user
+        client.post("/api/auth/register", json=register_payload)
+
+        # Login to set cookies (access_token, refresh_token, and XSRF-TOKEN)
+        login_res = client.post("/api/auth/login", json={"email": email, "password": password})
+        assert login_res.status_code == 200
+        
+        # Verify access_token and XSRF-TOKEN cookies are set
+        assert "access_token" in client.cookies
+        assert "XSRF-TOKEN" in client.cookies
+        csrf_token = client.cookies["XSRF-TOKEN"]
+
+        # Try to create a farm using cookies but without X-XSRF-TOKEN header -> Should return 403 Forbidden
+        farm_payload = {
+            "name": "CSRF Farm",
+            "crop": "Cotton",
+            "location": "Amravati, Maharashtra",
+            "area_acres": 10.0,
+            "soil_type": "black",
+        }
+        
+        # Request without header (clear auth header if default set, but TestClient has none unless passed in headers)
+        res_no_header = client.post("/api/farms", json=farm_payload)
+        assert res_no_header.status_code == 403
+        assert "CSRF" in res_no_header.json()["detail"]
+
+        # Request with mismatching header
+        res_bad_header = client.post(
+            "/api/farms",
+            json=farm_payload,
+            headers={"X-XSRF-TOKEN": "invalid-token"},
+        )
+        assert res_bad_header.status_code == 403
+
+        # Request with correct header -> Should succeed (201)
+        res_good_header = client.post(
+            "/api/farms",
+            json=farm_payload,
+            headers={"X-XSRF-TOKEN": csrf_token},
+        )
+        assert res_good_header.status_code == 201
+
+
+def test_account_lockout() -> None:
+    import uuid
+    email = f"lockout-{uuid.uuid4()}@example.com"
+    password = "StrongPass1!"
+    register_payload = {
+        "email": email,
+        "password": password,
+        "full_name": "Lockout User",
+    }
+    with TestClient(app) as client:
+        reg_res = client.post("/api/auth/register", json=register_payload)
+        assert reg_res.status_code == 201
+
+        # 4 failed attempts (unlocked)
+        for _ in range(4):
+            res = client.post("/api/auth/login", json={"email": email, "password": "WrongPassword"})
+            assert res.status_code == 401
+
+        # 5th failed attempt triggers lockout
+        res_5 = client.post("/api/auth/login", json={"email": email, "password": "WrongPassword"})
+        assert res_5.status_code == 401
+
+        # 6th attempt (even with correct password) is locked out
+        res_locked = client.post("/api/auth/login", json={"email": email, "password": password})
+        assert res_locked.status_code == 403
+        assert "locked" in res_locked.json()["detail"].lower()
+
+
+def test_access_token_blacklisting_on_logout() -> None:
+    import uuid
+    email = f"blacklisted-{uuid.uuid4()}@example.com"
+    password = "StrongPass1!"
+    register_payload = {
+        "email": email,
+        "password": password,
+        "full_name": "Blacklist User",
+    }
+    with TestClient(app) as client:
+        reg_res = client.post("/api/auth/register", json=register_payload)
+        assert reg_res.status_code == 201
+
+        login_res = client.post("/api/auth/login", json={"email": email, "password": password})
+        assert login_res.status_code == 200
+        token = login_res.json()["access_token"]
+        headers = {"Authorization": f"Bearer {token}"}
+
+        res_me = client.get("/api/auth/me", headers=headers)
+        assert res_me.status_code == 200
+
+        res_logout = client.post("/api/auth/logout", headers=headers)
+        assert res_logout.status_code == 204
+
+        res_me_revoked = client.get("/api/auth/me", headers=headers)
+        assert res_me_revoked.status_code == 401
+        assert "revoked" in res_me_revoked.json()["detail"].lower()
+
+
+def test_http_security_headers() -> None:
+    with TestClient(app) as client:
+        res = client.get("/api/health")
+        assert res.status_code == 200
+        assert res.headers.get("X-Content-Type-Options") == "nosniff"
+        assert res.headers.get("X-Frame-Options") == "DENY"
+        assert "max-age=" in res.headers.get("Strict-Transport-Security", "")
+
+
+def test_agent_endpoint_auth_and_limit() -> None:
+    with TestClient(app) as client:
+        res_no_auth = client.post(
+            "/api/agent/chat",
+            json={"messages": [{"role": "user", "content": "Hello PolliSync"}]},
+        )
+        assert res_no_auth.status_code == 401
+
+        headers = _auth_headers(client, email="agent-tester@example.com")
+        res_auth = client.post(
+            "/api/agent/chat",
+            json={"messages": [{"role": "user", "content": "Hello PolliSync"}]},
+            headers=headers,
+        )
+        assert res_auth.status_code in {200, 502, 503}

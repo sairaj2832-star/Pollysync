@@ -44,4 +44,4 @@ def get_firebase_app():
 
 def verify_firebase_token(id_token: str) -> dict:
     app = get_firebase_app()
-    return auth.verify_id_token(id_token, app=app, check_revoked=False)
+    return auth.verify_id_token(id_token, app=app, check_revoked=True)

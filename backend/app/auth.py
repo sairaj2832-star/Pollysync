@@ -1,22 +1,70 @@
+import uuid
 from datetime import datetime, timedelta, timezone
 from hashlib import sha256
 from secrets import token_urlsafe
 from typing import Any
 
-from fastapi import Depends, HTTPException, status
+from fastapi import Depends, HTTPException, Request, Response, status
 from fastapi.security import OAuth2PasswordBearer
 from jose import JWTError, jwt
 from passlib.context import CryptContext
+from sqlalchemy import select
 from sqlalchemy.orm import Session
 
 from app.core.config import settings
 from app.database import get_db
 from app.models.user import RefreshToken, User
+from app.models.revoked_token import RevokedToken
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/auth/token")
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/auth/token", auto_error=False)
 TOKEN_AUDIENCE = "pollisync-api"
 TOKEN_ISSUER = "pollisync"
+
+ACCESS_TOKEN_COOKIE = "access_token"
+REFRESH_TOKEN_COOKIE = "refresh_token"
+
+
+def set_auth_cookies(response: Response, access_token: str, refresh_token: str) -> None:
+    secure = settings.is_production
+    response.set_cookie(
+        key=ACCESS_TOKEN_COOKIE,
+        value=access_token,
+        httponly=True,
+        secure=secure,
+        samesite="lax",
+        max_age=settings.access_token_minutes * 60,
+        path="/",
+    )
+    response.set_cookie(
+        key=REFRESH_TOKEN_COOKIE,
+        value=refresh_token,
+        httponly=True,
+        secure=secure,
+        samesite="lax",
+        max_age=settings.refresh_token_days * 86400,
+        path="/api/auth",
+    )
+    # Set XSRF-TOKEN cookie for double-submit cookie CSRF protection
+    response.set_cookie(
+        key="XSRF-TOKEN",
+        value=token_urlsafe(32),
+        httponly=False,
+        secure=secure,
+        samesite="lax",
+        max_age=settings.access_token_minutes * 60,
+        path="/",
+    )
+
+
+def clear_auth_cookies(response: Response) -> None:
+    response.delete_cookie(key=ACCESS_TOKEN_COOKIE, path="/")
+    response.delete_cookie(key=REFRESH_TOKEN_COOKIE, path="/api/auth")
+    response.delete_cookie(key="XSRF-TOKEN", path="/")
+
+
+def _get_cookie_token(request: Request) -> str | None:
+    return request.cookies.get(ACCESS_TOKEN_COOKIE)
 
 
 def hash_password(password: str) -> str:
@@ -30,6 +78,7 @@ def verify_password(plain: str, hashed: str) -> bool:
 def create_access_token(user: User) -> str:
     now = datetime.now(timezone.utc)
     expire = now + timedelta(minutes=settings.access_token_minutes)
+    jti = str(uuid.uuid4())
     to_encode = {
         "sub": str(user.id),
         "email": user.email,
@@ -38,6 +87,7 @@ def create_access_token(user: User) -> str:
         "aud": TOKEN_AUDIENCE,
         "iat": now,
         "exp": expire,
+        "jti": jti,
     }
     return jwt.encode(to_encode, settings.secret_key, algorithm=settings.algorithm)
 
@@ -123,10 +173,43 @@ def rotate_refresh_token(raw_token: str, db: Session) -> tuple[User, str]:
 
 
 def get_current_user(
-    token: str = Depends(oauth2_scheme),
+    request: Request,
+    token: str | None = Depends(oauth2_scheme),
+    cookie_token: str | None = Depends(_get_cookie_token),
     db: Session = Depends(get_db),
 ) -> User:
-    payload = decode_access_token(token)
+    token_value = token or cookie_token
+    if not token_value:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Not authenticated",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+    # Double-submit cookie CSRF check
+    if not token and cookie_token and request.method in {"POST", "PUT", "DELETE", "PATCH"}:
+        csrf_cookie = request.cookies.get("XSRF-TOKEN")
+        csrf_header = request.headers.get("X-XSRF-TOKEN") or request.headers.get("x-xsrf-token")
+        if not csrf_cookie or not csrf_header or csrf_cookie != csrf_header:
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail="CSRF token validation failed",
+            )
+            
+    payload = decode_access_token(token_value)
+    
+    # Check blacklist for access token revocation
+    jti = payload.get("jti")
+    if jti:
+        is_revoked = db.scalar(
+            select(RevokedToken).where(RevokedToken.jti == jti)
+        )
+        if is_revoked:
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="Token has been revoked",
+                headers={"WWW-Authenticate": "Bearer"},
+            )
+            
     subject = payload.get("sub")
     if not subject:
         raise HTTPException(
@@ -134,7 +217,6 @@ def get_current_user(
             detail="Invalid token payload",
             headers={"WWW-Authenticate": "Bearer"},
         )
-    # Subject is now a UUID string
     user = db.get(User, subject)
     if user is None or not user.is_active:
         raise HTTPException(

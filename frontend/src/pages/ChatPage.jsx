@@ -1,12 +1,13 @@
 import { useState, useRef, useEffect, useCallback } from "react";
 import { useAuth } from "../context/AuthContext";
 import { useFarm } from "../context/FarmContext";
+import { getDashboardSummary, getWeatherCurrent, getLatestPrediction } from "../lib/api";
 
 const INITIAL_MESSAGES = [
   {
     id: 1,
     role: "assistant",
-    content: "Hello! I'm your PolliSync AI agronomist. Ask me anything about pollination, crop health, or weather conditions for your farm.",
+    content: "Hi there! I'm your PolliSync AI assistant. I can help you understand your farm's pollination conditions, crop health, weather risks, and what steps you can take to improve yield. What would you like to know?",
     timestamp: new Date(Date.now() - 60000).toISOString(),
   },
 ];
@@ -23,11 +24,84 @@ const USE_MOCK = import.meta.env.VITE_USE_MOCK === "true";
 function getDemoReply(question, farm) {
   const query = question.toLowerCase();
   const farmName = farm?.name || "your selected farm";
-  if (query.includes("water") || query.includes("irrig")) return `For ${farmName}, keep the root zone evenly moist this week. Your latest field record shows healthy moisture after recent rain, so inspect before adding a full irrigation cycle.`;
-  if (query.includes("ndvi") || query.includes("health")) return `Crop health is trending upward: the latest NDVI is 0.78, compared with 0.61 three weeks ago. Keep monitoring the lower-west edge, where canopy growth is slightly behind the field average.`;
-  if (query.includes("flower") || query.includes("bloom")) return `The strongest flowering window is July 19–29 with 91% confidence. Place or confirm hives before the window begins and avoid spraying during active bee hours.`;
-  if (query.includes("pollin") || query.includes("bee")) return `Pollination conditions are favorable today (PSI 82). Four bee species have been recorded near the field; calm mornings between 8–11 AM should have the best activity.`;
-  return `Based on the latest data for ${farmName}, conditions are favorable for pollination. The most useful next step is to review the morning weather window and keep pesticide applications outside bee-foraging hours.`;
+  if (query.includes("water") || query.includes("irrig")) return `Soil Moisture: Root zone should be kept evenly moist this week.\nRainfall Impact: Recent rainfall has left healthy moisture levels.\nRecommendation: Check soil moisture before starting irrigation — overwatering can be as harmful as underwatering.`;
+  if (query.includes("ndvi") || query.includes("health")) return `NDVI Reading: 0.78 — up from 0.61 three weeks ago.\nTrend: Solid improvement in crop health.\nWatch Area: Lower-west edge of your field is slightly behind the rest.`;
+  if (query.includes("flower") || query.includes("bloom")) return `Flowering Window: Predicted July 19–29.\nConfidence: 91%.\nAction: Place or confirm beehives before the window starts.\nCaution: Avoid spraying during active bee hours.`;
+  if (query.includes("pollin") || query.includes("bee")) return `PSI: 82 — favorable conditions.\nBee Activity: 4 different bee species detected.\nPrime Window: Calm mornings between 8–11 AM.`;
+  return `Conditions: Looking favorable for pollination at ${farmName}.\nRecommendation: Review the morning weather window and keep pesticide applications outside bee-foraging hours.\nNext Step: What specific aspect would you like to dive deeper into?`;
+}
+
+async function fetchFarmData(selectedFarm, user) {
+  if (!selectedFarm) return null;
+  const farmId = selectedFarm.id;
+  if (!farmId) {
+    return {
+      farmer_name: user?.full_name || "Farmer",
+      location: selectedFarm.location_name || selectedFarm.location || "Unknown",
+      crop_name: selectedFarm.crop_type || selectedFarm.crop || "Unknown",
+      farm_size: selectedFarm.area_acres?.toString() || "N/A",
+    };
+  }
+
+  const result = {
+    farmer_name: user?.full_name || "Farmer",
+    location: selectedFarm.location_name || selectedFarm.location || "Unknown",
+    crop_name: selectedFarm.crop_type || selectedFarm.crop || "Unknown",
+    farm_size: selectedFarm.area_acres?.toString() || "N/A",
+    season: "Kharif",
+    ndvi_interpretation: "Unknown",
+    trend: "Stable",
+  };
+
+  try {
+    const [summary, weather, prediction] = await Promise.allSettled([
+      getDashboardSummary(farmId),
+      getWeatherCurrent(farmId),
+      getLatestPrediction(farmId),
+    ]);
+
+    if (weather.status === "fulfilled" && weather.value) {
+      const w = weather.value;
+      result.temp_current = String(w.temperature ?? "");
+      result.humidity = String(w.humidity ?? "");
+      result.rainfall_mm = String(w.rainfall ?? "");
+      result.wind_speed = String(w.wind_speed ?? "");
+    }
+
+    if (prediction.status === "fulfilled" && prediction.value) {
+      const p = prediction.value;
+      result.ndvi_value = String(p.ndvi_value ?? "");
+      result.flowering_date = p.flowering_start ?? "";
+      result.risk_score = String(p.psi_score ?? "");
+      result.risk_level = p.risk_level ?? "";
+      if (p.weather_summary) {
+        const ws = typeof p.weather_summary === "object" ? p.weather_summary : {};
+        result.temp_forecast = String(ws.temp_forecast ?? ws.temperature ?? result.temp_current ?? "");
+      }
+    }
+
+    if (summary.status === "fulfilled" && summary.value) {
+      const s = summary.value;
+      if (s.latest_prediction) {
+        const p = s.latest_prediction;
+        result.ndvi_value = String(p.ndvi_value ?? result.ndvi_value);
+        result.flowering_date = p.flowering_start ?? result.flowering_date;
+        result.risk_score = String(p.psi_score ?? result.risk_score);
+        result.risk_level = p.risk_level ?? result.risk_level;
+      }
+      if (s.current_weather) {
+        const w = s.current_weather;
+        result.temp_current = String(w.temperature ?? result.temp_current);
+        result.humidity = String(w.humidity ?? result.humidity);
+        result.rainfall_mm = String(w.rainfall ?? result.rainfall_mm);
+        result.wind_speed = String(w.wind_speed ?? result.wind_speed);
+      }
+    }
+  } catch {
+    // Best-effort
+  }
+
+  return result;
 }
 
 export default function ChatPage() {
@@ -37,6 +111,7 @@ export default function ChatPage() {
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
   const [farmData, setFarmData] = useState(null);
+  const [fetchingFarm, setFetchingFarm] = useState(true);
   const bottomRef = useRef(null);
   const apiBase = import.meta.env.VITE_API_URL || "http://localhost:8000";
 
@@ -45,34 +120,11 @@ export default function ChatPage() {
   }, [messages]);
 
   useEffect(() => {
-    if (selectedFarm) {
-          const f = selectedFarm;
-          setFarmData({
-            farmer_name: user?.full_name || "Farmer",
-            location: f.location_name || f.location || "Unknown",
-            crop_name: f.crop_type || f.crop || "Unknown",
-            farm_size: f.area_acres?.toString() || "N/A",
-            temp_current: "28",
-            temp_forecast: "30",
-            humidity: "65",
-            rainfall_mm: "10",
-            wind_speed: "12",
-            season: "Kharif",
-            ndvi_value: "0.72",
-            ndvi_interpretation: "Healthy",
-            ndvi_date: new Date().toISOString().split("T")[0],
-            flowering_date: "2026-08-15",
-            bee_arrival_date: "2026-08-20",
-            mismatch_days: "5",
-            risk_score: "40",
-            risk_level: "MEDIUM",
-            avg_flowering_date: "2026-08-12",
-            avg_bee_arrival_date: "2026-08-18",
-            trend: "Stable",
-          });
-    } else {
-      setFarmData(null);
-    }
+    setFetchingFarm(true);
+    fetchFarmData(selectedFarm, user).then((data) => {
+      setFarmData(data);
+      setFetchingFarm(false);
+    });
   }, [user, selectedFarm]);
 
   const sendMessage = useCallback(async (text) => {
@@ -105,10 +157,8 @@ export default function ChatPage() {
 
       const res = await fetch(`${apiBase}/api/agent/chat`, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${window.localStorage.getItem("pollisync_token")}`,
-        },
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
         body: JSON.stringify(payload),
       });
 
@@ -131,8 +181,8 @@ export default function ChatPage() {
           id: Date.now() + 1,
           role: "assistant",
           content: err.message === "Failed to fetch"
-            ? "Could not reach the AI server. Make sure the backend is running (`py -3.12 -m uvicorn app.main:app --reload`)."
-            : `Sorry, I encountered an error: ${err.message}`,
+            ? "I can't reach the server right now. Please make sure the backend is running and try again."
+            : `Sorry, I ran into an error: ${err.message}`,
           timestamp: new Date().toISOString(),
         },
       ]);
@@ -156,8 +206,8 @@ export default function ChatPage() {
         <h1 className="font-headline-lg text-headline-lg text-on-surface">AI Assistant</h1>
         <p className="font-body-md text-body-md text-on-surface-variant">
           {farmData
-            ? `Ask about ${farmData.crop_name} at ${farmData.location}`
-            : "Ask questions about your farm and crops."}
+            ? `Ask me about ${farmData.crop_name} at ${farmData.location}`
+            : "I can help with pollination, weather, crop health, and more."}
         </p>
       </div>
 
@@ -172,7 +222,7 @@ export default function ChatPage() {
               {msg.role === "assistant" && (
                 <div className="flex items-center gap-xs mb-xs">
                   <span className="material-symbols-outlined text-primary text-[16px]">smart_toy</span>
-                  <span className="font-label-sm text-label-sm text-primary font-medium">AI Agronomist</span>
+                  <span className="font-label-sm text-label-sm text-primary font-medium">AI Assistant</span>
                 </div>
               )}
               <p className="font-body-md text-body-md whitespace-pre-wrap">{msg.content}</p>
@@ -220,7 +270,7 @@ export default function ChatPage() {
           type="text"
           value={input}
           onChange={(e) => setInput(e.target.value)}
-          placeholder="Ask about pollination, weather, crops..."
+          placeholder="Ask me anything about your farm..."
           disabled={loading}
           className="flex-1 bg-surface border border-outline-variant rounded-lg px-md py-sm font-body-md text-body-md text-on-surface focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all placeholder:text-on-surface-variant/50 disabled:opacity-50"
         />
@@ -230,7 +280,7 @@ export default function ChatPage() {
           className="bg-primary text-on-primary px-lg py-sm rounded-lg font-label-md text-label-md hover:brightness-90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-sm"
         >
           <span className="material-symbols-outlined text-[18px]">send</span>
-          Send
+          Ask
         </button>
       </form>
     </div>
