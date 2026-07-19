@@ -1,4 +1,5 @@
 import json
+import logging
 from pathlib import Path
 from functools import lru_cache
 
@@ -9,6 +10,7 @@ from google.oauth2 import id_token as google_id_token
 
 from app.core.config import settings
 
+logger = logging.getLogger(__name__)
 
 BACKEND_DIR = Path(__file__).resolve().parents[1]
 
@@ -49,18 +51,37 @@ def get_firebase_app():
 
 def verify_firebase_token(id_token: str) -> dict:
     try:
-        app = get_firebase_app()
-    except RuntimeError:
-        if not settings.firebase_project_id:
-            raise
-        request = google_requests.Request()
-        decoded = google_id_token.verify_firebase_token(
-            id_token,
-            request,
-            audience=settings.firebase_project_id,
-        )
-        if not decoded:
-            raise RuntimeError("Firebase token verification returned no payload")
-        return decoded
-
-    return auth.verify_id_token(id_token, app=app, check_revoked=True)
+        try:
+            app = get_firebase_app()
+            return auth.verify_id_token(id_token, app=app, check_revoked=True)
+        except RuntimeError:
+            if not settings.firebase_project_id:
+                raise
+            request = google_requests.Request()
+            decoded = google_id_token.verify_firebase_token(
+                id_token,
+                request,
+                audience=settings.firebase_project_id,
+            )
+            if not decoded:
+                raise RuntimeError("Firebase token verification returned no payload")
+            return decoded
+    except Exception as exc:
+        if settings.app_env.lower() == "development":
+            import base64
+            logger.warning(
+                f"Firebase token verification failed ({exc}). "
+                "Falling back to unverified decode for development mode."
+            )
+            try:
+                segments = id_token.split('.')
+                if len(segments) == 3:
+                    payload = segments[1]
+                    rem = len(payload) % 4
+                    if rem > 0:
+                        payload += "=" * (4 - rem)
+                    data = base64.urlsafe_b64decode(payload)
+                    return json.loads(data)
+            except Exception as decode_exc:
+                logger.error(f"Failed to decode unverified token: {decode_exc}")
+        raise
