@@ -25,6 +25,8 @@ class Settings:
     firebase_project_id: str = os.getenv("FIREBASE_PROJECT_ID", "")
     firebase_service_account_json: str = os.getenv("FIREBASE_SERVICE_ACCOUNT_JSON", "")
     firebase_service_account_path: str = os.getenv("FIREBASE_SERVICE_ACCOUNT_PATH", "")
+    firebase_private_key: str = os.getenv("FIREBASE_PRIVATE_KEY", "")
+    firebase_client_email: str = os.getenv("FIREBASE_CLIENT_EMAIL", "")
     gemini_api_key: str = os.getenv("GEMINI_API_KEY", "")
     gemini_model: str = os.getenv("GEMINI_MODEL", "gemini-2.5-flash")
     llm_api_key: str = os.getenv("LLM_API_KEY", "")

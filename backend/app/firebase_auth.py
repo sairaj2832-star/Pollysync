@@ -35,6 +35,16 @@ def get_firebase_app():
 
     if settings.firebase_service_account_json:
         certificate = credentials.Certificate(json.loads(settings.firebase_service_account_json))
+    elif settings.firebase_private_key and settings.firebase_client_email:
+        private_key = settings.firebase_private_key.replace("\\n", "\n")
+        cert_dict = {
+            "type": "service_account",
+            "project_id": settings.firebase_project_id,
+            "private_key": private_key,
+            "client_email": settings.firebase_client_email,
+            "token_uri": "https://oauth2.googleapis.com/token",
+        }
+        certificate = credentials.Certificate(cert_dict)
     elif settings.firebase_service_account_path:
         resolved_path = Path(_resolve_service_account_path(settings.firebase_service_account_path))
         if not resolved_path.exists():
