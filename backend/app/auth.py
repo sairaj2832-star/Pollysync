@@ -27,12 +27,13 @@ REFRESH_TOKEN_COOKIE = "refresh_token"
 
 def set_auth_cookies(response: Response, access_token: str, refresh_token: str) -> None:
     secure = settings.is_production
+    samesite = "none" if settings.is_production else "lax"
     response.set_cookie(
         key=ACCESS_TOKEN_COOKIE,
         value=access_token,
         httponly=True,
         secure=secure,
-        samesite="lax",
+        samesite=samesite,
         max_age=settings.access_token_minutes * 60,
         path="/",
     )
@@ -41,7 +42,7 @@ def set_auth_cookies(response: Response, access_token: str, refresh_token: str) 
         value=refresh_token,
         httponly=True,
         secure=secure,
-        samesite="lax",
+        samesite=samesite,
         max_age=settings.refresh_token_days * 86400,
         path="/api/auth",
     )
@@ -51,7 +52,7 @@ def set_auth_cookies(response: Response, access_token: str, refresh_token: str) 
         value=token_urlsafe(32),
         httponly=False,
         secure=secure,
-        samesite="lax",
+        samesite=samesite,
         max_age=settings.access_token_minutes * 60,
         path="/",
     )
