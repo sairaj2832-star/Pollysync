@@ -35,9 +35,11 @@ class Settings:
 
     @property
     def allowed_origins(self) -> list[str]:
-        origins = [origin.strip() for origin in self.cors_origins.split(",") if origin.strip()]
-        if self.frontend_origin and self.frontend_origin not in origins:
-            origins.append(self.frontend_origin)
+        origins = [origin.strip().rstrip("/") for origin in self.cors_origins.split(",") if origin.strip()]
+        if self.frontend_origin:
+            cleaned_frontend = self.frontend_origin.strip().rstrip("/")
+            if cleaned_frontend not in origins:
+                origins.append(cleaned_frontend)
         return origins
 
     @property
