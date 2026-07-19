@@ -121,7 +121,7 @@ export default function ChatPage() {
   const [farmData, setFarmData] = useState(null);
   const [fetchingFarm, setFetchingFarm] = useState(true);
   const bottomRef = useRef(null);
-  const apiBase = import.meta.env.VITE_API_URL || "http://localhost:8000";
+  const apiBase = import.meta.env.VITE_API_URL;
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -227,11 +227,10 @@ export default function ChatPage() {
       <div className="flex-1 overflow-y-auto bg-surface border border-outline-variant rounded-xl p-lg space-y-lg mb-md">
         {messages.map((msg) => (
           <div key={msg.id} className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}>
-            <div className={`max-w-[80%] rounded-xl px-lg py-md ${
-              msg.role === "user"
+            <div className={`max-w-[80%] rounded-xl px-lg py-md ${msg.role === "user"
                 ? "bg-primary text-on-primary"
                 : "bg-surface-container-low border border-outline-variant/50 text-on-surface"
-            }`}>
+              }`}>
               {msg.role === "assistant" && (
                 <div className="flex items-center gap-xs mb-xs">
                   <span className="material-symbols-outlined text-primary text-[16px]">smart_toy</span>
@@ -239,9 +238,8 @@ export default function ChatPage() {
                 </div>
               )}
               <p className="font-body-md text-body-md whitespace-pre-wrap">{msg.content}</p>
-              <span className={`font-label-sm text-label-sm block mt-xs ${
-                msg.role === "user" ? "text-on-primary/60 text-right" : "text-on-surface-variant"
-              }`}>
+              <span className={`font-label-sm text-label-sm block mt-xs ${msg.role === "user" ? "text-on-primary/60 text-right" : "text-on-surface-variant"
+                }`}>
                 {formatTime(msg.timestamp)}
               </span>
             </div>

@@ -3,7 +3,7 @@ import axios from "axios";
 const USE_MOCK = import.meta.env.VITE_USE_MOCK === "true";
 
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL ?? "http://localhost:8000",
+  baseURL: import.meta.env.VITE_API_URL,
   timeout: 15000,
   withCredentials: true,
 });
@@ -42,7 +42,7 @@ export function getApiErrorMessage(error, fallback = "Request failed") {
       "auth/operation-not-allowed":
         "This Firebase sign-in method is disabled. Enable it in Firebase Console > Authentication > Sign-in method.",
       "auth/unauthorized-domain":
-        "This domain is not authorized for Firebase sign-in. Add localhost to Firebase Console > Authentication > Settings > Authorized domains.",
+        "This domain is not authorized for Firebase sign-in.",
       "auth/invalid-credential":
         "The Firebase sign-in credentials were rejected. Check that the provider is enabled and try again.",
       "auth/invalid-email":

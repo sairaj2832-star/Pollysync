@@ -13,8 +13,8 @@ class Settings:
     app_name: str = "PolliSync API"
     app_env: str = os.getenv("APP_ENV", "development")
     database_url: str = os.getenv("DATABASE_URL", "sqlite:///./pollisync.db")
-    frontend_origin: str = os.getenv("FRONTEND_ORIGIN", "http://localhost:5173")
-    cors_origins: str = os.getenv("CORS_ORIGINS", "")
+    frontend_origin: str = os.getenv("FRONTEND_ORIGIN")
+    cors_origins: str = os.getenv("CORS_ORIGINS")
     secret_key: str = os.getenv("SECRET_KEY", "")
     algorithm: str = "HS256"
     access_token_minutes: int = int(os.getenv("ACCESS_TOKEN_MINUTES", "30"))
