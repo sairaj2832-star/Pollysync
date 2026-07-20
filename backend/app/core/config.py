@@ -13,8 +13,8 @@ class Settings:
     app_name: str = "PolliSync API"
     app_env: str = os.getenv("APP_ENV", "development")
     database_url: str = os.getenv("DATABASE_URL", "sqlite:///./pollisync.db")
-    frontend_origin: str = os.getenv("FRONTEND_ORIGIN")
-    cors_origins: str = os.getenv("CORS_ORIGINS")
+    frontend_origin: str = os.getenv("FRONTEND_ORIGIN", "")
+    cors_origins: str = os.getenv("CORS_ORIGINS", "")
     secret_key: str = os.getenv("SECRET_KEY", "")
     algorithm: str = "HS256"
     access_token_minutes: int = int(os.getenv("ACCESS_TOKEN_MINUTES", "30"))
@@ -37,7 +37,9 @@ class Settings:
 
     @property
     def allowed_origins(self) -> list[str]:
-        origins = [origin.strip().rstrip("/") for origin in self.cors_origins.split(",") if origin.strip()]
+        origins = []
+        if self.cors_origins:
+            origins = [origin.strip().rstrip("/") for origin in self.cors_origins.split(",") if origin.strip()]
         if self.frontend_origin:
             cleaned_frontend = self.frontend_origin.strip().rstrip("/")
             if cleaned_frontend not in origins:
