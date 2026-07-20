@@ -1,3 +1,4 @@
+import os
 import json
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
@@ -18,7 +19,10 @@ from app.services.weather_service import (
     get_fallback_weather,
 )
 
-MODELS_DIR = Path(__file__).resolve().parent.parent.parent.parent / "ml" / "models"
+MODELS_DIR = Path(
+    os.getenv("MODELS_DIR") or
+    (Path(__file__).resolve().parent.parent.parent.parent / "ml" / "models")
+)
 
 _model_cache = {}
 

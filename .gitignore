@@ -17,10 +17,10 @@ venv/
 *.db
 *.sqlite
 *.sqlite3
-ml/models/*.pkl
-ml/models/*.joblib
 *.db-wal
 *.db-shm
+# ml/models/*.pkl and ml/models/*.joblib are intentionally tracked
+# so Render can deploy the trained model artifacts without a separate download step
 
 # Firebase Admin SDK
 backend/*firebase-adminsdk*.json
