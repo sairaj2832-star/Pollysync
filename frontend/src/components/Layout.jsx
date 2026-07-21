@@ -88,7 +88,7 @@ export default function Layout({ children }) {
     <div className="text-on-surface bg-background flex h-screen overflow-hidden">
       <aside className={`bg-surface/90 backdrop-blur-md border-r border-outline-variant h-screen w-64 fixed left-0 top-0 flex flex-col overflow-hidden p-md z-20 transition-transform lg:translate-x-0 ${mobileOpen ? "translate-x-0" : "-translate-x-full"}`}>
         <div className="flex items-center gap-sm px-sm mb-lg">
-          <span className="material-symbols-outlined text-primary text-3xl filled">eco</span>
+          <img src="/PS.png" alt="PolliSync logo" className="h-9 w-9 rounded-lg object-contain" />
           <div className="flex flex-col">
             <span className="font-headline-md text-headline-md font-bold text-primary">PolliSync</span>
             <span className="font-label-sm text-label-sm text-on-surface-variant">Agrotech Analytics</span>
