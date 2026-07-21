@@ -58,19 +58,17 @@ PolliSync is a modular monorepo with a single deployable FastAPI backend. The ar
        |                  |                   |
        v                  v                   v
 +------------+   +----------------+   +--------------------+
-|  SQLite    |   |  EXTERNAL APIs |   |  ML MODELS         |
-|  Database  |   |  (Free Tier)   |   |  (Pickle Files)    |
+|  Supabase  |   |  EXTERNAL APIs |   |  ML MODELS         |
+|  PostgreSQL|   |  (Free Tier)   |   |  (Pickle Files)    |
 |            |   |                |   |                    |
 | users      |   | Open-Meteo     |   | flowering_model    |
 | farms      |   | (Weather)      |   | psi_model          |
 | predictions|   |                |   | risk_model         |
-| weather_   |   | GBIF           |   | (+ v2, ensemble,   |
-|   cache    |   | (Bee Data)     |   |  quantile variants)|
-| bee_       |   |                |   |                    |
-|   occur.   |   | Google Gemini  |   | Saved in:          |
-| team_      |   | (LLM)         |   | ml/models/*.pkl    |
-|   members  |   |                |   |                    |
-| notif.     |   | NASA POWER     |   | 24 model files     |
+| weather_   |   | Google Gemini  |   | (+ MH variants)    |
+|   cache    |   | (LLM)          |   |                    |
+| team_      |   |                |   | Saved in:          |
+|   members  |   | Firebase       |   | ml/models/*.pkl    |
+| notif.     |   | (Auth)         |   |                    |
 +------------+   +----------------+   +--------------------+
 ```
 
@@ -102,10 +100,10 @@ Request → Router → Service → External API / Database
 ```
 
 **Entry point** (`app/main.py`):
-- Creates the FastAPI app with CORS middleware
+- Creates the FastAPI app with dynamic CORS middleware
 - Mounts 11 route groups under `/api`
 - Runs database initialization on startup (lifespan)
-- Configures allowed origins: `localhost:5173` (dev) and `polli-sync-web.vercel.app` (prod)
+- Configures allowed origins from `CORS_ORIGINS` and `FRONTEND_ORIGIN` env vars
 
 **Routes** (`app/api/routes/*.py`):
 - Thin layer that handles HTTP concerns (request parsing, status codes, response formatting)
@@ -121,8 +119,8 @@ Request → Router → Service → External API / Database
 - `environment_service.py` — NDVI estimation via NASA POWER or seasonal lookup
 
 **Models** (`app/models/*.py`):
-- SQLAlchemy ORM mapped to SQLite tables
-- 8 tables: users, farms, predictions, weather_cache, bee_occurrences, team_members, notifications, notification_preferences
+- SQLAlchemy ORM mapped to Supabase PostgreSQL tables
+- 8 tables: users, farms, predictions, weather_cache, team_members, notifications, notification_preferences, agent_rate_limit
 
 **Schemas** (`app/schemas/*.py`):
 - Pydantic models for request/response validation
@@ -255,8 +253,7 @@ Client                          Server
 
 | Data Source | Cache Location | TTL | Eviction |
 |-------------|---------------|-----|----------|
-| Open-Meteo weather | SQLite `weather_cache` table | 1 hour | Time-based |
-| GBIF bee occurrences | SQLite `bee_occurrences` table | 1 week | Time-based |
+| Open-Meteo weather | PostgreSQL `weather_cache` table | 1 hour | Time-based |
 | ML model artifacts | In-memory (loaded at startup) | Server lifetime | Reload on restart |
 | LLM recommendations | Not cached (generated per prediction) | — | — |
 
@@ -267,27 +264,26 @@ Client                          Server
 | Service | Purpose | Auth | Free Tier Limits |
 |---------|---------|------|-----------------|
 | **Open-Meteo** | Weather data (temperature, humidity, rainfall, wind) | None (no API key) | Generous, 10k requests/day |
-| **GBIF** | Bee species occurrence data | None (no API key) | Public API, rate-limited |
 | **Google Gemini** | LLM-powered recommendations + AI assistant | API key (`GEMINI_API_KEY`) | Free tier available |
-| **NASA POWER** | NDVI / vegetation index fallback | None | Public API |
-| **Firebase** | Optional Google OAuth authentication | Service account JSON | Free Spark plan |
+| **Firebase** | Google OAuth authentication | Service account (env var) | Free Spark plan |
+| **Supabase** | PostgreSQL database + vector store | Service key | Free tier available |
 
 ---
 
 ## Database Schema
 
-8 SQLite tables managed by SQLAlchemy ORM. See `backend/app/models/` for column definitions.
+Supabase PostgreSQL tables managed by SQLAlchemy ORM. See `backend/app/models/` for column definitions.
 
 ```
 users ──────────< farms ──────────< predictions
                        │                │
-                       │                ├── weather_cache
-                       │                └── bee_occurrences
+                       │                └── weather_cache
                        │
                        └── team_members
 
 notifications
 notification_preferences
+agent_rate_limit
 ```
 
 Key relationships:
@@ -303,29 +299,28 @@ See `docs/PLAYBOOK.md` Section 11 for the full SQL DDL.
 
 ```
 ┌─────────────────────────────────────────────┐
-│                  VERCEL                      │
+│                  NETLIFY                     │
 │   Frontend (React + Vite build)              │
-│   URL: polli-sync-web.vercel.app             │
+│   URL: pollysync.netlify.app                 │
 │   Auto-deploys on push to main               │
-│   Env: VITE_API_URL=https://polli-sync-...  │
+│   Env: VITE_API_URL, VITE_FIREBASE_*         │
 └──────────────────┬──────────────────────────┘
                    │ HTTPS (REST API calls)
                    v
 ┌─────────────────────────────────────────────┐
 │                  RENDER                      │
 │   Backend (FastAPI + Uvicorn)                │
-│   URL: polli-sync-api.onrender.com           │
+│   URL: pollysync.onrender.com                │
 │   Auto-deploys on push to main               │
-│   Env: SECRET_KEY, GEMINI_API_KEY, etc.      │
-│   SQLite: pollisync.db (ephemeral)           │
-│   Note: Free tier sleeps after 15min idle    │
-│         Cold start ~30 seconds               │
+│   Env: SECRET_KEY, GEMINI_API_KEY,           │
+│        FIREBASE_*, SUPABASE_*, DATABASE_URL  │
+│   Database: Supabase PostgreSQL              │
 └─────────────────────────────────────────────┘
 ```
 
 **CI/CD Pipeline** (`.github/workflows/ci.yml`):
 - On every push/PR: frontend `npm run build` + backend `pytest`
-- Main branch protections require passing CI
+- Main branch auto-deploys to Netlify (frontend) and Render (backend)
 
 ---
 
@@ -339,7 +334,8 @@ See `docs/PLAYBOOK.md` Section 11 for the full SQL DDL.
 | **Direct LLM calls** | Simple to implement, no infrastructure overhead, fast to iterate on prompts | RAG (needs vector DB setup), LangChain (abstraction overhead for simple use case) |
 | **React + Vite** | Fast HMR, modern tooling, huge ecosystem, team already knows React | Next.js (SSR not needed for SPA), Vue (team preference) |
 | **Tailwind CSS** | Rapid prototyping, consistent design tokens, no CSS files to manage | CSS modules (slower iteration), styled-components (runtime overhead) |
-| **Vercel + Render** | Free tiers, auto-deploy from GitHub, minimal configuration | AWS/GCP (expensive, complex), Railway (limited free tier) |
+| **Netlify + Render** | Free tiers, auto-deploy from GitHub, minimal configuration | AWS/GCP (expensive, complex), Railway (limited free tier) |
+| **Supabase** | Managed PostgreSQL, free tier, built-in vector store for embeddings | SQLite (ephemeral on Render), MongoDB (schemaless not needed) |
 
 ---
 

@@ -53,12 +53,12 @@ We are 4 Second-Year CSE-AI students building a working hackathon MVP in 2 weeks
 
 ### What We ARE Building
 
-- React + Tailwind frontend on Vercel
-- FastAPI + SQLite backend on Render
+- React + Tailwind frontend on Netlify
+- FastAPI + Supabase PostgreSQL backend on Render
 - Scikit-learn / XGBoost models (train locally, deploy as .pkl files)
 - Open-Meteo weather API (free, no key)
-- GBIF bee data API (free, no key)
 - Direct LLM API calls (Gemini) for recommendations
+- Firebase Authentication (email/password + Google OAuth)
 - Leaflet maps (free)
 - A dashboard that looks professional and demo-ready
 
@@ -130,9 +130,9 @@ User selects Crop + Location
 
 | Platform | What |
 |----------|------|
-| Vercel | Frontend hosting (free tier) |
+| Netlify | Frontend hosting (free tier) |
 | Render | Backend hosting (free tier) |
-| SQLite | Database (file-based, deploys with backend) |
+| Supabase | PostgreSQL database (free tier) |
 | GitHub | Code + CI + project board |
 
 ---
@@ -210,19 +210,18 @@ If selected, we add:
 
 ### A.2 Deployment Setup (Day 2-3)
 
-**Frontend (Vercel):**
-- Connect repo to Vercel, framework preset: Vite
-- Set env var `VITE_API_URL` to backend URL
+**Frontend (Netlify):**
+- Connect repo to Netlify, base dir: `frontend`, build: `npm run build`, publish: `dist`
+- Set env vars: `VITE_API_URL`, `VITE_FIREBASE_*`
+- Add `netlify.toml` for SPA routing redirect
 - Auto-deploys on push to main
 
 **Backend (Render):**
-- Connect repo to Render, service type: Web Service
+- Connect repo to Render, service type: Web Service, root dir: `backend`
 - Build: `pip install -r requirements.txt`
 - Start: `uvicorn app.main:app --host 0.0.0.0 --port $PORT`
-- Set env vars: `SECRET_KEY`, `GEMINI_API_KEY`
-- Free tier sleeps after 15min — cold start ~30s
-
-**Note:** SQLite on Render has ephemeral filesystem. Data may reset on redeploy. Seed on startup if empty.
+- Set env vars: `SECRET_KEY`, `GEMINI_API_KEY`, `DATABASE_URL`, `FIREBASE_*`, `SUPABASE_*`, `CORS_ORIGINS`, `FRONTEND_ORIGIN`
+- Auto-deploy on push to main
 
 **Success:** Frontend shows landing page. Backend Swagger UI at `/docs`.
 
@@ -700,15 +699,15 @@ Columns: Backlog → To Do → In Progress → In Review → Done
 
 | Resource | What | Link |
 |----------|------|------|
-| Vercel | Frontend hosting | vercel.com |
+| Netlify | Frontend hosting | netlify.com |
 | Render | Backend hosting | render.com |
 | Open-Meteo | Weather API | open-meteo.com |
-| GBIF | Bee data | gbif.org |
 | Gemini | LLM API | ai.google.dev |
+| Supabase | PostgreSQL + vector store | supabase.com |
+| Firebase | Authentication | firebase.google.com |
 | shadcn/ui | UI components | ui.shadcn.com |
 | Figma | UI design (free student) | figma.com |
 | Notion | Documentation | notion.so |
-| DB Browser | SQLite GUI | sqlitebrowser.org |
 
 ---
 
@@ -765,32 +764,21 @@ Columns: Backlog → To Do → In Progress → In Review → Done
 
 ### Render (Backend)
 
-- [ ] GitHub repo connected to Render Web Service
+- [ ] GitHub repo connected to Render Web Service, root dir: `backend`
 - [ ] Build: `pip install -r requirements.txt`
 - [ ] Start: `uvicorn app.main:app --host 0.0.0.0 --port $PORT`
-- [ ] Env vars: `SECRET_KEY`, `GEMINI_API_KEY`
-- [ ] CORS origins include Vercel URL
-- [ ] SQLite path is relative (`./pollisync.db`)
+- [ ] Env vars: `SECRET_KEY`, `GEMINI_API_KEY`, `LLM_API_KEY`, `DATABASE_URL`, `FIREBASE_PROJECT_ID`, `FIREBASE_SERVICE_ACCOUNT_JSON`, `SUPABASE_URL`, `SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_KEY`, `CORS_ORIGINS`, `FRONTEND_ORIGIN`, `APP_ENV=production`
 - [ ] Auto-deploy on push to `main`
 
-### Vercel (Frontend)
+### Netlify (Frontend)
 
-- [ ] GitHub repo connected to Vercel
-- [ ] Framework: Vite
+- [ ] GitHub repo connected to Netlify
+- [ ] Base directory: `frontend`
 - [ ] Build: `npm run build`
-- [ ] Output: `dist`
-- [ ] Env var: `VITE_API_URL=https://your-backend.onrender.com`
+- [ ] Publish: `dist`
+- [ ] `netlify.toml` present with SPA redirect rule
+- [ ] Env vars: `VITE_API_URL`, `VITE_FIREBASE_API_KEY`, `VITE_FIREBASE_AUTH_DOMAIN`, `VITE_FIREBASE_PROJECT_ID`, `VITE_FIREBASE_STORAGE_BUCKET`, `VITE_FIREBASE_MESSAGING_SENDER_ID`, `VITE_FIREBASE_APP_ID`
 - [ ] Auto-deploy on push to `main`
-
-### Quick SQLite Commands
-
-```bash
-sqlite3 pollisync.db          # Open database
-.tables                       # List tables
-.schema predictions           # Describe table
-SELECT * FROM predictions ORDER BY created_at DESC LIMIT 5;
-.quit                         # Exit
-```
 
 ---
 
