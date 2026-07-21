@@ -136,14 +136,6 @@ Copy `frontend/.env.example` to `frontend/.env` only when you need to change the
 | Open-Meteo | Free weather API |
 | GBIF | Bee occurrence data |
 
-### Deployment
-
-| Platform | What |
-|----------|------|
-| Vercel | Frontend hosting (free tier) |
-| Render | Backend hosting (free tier) |
-| GitHub | Code, CI, and project board |
-
 ## Validation
 
 ```console
@@ -175,7 +167,7 @@ The initial code provides:
 - An ML module contract and honest placeholder implementation
 - CI checks for frontend builds and backend tests
 
-Authentication, live weather and GBIF integrations, trained model artifacts, dashboards, and deployment configuration are intentionally left for the planned project milestones.
+Authentication, live weather and GBIF integrations, trained model artifacts, and dashboards are intentionally left for the planned project milestones.
 
 ## Contributing
 
